@@ -1,4 +1,4 @@
-package pl.droidsonroids.droidsmap.business_logic
+package pl.droidsonroids.droidsmap.room.business_logic
 
 class RoomFeatureUseCase : IRoomFeatureBoundary {
     //no-op
