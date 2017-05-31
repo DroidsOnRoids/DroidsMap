@@ -3,6 +3,7 @@ package pl.droidsonroids.droidsmap
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.transition.Scene
+import android.transition.Transition
 import android.transition.TransitionInflater
 import android.transition.TransitionManager
 import android.widget.GridLayout
@@ -14,6 +15,7 @@ import kotlinx.android.synthetic.main.scene_office.*
 class MapActivity : AppCompatActivity() {
     private var shouldMoveBack = true
     private var officeScene: Scene? = null
+    private var currentRoom: ImageView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,7 +25,8 @@ class MapActivity : AppCompatActivity() {
         roomImagesGridLayout.getRoomImages()
                 .forEach {
                     it?.setOnClickListener {
-                        it?.transitionName = "room_transition"
+                        currentRoom = it as ImageView
+                        it.transitionName = "room_transition"
                         performRoomTransition()
                     }
                 }
@@ -38,12 +41,8 @@ class MapActivity : AppCompatActivity() {
 
     private fun performOfficeTransition() {
         val sceneTransition = TransitionInflater.from(this).inflateTransition(R.transition.room_scene_transition)
+        sceneTransition.addListener(TransitionListenerAdapter({ currentRoom?.transitionName = "" }))
         TransitionManager.go(officeScene, sceneTransition)
-
-        roomImagesGridLayout.getRoomImages()
-                .forEach {
-                    it?.transitionName = ""
-                }
     }
 
     override fun onBackPressed() {
@@ -56,6 +55,31 @@ class MapActivity : AppCompatActivity() {
     }
 }
 
-private fun GridLayout.getRoomImages() = (0..childCount).map {
-    getChildAt(it) as ImageView?
-}.toList()
+private fun GridLayout.getRoomImages() = (0..childCount)
+        .map {
+            getChildAt(it) as ImageView?
+        }.toList()
+
+private class TransitionListenerAdapter(runnableAction: () -> Unit) : Transition.TransitionListener {
+    private val runnableAction = runnableAction
+
+    override fun onTransitionResume(transition: Transition?) {
+        //no-op
+    }
+
+    override fun onTransitionPause(transition: Transition?) {
+        //no-op
+    }
+
+    override fun onTransitionCancel(transition: Transition?) {
+        //no-op
+    }
+
+    override fun onTransitionStart(transition: Transition?) {
+        //no-op
+    }
+
+    override fun onTransitionEnd(transition: Transition?) {
+        kotlin.run { runnableAction() }
+    }
+}
