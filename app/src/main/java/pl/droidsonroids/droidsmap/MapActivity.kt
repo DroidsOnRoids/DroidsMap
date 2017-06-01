@@ -41,7 +41,7 @@ class MapActivity : AppCompatActivity() {
 
     private fun performOfficeTransition() {
         val sceneTransition = TransitionInflater.from(this).inflateTransition(R.transition.room_scene_transition)
-        sceneTransition.addListener(TransitionListenerAdapter({ currentRoom?.transitionName = "" }))
+        sceneTransition.addListener(TransitionListenerAdapter({ currentRoom!!.transitionName = "" }))
         TransitionManager.go(officeScene, sceneTransition)
     }
 
