@@ -1,11 +1,13 @@
 package pl.droidsonroids.droidsmap
 
 import android.os.Bundle
+import android.support.constraint.ConstraintLayout
 import android.support.v7.app.AppCompatActivity
 import android.transition.Scene
 import android.transition.Transition
 import android.transition.TransitionInflater
 import android.transition.TransitionManager
+import android.view.View
 import android.widget.GridLayout
 import android.widget.ImageView
 import kotlinx.android.synthetic.main.activity_map.*
@@ -22,10 +24,9 @@ class MapActivity : AppCompatActivity() {
         setContentView(R.layout.activity_map)
         officeScene = Scene(rootLayout, officeSceneLayout)
 
-        roomImagesGridLayout.getRoomImages()
+        roomsMap.getRoomImages()
                 .forEach {
                     it?.setOnClickListener {
-                        currentRoom = it as ImageView
                         it.transitionName = "room_transition"
                         performRoomTransition()
                     }
@@ -55,10 +56,13 @@ class MapActivity : AppCompatActivity() {
     }
 }
 
-private fun GridLayout.getRoomImages() = (0..childCount)
+private fun ConstraintLayout.getRoomImages() = (0..childCount)
         .map {
-            getChildAt(it) as ImageView?
-        }.toList()
+            getChildAt(it) as View?
+        }
+        .filter { it is ImageView }
+        .map { it as ImageView }
+        .toList()
 
 private class TransitionListenerAdapter(runnableAction: () -> Unit) : Transition.TransitionListener {
     private val runnableAction = runnableAction
