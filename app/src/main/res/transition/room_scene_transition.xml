@@ -4,9 +4,9 @@
     android:duration="300">
     <fade android:fadingMode="fade_out" />
     <changeBounds />
-    <changeTransform />
-    <changeClipBounds />
-    <changeImageTransform />
+    <changeTransform android:interpolator="@android:interpolator/accelerate_decelerate" />
+    <changeClipBounds android:interpolator="@android:interpolator/accelerate_decelerate" />
+    <changeImageTransform android:interpolator="@android:interpolator/accelerate_decelerate" />
     <fade android:fadingMode="fade_in">
         <targets>
             <target android:targetId="@+id/rootLayout" />

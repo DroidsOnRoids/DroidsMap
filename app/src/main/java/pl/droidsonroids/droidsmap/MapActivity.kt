@@ -7,12 +7,9 @@ import android.transition.Scene
 import android.transition.Transition
 import android.transition.TransitionInflater
 import android.transition.TransitionManager
-import android.view.View
-import android.widget.GridLayout
 import android.widget.ImageView
 import kotlinx.android.synthetic.main.activity_map.*
 import kotlinx.android.synthetic.main.scene_office.*
-
 
 class MapActivity : AppCompatActivity() {
     private var shouldMoveBack = true
@@ -26,7 +23,8 @@ class MapActivity : AppCompatActivity() {
 
         roomsMap.getRoomImages()
                 .forEach {
-                    it?.setOnClickListener {
+                    it.setOnClickListener {
+                        currentRoom = it as ImageView
                         it.transitionName = "room_transition"
                         performRoomTransition()
                     }
@@ -36,6 +34,7 @@ class MapActivity : AppCompatActivity() {
     fun performRoomTransition() {
         shouldMoveBack = false
         val roomScene = Scene.getSceneForLayout(rootLayout, R.layout.scene_room, this)
+        roomScene.setEnterAction { (roomScene.sceneRoot.findViewById(R.id.zoomedRoomImage) as ImageView).setImageDrawable(currentRoom!!.drawable) }
         val sceneTransition = TransitionInflater.from(this).inflateTransition(R.transition.room_scene_transition)
         TransitionManager.go(roomScene, sceneTransition)
     }
@@ -57,15 +56,11 @@ class MapActivity : AppCompatActivity() {
 }
 
 private fun ConstraintLayout.getRoomImages() = (0..childCount)
-        .map {
-            getChildAt(it) as View?
-        }
+        .map { getChildAt(it) }
         .filter { it is ImageView }
-        .map { it as ImageView }
         .toList()
 
-private class TransitionListenerAdapter(runnableAction: () -> Unit) : Transition.TransitionListener {
-    private val runnableAction = runnableAction
+private class TransitionListenerAdapter(private val endAction: () -> Unit) : Transition.TransitionListener {
 
     override fun onTransitionResume(transition: Transition?) {
         //no-op
@@ -84,6 +79,6 @@ private class TransitionListenerAdapter(runnableAction: () -> Unit) : Transition
     }
 
     override fun onTransitionEnd(transition: Transition?) {
-        kotlin.run { runnableAction() }
+        kotlin.run { endAction() }
     }
 }
