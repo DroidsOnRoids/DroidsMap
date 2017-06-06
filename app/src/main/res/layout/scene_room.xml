@@ -1,24 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/rootLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/faded_background">
+    android:background="@android:color/transparent">
 
     <LinearLayout
+        android:id="@+id/rootLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
-        android:gravity="center">
+        android:background="@color/faded_background"
+        android:gravity="center"
+        android:orientation="horizontal" />
 
-        <ImageView
-            android:id="@+id/zoomedRoomImage"
-            android:layout_margin="50dp"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:src="@drawable/sample"
-            android:transitionName="room_transition" />
-    </LinearLayout>
+    <ImageView
+        android:id="@+id/zoomedRoomImage"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="50dp"
+        android:src="@drawable/sample"
+        android:transitionName="room_transition" />
 
     <TextView
         android:id="@+id/roomNameTextView"

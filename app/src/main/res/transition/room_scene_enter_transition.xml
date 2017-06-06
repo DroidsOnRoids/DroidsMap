@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<transitionSet xmlns:android="http://schemas.android.com/apk/res/android"
+    android:transitionOrdering="together">
+
+    <changeBounds android:interpolator="@android:interpolator/overshoot" />
+
+    <fade
+        android:fadingMode="fade_in"
+        android:duration="200">
+        <targets>
+            <target android:targetId="@id/rootLayout" />
+        </targets>
+    </fade>
+
+    <slide
+        android:slideEdge="top"
+        android:duration="400"
+        android:interpolator="@android:interpolator/overshoot">
+        <targets>
+            <target android:targetId="@id/roomNameTextView" />
+        </targets>
+    </slide>
+
+</transitionSet>

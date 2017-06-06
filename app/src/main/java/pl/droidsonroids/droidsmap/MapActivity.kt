@@ -137,12 +137,12 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnGroundO
             val roomSceneImage = (roomScene.sceneRoot.findViewById(R.id.zoomedRoomImage) as ImageView)
             roomSceneImage.setImageDrawable(roomImage.drawable)
         }
-        val sceneTransition = TransitionInflater.from(this).inflateTransition(R.transition.room_scene_transition)
+        val sceneTransition = TransitionInflater.from(this).inflateTransition(R.transition.room_scene_enter_transition)
         TransitionManager.go(roomScene, sceneTransition)
     }
 
     private fun performOfficeTransition() {
-        val sceneTransition = TransitionInflater.from(this).inflateTransition(R.transition.room_scene_transition)
+        val sceneTransition = TransitionInflater.from(this).inflateTransition(R.transition.room_scene_exit_transition)
         sceneTransition.addListener(TransitionListenerAdapter({
             roomImage.transitionName = ""
             roomImage.setImageDrawable(null)
