@@ -20,6 +20,7 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import kotlinx.android.synthetic.main.activity_map.*
+import kotlinx.android.synthetic.main.scene_office_map.*
 import java.util.*
 
 class MapActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnGroundOverlayClickListener {
@@ -29,7 +30,6 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnGroundO
     private lateinit var map: GoogleMap
 
     private lateinit var officeScene: Scene
-    private lateinit var currentRoom: ImageView
     private val groundOverlayList = ArrayList<GroundOverlay>()
     val MAP_BEARING = 201.5f
     private var shouldMoveBack = true
@@ -43,15 +43,6 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnGroundO
         mapFragment.getMapAsync(this)
 
         officeScene = Scene(rootLayout, officeSceneLayout)
-
-        /*roomsMap.getRoomImages()
-                .forEach {
-                    it.setOnClickListener {
-                        currentRoom = it as ImageView
-                        it.transitionName = "room_transition"
-                        performRoomTransition()
-                    }
-                }*/
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
@@ -88,14 +79,14 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnGroundO
         val cameraUpdate = CameraUpdateFactory.newCameraPosition(cameraPosition)
         map.moveCamera(cameraUpdate)
 
-        val newarkMap = GroundOverlayOptions()
+        val room3Overlay = GroundOverlayOptions()
                 .image(createMarkerBitmapDescriptor())
                 .transparency(0f)
                 .bearing(MAP_BEARING)
                 .position(droidsOnRoidsLocation, 6.90f, 4.30f)
                 .clickable(true)
 
-        val overlay = map.addGroundOverlay(newarkMap)
+        val overlay = map.addGroundOverlay(room3Overlay)
         overlay.tag = "skybuds_room"
         groundOverlayList.add(overlay)
 
@@ -125,21 +116,37 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnGroundO
                     .build()
 
             val cameraUpdate = CameraUpdateFactory.newCameraPosition(cameraPosition)
-            map.animateCamera(cameraUpdate, CAMERA_TRANSITION_DURATION_MILLIS, null)
+            map.animateCamera(cameraUpdate, CAMERA_TRANSITION_DURATION_MILLIS, object : GoogleMap.CancelableCallback {
+                override fun onFinish() {
+                    roomImage.setImageDrawable(ContextCompat.getDrawable(this@MapActivity, R.drawable.room_3))
+                    performRoomTransition()
+                }
+
+                override fun onCancel() {
+                    //no-op
+                }
+            })
         }
     }
 
     fun performRoomTransition() {
         shouldMoveBack = false
+        roomImage.transitionName = "room_transition"
         val roomScene = Scene.getSceneForLayout(rootLayout, R.layout.scene_room, this)
-        roomScene.setEnterAction { (roomScene.sceneRoot.findViewById(R.id.zoomedRoomImage) as ImageView).setImageDrawable(currentRoom!!.drawable) }
+        roomScene.setEnterAction {
+            val roomSceneImage = (roomScene.sceneRoot.findViewById(R.id.zoomedRoomImage) as ImageView)
+            roomSceneImage.setImageDrawable(roomImage.drawable)
+        }
         val sceneTransition = TransitionInflater.from(this).inflateTransition(R.transition.room_scene_transition)
         TransitionManager.go(roomScene, sceneTransition)
     }
 
     private fun performOfficeTransition() {
         val sceneTransition = TransitionInflater.from(this).inflateTransition(R.transition.room_scene_transition)
-        sceneTransition.addListener(TransitionListenerAdapter({ currentRoom!!.transitionName = "" }))
+        sceneTransition.addListener(TransitionListenerAdapter({
+            roomImage.transitionName = ""
+            roomImage.setImageDrawable(null)
+        }))
         TransitionManager.go(officeScene, sceneTransition)
     }
 
@@ -147,7 +154,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnGroundO
         if (shouldMoveBack) {
             super.onBackPressed()
         } else {
-//            performOfficeTransition()
+            performOfficeTransition()
             shouldMoveBack = true
         }
     }
@@ -164,11 +171,6 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnGroundO
         }
     }
 }
-/*
-private fun ConstraintLayout.getRoomImages() = (0..childCount)
-        .map { getChildAt(it) }
-        .filter { it is ImageView }
-        .toList()*/
 
 private class TransitionListenerAdapter(private val endAction: () -> Unit) : Transition.TransitionListener {
 

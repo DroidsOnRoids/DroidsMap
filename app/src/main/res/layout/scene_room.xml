@@ -9,8 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
-        android:gravity="center"
-        android:rotationX="15">
+        android:gravity="center">
 
         <ImageView
             android:id="@+id/zoomedRoomImage"
@@ -18,8 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:src="@drawable/sample"
-            android:transitionName="room_transition"
-            android:rotationX="-15" />
+            android:transitionName="room_transition" />
     </LinearLayout>
 
     <TextView
@@ -28,6 +26,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_margin="32dp"
-        android:text="Room 1"
+        android:text="Room 3"
         android:textSize="30sp" />
 </FrameLayout>
