@@ -7,6 +7,6 @@
     tools:context="pl.droidsonroids.droidsmap.MapActivity">
 
     <include
-        layout="@layout/scene_office"
+        layout="@layout/scene_office_map"
         android:id="@+id/officeSceneLayout" />
 </FrameLayout>
