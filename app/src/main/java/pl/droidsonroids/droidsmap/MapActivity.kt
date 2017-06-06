@@ -25,13 +25,20 @@ import java.util.*
 
 class MapActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnGroundOverlayClickListener {
 
-    private val droidsOnRoidsLocation: LatLng = LatLng(51.10944382158668, 17.0255388552323)
-    private val CAMERA_TRANSITION_DURATION_MILLIS = 500
-    private lateinit var map: GoogleMap
+    companion object {
+        private val LOCATION_REQUEST_CODE = 1
+        private val CAMERA_TRANSITION_DURATION_MILLIS = 300
+        private val MAP_BEARING = 201.5f
+        private val MIN_MAP_ZOOM = 18f
+        private val MAX_MAP_ZOOM = 25f
+        private val ROOM_TRANSITION_NAME = "room_transition"
+    }
 
+    private val droidsOnRoidsLocation: LatLng = LatLng(51.10944382158668, 17.0255388552323)
+
+    private lateinit var map: GoogleMap
     private lateinit var officeScene: Scene
     private val groundOverlayList = ArrayList<GroundOverlay>()
-    val MAP_BEARING = 201.5f
     private var shouldMoveBack = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,7 +54,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnGroundO
 
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
-        googleMap.setMinZoomPreference(18f)
+        googleMap.setMinZoomPreference(MIN_MAP_ZOOM)
         map.isBuildingsEnabled = true
         map.setOnGroundOverlayClickListener(this)
 
@@ -57,7 +64,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnGroundO
             if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                     Manifest.permission.ACCESS_FINE_LOCATION)) {
             } else {
-                ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 200)
+                ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), LOCATION_REQUEST_CODE)
             }
         }
 
@@ -112,26 +119,20 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnGroundO
             val cameraPosition = CameraPosition.Builder()
                     .bearing(MAP_BEARING)
                     .target(groundOverlay.position)
-                    .zoom(25f)
+                    .zoom(MAX_MAP_ZOOM)
                     .build()
 
             val cameraUpdate = CameraUpdateFactory.newCameraPosition(cameraPosition)
-            map.animateCamera(cameraUpdate, CAMERA_TRANSITION_DURATION_MILLIS, object : GoogleMap.CancelableCallback {
-                override fun onFinish() {
-                    roomImage.setImageDrawable(ContextCompat.getDrawable(this@MapActivity, R.drawable.room_3))
-                    performRoomTransition()
-                }
-
-                override fun onCancel() {
-                    //no-op
-                }
-            })
+            map.animateCamera(cameraUpdate, CAMERA_TRANSITION_DURATION_MILLIS, CameraListenerAdapter({
+                roomImage.setImageDrawable(ContextCompat.getDrawable(this@MapActivity, R.drawable.room_3))
+                performRoomTransition()
+            }))
         }
     }
 
     fun performRoomTransition() {
         shouldMoveBack = false
-        roomImage.transitionName = "room_transition"
+        roomImage.transitionName = ROOM_TRANSITION_NAME
         val roomScene = Scene.getSceneForLayout(rootLayout, R.layout.scene_room, this)
         roomScene.setEnterAction {
             val roomSceneImage = (roomScene.sceneRoot.findViewById(R.id.zoomedRoomImage) as ImageView)
@@ -161,7 +162,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnGroundO
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         when (requestCode) {
-            200 -> {
+            LOCATION_REQUEST_CODE -> {
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     map.isMyLocationEnabled = true
                 } else {
@@ -191,6 +192,16 @@ private class TransitionListenerAdapter(private val endAction: () -> Unit) : Tra
     }
 
     override fun onTransitionEnd(transition: Transition?) {
-        kotlin.run { endAction() }
+        endAction.invoke()
+    }
+}
+
+private class CameraListenerAdapter(private val endAction: () -> Unit) : GoogleMap.CancelableCallback {
+    override fun onFinish() {
+        endAction.invoke()
+    }
+
+    override fun onCancel() {
+        //no-op
     }
 }
