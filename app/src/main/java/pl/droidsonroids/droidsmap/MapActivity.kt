@@ -34,12 +34,11 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnGroundO
         private val ROOM_TRANSITION_NAME = "room_transition"
     }
 
-    private val room3Location: LatLng = LatLng(51.10944082158668, 17.0255388552323)
-    private val room2Location: LatLng = LatLng(51.10948273424337, 17.02558437671076)
-
+    private var officeLeftTopCornerCoordinates = LatLng(51.109401, 17.025554)
     private lateinit var map: GoogleMap
     private lateinit var officeScene: Scene
     private val groundOverlayList = ArrayList<GroundOverlay>()
+    private val roomsList = ArrayList<Room>()
     private var shouldMoveBack = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,7 +49,16 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnGroundO
                 .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
+        createRoomList()
         officeScene = Scene(rootLayout, officeSceneLayout)
+    }
+
+    private fun createRoomList() {
+        roomsList.add(Room(228f, 144f, 114f, 138f, "skybuds room", R.drawable.room_3))
+        roomsList.add(Room(148f, 204f, 74f, 304f, "server room", R.drawable.room_2))
+        roomsList.add(Room(100f, 168f, 50f, 454f, "server room2", R.drawable.room_2a))
+        roomsList.add(Room(164f, 116f, 174f, 456f, "room 1", R.drawable.room_1))
+        roomsList.add(Room(126f, 142f, 257f, 273f, "room 4", R.drawable.room_4))
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
@@ -71,8 +79,8 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnGroundO
         }
 
         val bounds = LatLngBounds.builder()
-                .include(LatLng(room3Location.latitude - 0.0005, room3Location.longitude - 0.0005))
-                .include(LatLng(room3Location.latitude + 0.0005, room3Location.longitude + 0.0005))
+                .include(LatLng(officeLeftTopCornerCoordinates.latitude - 0.0005, officeLeftTopCornerCoordinates.longitude - 0.0005))
+                .include(LatLng(officeLeftTopCornerCoordinates.latitude + 0.0005, officeLeftTopCornerCoordinates.longitude + 0.0005))
                 .build()
 
         map.setLatLngBoundsForCameraTarget(bounds)
@@ -82,40 +90,35 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnGroundO
 
         val cameraPosition = CameraPosition.Builder()
                 .bearing(MAP_BEARING)
-                .target(room3Location)
+                .target(officeLeftTopCornerCoordinates)
                 .zoom(20f)
                 .build()
         val cameraUpdate = CameraUpdateFactory.newCameraPosition(cameraPosition)
         map.moveCamera(cameraUpdate)
 
-        val room3OverlayOptions = GroundOverlayOptions()
-                .image(createMarkerBitmapDescriptor(R.drawable.room_3))
-                .transparency(0f)
-                .bearing(MAP_BEARING)
-                .position(room3Location, 7.6f, 4.8f)
-                .clickable(true)
+        map.addMarker(MarkerOptions().position(officeLeftTopCornerCoordinates).title("Droids on Roids marker"))
+        map.moveCamera(CameraUpdateFactory.newLatLng(officeLeftTopCornerCoordinates))
 
-        val room3Overlay = map.addGroundOverlay(room3OverlayOptions)
-        room3Overlay.tag = "skybuds_room"
-        groundOverlayList.add(room3Overlay)
-
-        val room2OverlayOptions = GroundOverlayOptions()
-                .image(createMarkerBitmapDescriptor(R.drawable.room_2))
-                .transparency(0f)
-                .bearing(MAP_BEARING)
-                .position(room2Location, 4.9333333333f, 6.8f)
-                .clickable(true)
-
-        val room2Overlay = map.addGroundOverlay(room2OverlayOptions)
-        room2Overlay.tag = "server_room"
-        groundOverlayList.add(room2Overlay)
-
-        map.addMarker(MarkerOptions().position(room3Location).title("Droids on Roids marker"))
-        map.moveCamera(CameraUpdateFactory.newLatLng(room3Location))
+        roomsList.forEach { createMapOverlay(it) }
     }
 
-    private fun createMarkerBitmapDescriptor(resourceId: Int): BitmapDescriptor {
-        val vectorDrawable = ContextCompat.getDrawable(this, resourceId)
+    private fun createMapOverlay(room: Room) {
+        val overlayOptions = GroundOverlayOptions()
+                .image(createMarkerBitmapDescriptor(room.getImageResource()))
+                .transparency(0f)
+                .bearing(MAP_BEARING)
+                .position(LatLng(officeLeftTopCornerCoordinates.latitude + room.getRelativeCenterLatitude(291.5f),
+                        officeLeftTopCornerCoordinates.longitude + room.getRelativeCenterLongitude(291.5f)),
+                        room.getRoomWidthMeters(), room.getRoomHeightMeters())
+                .clickable(true)
+
+        val overlay = map.addGroundOverlay(overlayOptions)
+        overlay.tag = room.getTag()
+        groundOverlayList.add(overlay)
+    }
+
+    private fun createMarkerBitmapDescriptor(imageResource: Int): BitmapDescriptor {
+        val vectorDrawable = ContextCompat.getDrawable(this, imageResource)
         val width = vectorDrawable.intrinsicWidth
         val height = vectorDrawable.intrinsicHeight
         vectorDrawable.setBounds(0, 0, width, height)
@@ -126,35 +129,19 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnGroundO
     }
 
     override fun onGroundOverlayClick(groundOverlay: GroundOverlay) {
-        if (groundOverlay.tag == "skybuds_room") {
-            Toast.makeText(this, "Skybuds room overlay clicked!", Toast.LENGTH_SHORT).show()
+        val cameraPosition = CameraPosition.Builder()
+                .bearing(MAP_BEARING)
+                .target(groundOverlay.position)
+                .zoom(MAX_MAP_ZOOM)
+                .build()
 
-            val cameraPosition = CameraPosition.Builder()
-                    .bearing(MAP_BEARING)
-                    .target(groundOverlay.position)
-                    .zoom(MAX_MAP_ZOOM)
-                    .build()
-
-            val cameraUpdate = CameraUpdateFactory.newCameraPosition(cameraPosition)
-            map.animateCamera(cameraUpdate, CAMERA_TRANSITION_DURATION_MILLIS, CameraListenerAdapter({
-                roomImage.setImageDrawable(ContextCompat.getDrawable(this@MapActivity, R.drawable.room_3))
-                performRoomTransition()
-            }))
-        } else if (groundOverlay.tag == "server_room") {
-            Toast.makeText(this, "Server room overlay clicked!", Toast.LENGTH_SHORT).show()
-
-            val cameraPosition = CameraPosition.Builder()
-                    .bearing(MAP_BEARING)
-                    .target(groundOverlay.position)
-                    .zoom(MAX_MAP_ZOOM)
-                    .build()
-
-            val cameraUpdate = CameraUpdateFactory.newCameraPosition(cameraPosition)
-            map.animateCamera(cameraUpdate, CAMERA_TRANSITION_DURATION_MILLIS, CameraListenerAdapter({
-                roomImage.setImageDrawable(ContextCompat.getDrawable(this@MapActivity, R.drawable.room_2))
-                performRoomTransition()
-            }))
-        }
+        val cameraUpdate = CameraUpdateFactory.newCameraPosition(cameraPosition)
+        map.animateCamera(cameraUpdate, CAMERA_TRANSITION_DURATION_MILLIS, CameraListenerAdapter({
+            roomImage.setImageDrawable(ContextCompat.getDrawable(this@MapActivity,
+                    roomsList.filter { it.getTag() == groundOverlay.tag }.first().getImageResource())
+            )
+            performRoomTransition()
+        }))
     }
 
     fun performRoomTransition() {
