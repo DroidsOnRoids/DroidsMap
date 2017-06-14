@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="146px"
+    android:height="202px"
+    android:viewportWidth="146.0"
+    android:viewportHeight="202.0">
+    <path
+        android:name="wall"
+        android:pathData="M0,0 L0,202 L146,202 L146,0 L46,0 L46,8 L138,8 L138,194 L8,194 L8,0"
+        android:fillColor="@color/wall_color" />
+    <path
+        android:name="inside"
+        android:pathData="M8,8 L138,8 L138,194 L8,194  z"
+        android:fillColor="#fff" />
+</vector>

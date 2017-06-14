@@ -12,6 +12,7 @@ import android.transition.Scene
 import android.transition.Transition
 import android.transition.TransitionInflater
 import android.transition.TransitionManager
+import android.util.Log
 import android.widget.ImageView
 import android.widget.Toast
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -34,7 +35,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnGroundO
         private val ROOM_TRANSITION_NAME = "room_transition"
     }
 
-    private var officeLeftTopCornerCoordinates = LatLng(51.109401, 17.025554)
+    private var officeLeftTopCornerCoordinates = LatLng(51.10938699, 17.025564399)
     private lateinit var map: GoogleMap
     private lateinit var officeScene: Scene
     private val groundOverlayList = ArrayList<GroundOverlay>()
@@ -53,24 +54,25 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnGroundO
         officeScene = Scene(rootLayout, officeSceneLayout)
 
         latplus.setOnClickListener {
-            officeLeftTopCornerCoordinates = LatLng(officeLeftTopCornerCoordinates.latitude + 0.000005, officeLeftTopCornerCoordinates.longitude)
+            officeLeftTopCornerCoordinates = LatLng(officeLeftTopCornerCoordinates.latitude + 0.000002, officeLeftTopCornerCoordinates.longitude)
             recalculateOfficeOverlays()
         }
         latminus.setOnClickListener {
-            officeLeftTopCornerCoordinates = LatLng(officeLeftTopCornerCoordinates.latitude - 0.000005, officeLeftTopCornerCoordinates.longitude)
+            officeLeftTopCornerCoordinates = LatLng(officeLeftTopCornerCoordinates.latitude - 0.000002, officeLeftTopCornerCoordinates.longitude)
             recalculateOfficeOverlays()
         }
         longplus.setOnClickListener {
-            officeLeftTopCornerCoordinates = LatLng(officeLeftTopCornerCoordinates.latitude, officeLeftTopCornerCoordinates.longitude + 0.000005)
+            officeLeftTopCornerCoordinates = LatLng(officeLeftTopCornerCoordinates.latitude, officeLeftTopCornerCoordinates.longitude + 0.000002)
             recalculateOfficeOverlays()
         }
         longminus.setOnClickListener {
-            officeLeftTopCornerCoordinates = LatLng(officeLeftTopCornerCoordinates.latitude, officeLeftTopCornerCoordinates.longitude - 0.000005)
+            officeLeftTopCornerCoordinates = LatLng(officeLeftTopCornerCoordinates.latitude, officeLeftTopCornerCoordinates.longitude - 0.000002)
             recalculateOfficeOverlays()
         }
     }
 
     private fun recalculateOfficeOverlays() {
+        Log.d("New coordinates", "$officeLeftTopCornerCoordinates")
         map.clear()
         roomsList.forEach { createMapOverlay(it) }
     }
@@ -85,6 +87,9 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnGroundO
         roomsList.add(Room(144f, 202f, 448f, 607f, "room 5", R.drawable.room_5))
         roomsList.add(Room(256f, 204f, 562f, 304f, "room 6", R.drawable.room_6))
         roomsList.add(Room(130f, 70f, 377f, 371f, "wall 1", R.drawable.wall_1))
+        roomsList.add(Room(146f, 202f, 585f, 607f, "room_7", R.drawable.room_7))
+        roomsList.add(Room(194f, 406f, 759f, 203f, "room_fun", R.drawable.room_fun))
+        roomsList.add(Room(206f, 202f, 753f, 607f, "room_9", R.drawable.room_9))
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
@@ -165,7 +170,9 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnGroundO
         val cameraUpdate = CameraUpdateFactory.newCameraPosition(cameraPosition)
         map.animateCamera(cameraUpdate, CAMERA_TRANSITION_DURATION_MILLIS, CameraListenerAdapter({
             roomImage.setImageDrawable(ContextCompat.getDrawable(this@MapActivity,
-                    roomsList.filter { it.getTag() == groundOverlay.tag }.first().getImageResource())
+                    roomsList.filter { it.getTag() == groundOverlay.tag }
+                            .first()
+                            .getImageResource())
             )
             performRoomTransition()
         }))
