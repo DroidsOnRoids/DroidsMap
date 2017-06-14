@@ -2,7 +2,7 @@
 <transitionSet xmlns:android="http://schemas.android.com/apk/res/android"
     android:transitionOrdering="together">
 
-    <changeBounds android:interpolator="@android:interpolator/overshoot" />
+    <changeBounds android:interpolator="@android:interpolator/accelerate_decelerate" />
 
     <fade
         android:fadingMode="fade_in"
@@ -15,7 +15,7 @@
     <slide
         android:slideEdge="top"
         android:duration="400"
-        android:interpolator="@android:interpolator/overshoot">
+        android:interpolator="@android:interpolator/accelerate_decelerate">
         <targets>
             <target android:targetId="@id/roomNameTextView" />
         </targets>

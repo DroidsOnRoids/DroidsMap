@@ -127,7 +127,6 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnGroundO
         val cameraUpdate = CameraUpdateFactory.newCameraPosition(cameraPosition)
         map.moveCamera(cameraUpdate)
 
-        map.addMarker(MarkerOptions().position(officeLeftTopCornerCoordinates).title("Droids on Roids marker"))
         map.moveCamera(CameraUpdateFactory.newLatLng(officeLeftTopCornerCoordinates))
 
         roomsList.forEach { createMapOverlay(it) }
@@ -167,13 +166,25 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnGroundO
                 .zoom(MAX_MAP_ZOOM)
                 .build()
 
+        val roomImageResource = roomsList
+                .filter { it.getTag() == groundOverlay.tag }
+                .first()
+                .getImageResource()
+
         val cameraUpdate = CameraUpdateFactory.newCameraPosition(cameraPosition)
         map.animateCamera(cameraUpdate, CAMERA_TRANSITION_DURATION_MILLIS, CameraListenerAdapter({
             roomImage.setImageDrawable(ContextCompat.getDrawable(this@MapActivity,
-                    roomsList.filter { it.getTag() == groundOverlay.tag }
-                            .first()
-                            .getImageResource())
-            )
+                    roomImageResource
+            ))
+            roomImage.layoutParams.width = (ContextCompat.getDrawable(this, roomImageResource).intrinsicWidth * 2.2f).toInt()
+            roomImage.layoutParams.height = (ContextCompat.getDrawable(this, roomImageResource).intrinsicHeight * 2.2f).toInt()
+
+
+
+            map.addMarker(MarkerOptions().position(map.projection.visibleRegion.nearLeft).title("Near left"))
+            map.addMarker(MarkerOptions().position(map.projection.visibleRegion.nearRight).title("Near right"))
+            map.addMarker(MarkerOptions().position(map.projection.visibleRegion.farLeft).title("Near left"))
+            map.addMarker(MarkerOptions().position(map.projection.visibleRegion.farRight).title("Near right"))
             performRoomTransition()
         }))
     }
@@ -181,6 +192,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnGroundO
     fun performRoomTransition() {
         shouldMoveBack = false
         roomImage.transitionName = ROOM_TRANSITION_NAME
+
         val roomScene = Scene.getSceneForLayout(rootLayout, R.layout.scene_room, this)
         roomScene.setEnterAction {
             val roomSceneImage = (roomScene.sceneRoot.findViewById(R.id.zoomedRoomImage) as ImageView)
