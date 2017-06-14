@@ -51,6 +51,28 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnGroundO
 
         createRoomList()
         officeScene = Scene(rootLayout, officeSceneLayout)
+
+        latplus.setOnClickListener {
+            officeLeftTopCornerCoordinates = LatLng(officeLeftTopCornerCoordinates.latitude + 0.000005, officeLeftTopCornerCoordinates.longitude)
+            recalculateOfficeOverlays()
+        }
+        latminus.setOnClickListener {
+            officeLeftTopCornerCoordinates = LatLng(officeLeftTopCornerCoordinates.latitude - 0.000005, officeLeftTopCornerCoordinates.longitude)
+            recalculateOfficeOverlays()
+        }
+        longplus.setOnClickListener {
+            officeLeftTopCornerCoordinates = LatLng(officeLeftTopCornerCoordinates.latitude, officeLeftTopCornerCoordinates.longitude + 0.000005)
+            recalculateOfficeOverlays()
+        }
+        longminus.setOnClickListener {
+            officeLeftTopCornerCoordinates = LatLng(officeLeftTopCornerCoordinates.latitude, officeLeftTopCornerCoordinates.longitude - 0.000005)
+            recalculateOfficeOverlays()
+        }
+    }
+
+    private fun recalculateOfficeOverlays() {
+        map.clear()
+        roomsList.forEach { createMapOverlay(it) }
     }
 
     private fun createRoomList() {
@@ -59,6 +81,10 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnGroundO
         roomsList.add(Room(100f, 168f, 50f, 454f, "server room2", R.drawable.room_2a))
         roomsList.add(Room(164f, 116f, 174f, 456f, "room 1", R.drawable.room_1))
         roomsList.add(Room(126f, 142f, 257f, 273f, "room 4", R.drawable.room_4))
+        roomsList.add(Room(166f, 202f, 301f, 607f, "room m", R.drawable.room_m))
+        roomsList.add(Room(144f, 202f, 448f, 607f, "room 5", R.drawable.room_5))
+        roomsList.add(Room(256f, 204f, 562f, 304f, "room 6", R.drawable.room_6))
+        roomsList.add(Room(130f, 70f, 377f, 371f, "wall 1", R.drawable.wall_1))
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
@@ -107,9 +133,10 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnGroundO
                 .image(createMarkerBitmapDescriptor(room.getImageResource()))
                 .transparency(0f)
                 .bearing(MAP_BEARING)
-                .position(LatLng(officeLeftTopCornerCoordinates.latitude + room.getRelativeCenterLatitude(291.5f),
+                .position(LatLng(
+                        officeLeftTopCornerCoordinates.latitude + room.getRelativeCenterLatitude(291.5f),
                         officeLeftTopCornerCoordinates.longitude + room.getRelativeCenterLongitude(291.5f)),
-                        room.getRoomWidthMeters(), room.getRoomHeightMeters())
+                        room.getRoomHeightMeters(), room.getRoomWidthMeters())
                 .clickable(true)
 
         val overlay = map.addGroundOverlay(overlayOptions)
