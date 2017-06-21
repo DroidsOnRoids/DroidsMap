@@ -179,12 +179,10 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnGroundO
             roomImage.layoutParams.width = (ContextCompat.getDrawable(this, roomImageResource).intrinsicWidth * 2.2f).toInt()
             roomImage.layoutParams.height = (ContextCompat.getDrawable(this, roomImageResource).intrinsicHeight * 2.2f).toInt()
 
-
-
             map.addMarker(MarkerOptions().position(map.projection.visibleRegion.nearLeft).title("Near left"))
             map.addMarker(MarkerOptions().position(map.projection.visibleRegion.nearRight).title("Near right"))
-            map.addMarker(MarkerOptions().position(map.projection.visibleRegion.farLeft).title("Near left"))
-            map.addMarker(MarkerOptions().position(map.projection.visibleRegion.farRight).title("Near right"))
+            map.addMarker(MarkerOptions().position(map.projection.visibleRegion.farLeft).title("Far left"))
+            map.addMarker(MarkerOptions().position(map.projection.visibleRegion.farRight).title("Far right"))
             performRoomTransition()
         }))
     }
