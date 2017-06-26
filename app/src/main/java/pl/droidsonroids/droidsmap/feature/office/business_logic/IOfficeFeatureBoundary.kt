@@ -1,16 +1,16 @@
-package pl.droidsonroids.droidsmap.office.business_logic
-
-import android.support.annotation.NonNull
+package pl.droidsonroids.droidsmap.feature.office.business_logic
 
 interface IOfficeFeatureBoundary {
 
+    fun requestOffice(gateway: Gateway)
+
+    fun setOfficeCenterLocation()
 
     interface Gateway {
         fun onOfficeEntityAvailable(entity: OfficeEntity)
     }
 
     class Factory {
-        @NonNull
         fun create() = OfficeFeatureUseCase()
     }
 }

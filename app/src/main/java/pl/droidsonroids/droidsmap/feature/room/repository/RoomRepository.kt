@@ -1,4 +1,4 @@
-package pl.droidsonroids.droidsmap.room.repository
+package pl.droidsonroids.droidsmap.feature.room.repository
 
 class RoomRepository {
     private lateinit var roomDataSource: RoomDataSource
