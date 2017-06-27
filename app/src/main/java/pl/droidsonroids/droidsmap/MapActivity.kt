@@ -22,6 +22,7 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import kotlinx.android.synthetic.main.activity_map.*
 import kotlinx.android.synthetic.main.scene_office_map.*
+import pl.droidsonroids.droidsmap.feature.office.ui.OfficeUiFeatureView
 import pl.droidsonroids.droidsmap.model.Room
 import java.util.*
 
@@ -35,6 +36,8 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnGroundO
         private val MAX_MAP_ZOOM = 25f
         private val ROOM_TRANSITION_NAME = "room_transition"
     }
+
+    private lateinit var officeFeature: OfficeUiFeatureView
 
     private var officeLeftTopCornerCoordinates = LatLng(51.10938699, 17.025564399)
     private lateinit var map: GoogleMap
