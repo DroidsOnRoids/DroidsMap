@@ -38,6 +38,7 @@ dependencies {
 	compile 'com.android.support.constraint:constraint-layout:1.0.2'
 	compile 'com.google.firebase:firebase-database:10.0.1'
 	compile 'com.github.ReactiveX:RxKotlin:1.0.0'
+	compile 'io.reactivex:rxandroid:1.2.1'
 
 	compile fileTree(dir: 'libs', include: ['*.jar'])
 	androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {

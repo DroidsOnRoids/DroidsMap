@@ -1,6 +1,6 @@
 package pl.droidsonroids.droidsmap.feature.office.repository
 
-import pl.droidsonroids.droidsmap.feature.office.api.IOfficeDataInteractor
+import pl.droidsonroids.droidsmap.feature.office.api.OfficeDataEndpoint
 import pl.droidsonroids.droidsmap.feature.office.api.OfficeDataInteractor
 import pl.droidsonroids.droidsmap.feature.office.business_logic.OfficeEntity
 import pl.droidsonroids.droidsmap.model.OperationStatus
@@ -9,10 +9,7 @@ import rx.Observable
 
 class OfficeRepository : QuerySingleRepositoryOperation<OfficeEntity> {
 
-    private val interactor: IOfficeDataInteractor = OfficeDataInteractor()
+    private val officeDataSource: OfficeDataEndpoint = OfficeDataInteractor()
 
-    override fun query(): Observable<Pair<OfficeEntity, OperationStatus>> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
+    override fun query(): Observable<Pair<OfficeEntity, OperationStatus>> = officeDataSource.getOfficeData()
 }

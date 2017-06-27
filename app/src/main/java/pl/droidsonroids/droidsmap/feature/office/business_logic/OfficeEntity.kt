@@ -2,4 +2,4 @@ package pl.droidsonroids.droidsmap.feature.office.business_logic
 
 import pl.droidsonroids.droidsmap.model.Entity
 
-class OfficeEntity(var centerLatitude: Float, var centerLongitude: Float) : Entity()
+data class OfficeEntity(var centerLatitude: Float = 0.0f, var centerLongitude: Float = 0.0f) : Entity()

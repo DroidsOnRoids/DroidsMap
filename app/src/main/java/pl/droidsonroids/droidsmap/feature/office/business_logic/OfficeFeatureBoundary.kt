@@ -1,6 +1,6 @@
 package pl.droidsonroids.droidsmap.feature.office.business_logic
 
-interface IOfficeFeatureBoundary {
+interface OfficeFeatureBoundary {
 
     fun requestOffice(gateway: Gateway)
 
