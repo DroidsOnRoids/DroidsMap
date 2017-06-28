@@ -50,6 +50,9 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnGroundO
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_map)
 
+        officeFeature = OfficeUiFeatureView(this)
+
+
         val mapFragment = supportFragmentManager
                 .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)

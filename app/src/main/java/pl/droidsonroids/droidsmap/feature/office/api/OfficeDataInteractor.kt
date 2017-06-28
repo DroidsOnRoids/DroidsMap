@@ -6,6 +6,9 @@ import com.google.firebase.database.ValueEventListener
 import pl.droidsonroids.droidsmap.feature.office.business_logic.OfficeEntity
 import pl.droidsonroids.droidsmap.model.OperationStatus
 import rx.Observable
+import rx.Observable.create
+import rx.functions.Action1
+import rx.observers.Subscribers
 
 class OfficeDataInteractor : BaseFirebaseInteractor<Pair<OfficeEntity, OperationStatus>>(), OfficeDataEndpoint {
 
@@ -16,24 +19,34 @@ class OfficeDataInteractor : BaseFirebaseInteractor<Pair<OfficeEntity, Operation
     }
 
     override fun getOfficeData(): Observable<Pair<OfficeEntity, OperationStatus>> {
-        databaseQueryNode.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                publishSubject.onNext(Pair(
-                        OfficeEntity(
-                                snapshot.child("center_latitude").value as Float,
-                                snapshot.child("center_longitude").value as Float
-                        ),
-                        if (isOfficeDataComplete()) OperationStatus.SUCCESS else OperationStatus.FAILURE)
-                )
+
+        return create({
+
+            val queryListener = object : ValueEventListener {
+
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    it.onNext(
+                            Pair(
+                                    OfficeEntity(snapshot.child("center_latitude").value as Float, snapshot.child("center_longitude").value as Float),
+                                    if (isOfficeDataComplete()) OperationStatus.SUCCESS else OperationStatus.FAILURE))
+                    it.onCompleted()
+                }
+
+                override fun onCancelled(databaseError: DatabaseError) {
+                    it.onNext(Pair(OfficeEntity(), OperationStatus.FAILURE))
+                    it.onCompleted()
+                }
             }
 
-            override fun onCancelled(databaseError: DatabaseError) = publishSubject.onNext(Pair(OfficeEntity(), OperationStatus.FAILURE))
+            it.add(Subscribers.create(Action1 {
+                databaseQueryNode.removeEventListener(queryListener)
+            }))
+
+            databaseQueryNode.addListenerForSingleValueEvent(queryListener)
         })
-        return publishSubject
     }
 
     private fun isOfficeDataComplete(): Boolean {
         return true
     }
-
 }
