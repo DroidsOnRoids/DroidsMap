@@ -10,13 +10,13 @@ class OfficePresenter private constructor(val view: OfficeMvpView) {
     fun onViewInitialized() {
         officeFeatureBoundary.requestOffice(object : OfficeFeatureBoundary.Gateway {
             override fun onOfficeEntityAvailable(entity: OfficeEntity) {
-                updateUi()
+                updateUi(OfficeViewModel.Mapper().map(entity))
             }
         })
     }
 
-    private fun updateUi() {
-        TODO("NYI")
+    private fun updateUi(uiModel: OfficeViewModel) {
+        view.showMap(uiModel)
     }
 
     class Factory {

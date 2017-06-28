@@ -116,21 +116,12 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnGroundO
             }
         }
 
-        val bounds = LatLngBounds.builder()
-                .include(LatLng(officeLeftTopCornerCoordinates.latitude - 0.0005, officeLeftTopCornerCoordinates.longitude - 0.0005))
-                .include(LatLng(officeLeftTopCornerCoordinates.latitude + 0.0005, officeLeftTopCornerCoordinates.longitude + 0.0005))
-                .build()
-
-        map.setLatLngBoundsForCameraTarget(bounds)
-        map.uiSettings.isZoomControlsEnabled = false
-        map.uiSettings.isCompassEnabled = false
-        map.uiSettings.isMyLocationButtonEnabled = false
-
         val cameraPosition = CameraPosition.Builder()
                 .bearing(MAP_BEARING)
                 .target(officeLeftTopCornerCoordinates)
                 .zoom(20f)
                 .build()
+
         val cameraUpdate = CameraUpdateFactory.newCameraPosition(cameraPosition)
         map.moveCamera(cameraUpdate)
 
