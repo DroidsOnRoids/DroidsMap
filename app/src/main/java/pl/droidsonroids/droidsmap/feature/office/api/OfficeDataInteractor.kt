@@ -25,10 +25,13 @@ class OfficeDataInteractor : BaseFirebaseInteractor<Pair<OfficeEntity, Operation
             val queryListener = object : ValueEventListener {
 
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    it.onNext(
-                            Pair(
-                                    OfficeEntity(snapshot.child("center_latitude").value as Float, snapshot.child("center_longitude").value as Float),
-                                    if (isOfficeDataComplete()) OperationStatus.SUCCESS else OperationStatus.FAILURE))
+                    it.onNext(Pair(
+                            OfficeEntity(
+                                    snapshot.child("center_latitude").value as Float,
+                                    snapshot.child("center_longitude").value as Float,
+                                    snapshot.child("top_left_corner_latitude").value as Float,
+                                    snapshot.child("top_left_corner_longitude").value as Float),
+                            if (isOfficeDataComplete()) OperationStatus.SUCCESS else OperationStatus.FAILURE))
                     it.onCompleted()
                 }
 

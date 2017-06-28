@@ -1,13 +1,11 @@
 package pl.droidsonroids.droidsmap.model
 
-data class Room(private val roomHeightPx: Float, private val roomWidthPx: Float, private val relativeCenterXPositionPx: Float,
-                private val relativeCenterYPositionPx: Float, private val tag: String, private val imageResource: Int) {
+private const val PX_TO_METERS_FACTOR = 0.0333333333333f
+private const val LATITUDE_TO_METERS_FACTOR = 111250.33305527679f
+private const val LONGITUDE_TO_METERS_FACTOR = 70032.3813587852f
 
-    companion object {
-        private val PX_TO_METERS_FACTOR = 0.0333333333333f
-        private val LATITUDE_TO_METERS_FACTOR = 111250.33305527679f
-        private val LONGITUDE_TO_METERS_FACTOR = 70032.3813587852f
-    }
+data class Room(private val roomHeightPx: Float, private val roomWidthPx: Float, private val relativeCenterXPositionPx: Float,
+                private val relativeCenterYPositionPx: Float, val tag: String, val imageResource: Int) {
 
     fun getRoomHeightMeters() = roomHeightPx * PX_TO_METERS_FACTOR
 
@@ -26,8 +24,4 @@ data class Room(private val roomHeightPx: Float, private val roomWidthPx: Float,
         val translatedPhiRadians = (phiRadians + Math.toRadians(translationDegrees.toDouble())).toFloat()
         return (r.toDouble() * Math.sin(translatedPhiRadians.toDouble()) * PX_TO_METERS_FACTOR.toDouble() / LONGITUDE_TO_METERS_FACTOR).toFloat()
     }
-
-    fun getTag() = tag
-
-    fun getImageResource() = imageResource
 }

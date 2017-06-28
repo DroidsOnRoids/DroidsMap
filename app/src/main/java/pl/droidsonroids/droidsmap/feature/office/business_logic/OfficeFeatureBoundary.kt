@@ -10,7 +10,7 @@ interface OfficeFeatureBoundary {
         fun onOfficeEntityAvailable(entity: OfficeEntity)
     }
 
-    class Factory {
+    companion object {
         fun create() = OfficeFeatureUseCase()
     }
 }

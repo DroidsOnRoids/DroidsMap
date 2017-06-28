@@ -1,5 +1,5 @@
 package pl.droidsonroids.droidsmap.feature.office.mvp
 
 interface OfficeMvpView {
-    fun showMap(uiModel: OfficeViewModel)
+    fun showMap(uiModel: OfficeUiModel)
 }

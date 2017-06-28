@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/rootLayout"
     android:layout_width="match_parent"
@@ -7,6 +7,6 @@
     tools:context="pl.droidsonroids.droidsmap.MapActivity">
 
     <include
-        layout="@layout/scene_office_map"
-        android:id="@+id/officeSceneLayout" />
-</FrameLayout>
+        android:id="@+id/officeSceneLayout"
+        layout="@layout/scene_office_map" />
+</LinearLayout>
