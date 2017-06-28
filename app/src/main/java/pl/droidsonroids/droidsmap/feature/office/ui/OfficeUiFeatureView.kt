@@ -47,7 +47,7 @@ class OfficeUiFeatureView(private val activity: MapActivity) : OfficeMvpView {
         mapFragment.getMapAsync {
             googleMap = it
             it.setup()
-            checkLocationPermission(it)
+            checkLocationPermission()
             createRoomList()
             UiCommandInvoker.invokeQueuedChain()
         }
@@ -68,9 +68,9 @@ class OfficeUiFeatureView(private val activity: MapActivity) : OfficeMvpView {
         roomsList.add(Room(206f, 202f, 753f, 607f, "room_9", R.drawable.room_9))
     }
 
-    private fun checkLocationPermission(it: GoogleMap) {
+    private fun checkLocationPermission() {
         if (ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            it.isMyLocationEnabled = true
+            googleMap?.isMyLocationEnabled = true
         } else {
             if (ActivityCompat.shouldShowRequestPermissionRationale(activity,
                     Manifest.permission.ACCESS_FINE_LOCATION)) {

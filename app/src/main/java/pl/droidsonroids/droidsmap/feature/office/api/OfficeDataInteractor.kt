@@ -19,11 +19,9 @@ class OfficeDataInteractor : BaseFirebaseInteractor<Pair<OfficeEntity, Operation
     }
 
     override fun getOfficeData(): Observable<Pair<OfficeEntity, OperationStatus>> {
-
+        setDatabaseNode()
         return create({
-
             val queryListener = object : ValueEventListener {
-
                 override fun onDataChange(snapshot: DataSnapshot) {
                     it.onNext(Pair(
                             OfficeEntity(

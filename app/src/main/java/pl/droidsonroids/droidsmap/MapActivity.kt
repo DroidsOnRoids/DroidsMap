@@ -15,6 +15,7 @@ class MapActivity : AppCompatActivity() {
         setContentView(R.layout.activity_map)
 
         officeFeature = OfficeUiFeatureView(this)
+        officeFeature.requestOffice()
     }
 
     override fun onBackPressed() {

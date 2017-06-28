@@ -4,7 +4,7 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 
 abstract class BaseFirebaseInteractor<T> {
-    protected lateinit var firebaseDatabase: FirebaseDatabase
+    protected val firebaseDatabase: FirebaseDatabase = FirebaseDatabase.getInstance()
     protected lateinit var databaseQueryNode: DatabaseReference
 
     abstract fun setDatabaseNode()
