@@ -263,8 +263,8 @@ private fun GoogleMap.setup() {
         isCompassEnabled = false
         isMyLocationButtonEnabled = false
     }
-    this.setMinZoomPreference(MIN_MAP_ZOOM)
-    this.mapType = GoogleMap.MAP_TYPE_SATELLITE
+//    this.setMinZoomPreference(MIN_MAP_ZOOM)
+    this.mapType = GoogleMap.MAP_TYPE_TERRAIN
     this.isBuildingsEnabled = true
 }
 

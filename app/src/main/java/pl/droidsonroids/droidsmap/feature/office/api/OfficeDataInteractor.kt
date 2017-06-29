@@ -12,10 +12,9 @@ import rx.observers.Subscribers
 
 class OfficeDataInteractor : BaseFirebaseInteractor<Pair<OfficeEntity, OperationStatus>>(), OfficeDataEndpoint {
 
-    private val OFFICE_ENDPOINT = "droidsmap/office"
-
     override fun setDatabaseNode() {
-        databaseQueryNode = firebaseDatabase.getReference(OFFICE_ENDPOINT)
+        databaseQueryNode = firebaseDatabase.reference
+                .child("office")
     }
 
     override fun getOfficeData(): Observable<Pair<OfficeEntity, OperationStatus>> {
@@ -25,10 +24,10 @@ class OfficeDataInteractor : BaseFirebaseInteractor<Pair<OfficeEntity, Operation
                 override fun onDataChange(snapshot: DataSnapshot) {
                     it.onNext(Pair(
                             OfficeEntity(
-                                    snapshot.child("center_latitude").value as Float,
-                                    snapshot.child("center_longitude").value as Float,
-                                    snapshot.child("top_left_corner_latitude").value as Float,
-                                    snapshot.child("top_left_corner_longitude").value as Float),
+                                    snapshot.child("center_latitude").value as Double,
+                                    snapshot.child("center_longitude").value as Double,
+                                    snapshot.child("top_left_corner_latitude").value as Double,
+                                    snapshot.child("top_left_corner_longitude").value as Double),
                             if (isOfficeDataComplete()) OperationStatus.SUCCESS else OperationStatus.FAILURE))
                     it.onCompleted()
                 }
