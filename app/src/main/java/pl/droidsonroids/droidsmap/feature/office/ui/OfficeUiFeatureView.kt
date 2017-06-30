@@ -80,7 +80,7 @@ class OfficeUiFeatureView(private val activity: MapActivity) : OfficeMvpView {
         }
     }
 
-    fun requestOffice() = presenter.onViewInitialized()
+    fun requestOffice() = presenter.onRequestOffice()
 
     fun onRequestPermissionsResult(requestCode: Int, grantResults: IntArray) {
         when (requestCode) {
@@ -99,24 +99,24 @@ class OfficeUiFeatureView(private val activity: MapActivity) : OfficeMvpView {
     }
 
     private fun performShowMap(uiModel: OfficeUiModel) {
-        val officeLeftTopCornerCoordinates = LatLng(uiModel.leftTopCornerLatitude.toDouble(), uiModel.leftTopCornerLongitude.toDouble())
+        val officeCenterCoordinates = LatLng(uiModel.centerLatitude, uiModel.centerLongitude)
 
         val bounds = LatLngBounds.builder()
-                .include(LatLng(uiModel.centerLatitude - 0.0005, uiModel.centerLongitude - 0.0005))
-                .include(LatLng(uiModel.centerLatitude + 0.0005, uiModel.centerLongitude + 0.0005))
+                .include(LatLng(uiModel.centerLatitude - uiModel.mapViewportConstraint, uiModel.centerLongitude - uiModel.mapViewportConstraint))
+                .include(LatLng(uiModel.centerLatitude + uiModel.mapViewportConstraint, uiModel.centerLongitude + uiModel.mapViewportConstraint))
                 .build()
 
         googleMap?.setLatLngBoundsForCameraTarget(bounds)
 
         val cameraPosition = CameraPosition.Builder()
-                .bearing(MAP_BEARING)
-                .target(officeLeftTopCornerCoordinates)
+                .bearing(uiModel.mapViewportBearing.toFloat())
+                .target(officeCenterCoordinates)
                 .zoom(20f)
                 .build()
 
         val cameraUpdate = CameraUpdateFactory.newCameraPosition(cameraPosition)
         googleMap?.moveCamera(cameraUpdate)
-        googleMap?.moveCamera(CameraUpdateFactory.newLatLng(officeLeftTopCornerCoordinates))
+        googleMap?.moveCamera(CameraUpdateFactory.newLatLng(officeCenterCoordinates))
 
         roomsList.forEach { createMapOverlay(it, uiModel) }
     }
@@ -125,10 +125,10 @@ class OfficeUiFeatureView(private val activity: MapActivity) : OfficeMvpView {
         val overlayOptions = GroundOverlayOptions()
                 .image(createMarkerBitmapDescriptor(room.imageResource))
                 .transparency(0f)
-                .bearing(MAP_BEARING)
+                .bearing(uiModel.mapViewportBearing.toFloat())
                 .position(LatLng(
-                        (uiModel.leftTopCornerLatitude + room.getRelativeCenterLatitude(291.5f)).toDouble(),
-                        (uiModel.leftTopCornerLongitude + room.getRelativeCenterLongitude(291.5f)).toDouble()),
+                        (uiModel.leftTopCornerLatitude + room.getRelativeCenterLatitude(uiModel.translatedMapViewportBearing)),
+                        (uiModel.leftTopCornerLongitude + room.getRelativeCenterLongitude(uiModel.translatedMapViewportBearing))),
                         room.getRoomHeightMeters(), room.getRoomWidthMeters())
                 .clickable(true)
 
@@ -263,7 +263,7 @@ private fun GoogleMap.setup() {
         isCompassEnabled = false
         isMyLocationButtonEnabled = false
     }
-//    this.setMinZoomPreference(MIN_MAP_ZOOM)
+    this.setMinZoomPreference(MIN_MAP_ZOOM)
     this.mapType = GoogleMap.MAP_TYPE_TERRAIN
     this.isBuildingsEnabled = true
 }

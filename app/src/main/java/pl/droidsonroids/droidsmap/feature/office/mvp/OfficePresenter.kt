@@ -7,11 +7,13 @@ class OfficePresenter private constructor(private val view: OfficeMvpView) {
 
     private val officeFeatureBoundary = OfficeFeatureBoundary.create()
 
-    fun onViewInitialized() = officeFeatureBoundary.requestOffice(object : OfficeFeatureBoundary.Gateway {
+    fun onRequestOffice() = officeFeatureBoundary.requestOffice(object : OfficeFeatureBoundary.Gateway {
         override fun onOfficeEntityAvailable(entity: OfficeEntity) = updateUi(OfficeUiModel.from(entity))
     })
 
-    private fun updateUi(uiModel: OfficeUiModel) = view.showMap(uiModel)
+    private fun updateUi(uiModel: OfficeUiModel) {
+        view.showMap(uiModel)
+    }
 
     companion object {
         fun create(view: OfficeMvpView) = OfficePresenter(view)
