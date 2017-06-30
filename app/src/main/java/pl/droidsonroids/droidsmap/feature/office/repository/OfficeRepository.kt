@@ -8,7 +8,6 @@ import pl.droidsonroids.droidsmap.repository_operation.QuerySingleRepositoryOper
 import rx.Observable
 
 class OfficeRepository : QuerySingleRepositoryOperation<OfficeEntity> {
-
     private val officeDataSource: OfficeDataEndpoint = OfficeDataInteractor()
 
     override fun query(): Observable<Pair<OfficeEntity, OperationStatus>> = officeDataSource.getOfficeData()

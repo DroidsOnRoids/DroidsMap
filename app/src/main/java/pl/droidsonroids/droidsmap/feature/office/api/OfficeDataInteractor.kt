@@ -7,8 +7,7 @@ import pl.droidsonroids.droidsmap.feature.office.business_logic.OfficeEntity
 import pl.droidsonroids.droidsmap.model.OperationStatus
 import rx.Observable
 import rx.Observable.create
-import rx.functions.Action1
-import rx.observers.Subscribers
+import rx.subscriptions.Subscriptions
 
 class OfficeDataInteractor : BaseFirebaseInteractor<Pair<OfficeEntity, OperationStatus>>(), OfficeDataEndpoint {
 
@@ -34,15 +33,11 @@ class OfficeDataInteractor : BaseFirebaseInteractor<Pair<OfficeEntity, Operation
                 }
             }
 
-            it.add(Subscribers.create(Action1 {
-                databaseQueryNode.removeEventListener(queryListener)
-            }))
-
             databaseQueryNode.addListenerForSingleValueEvent(queryListener)
+
+            it.add(Subscriptions.create { databaseQueryNode.removeEventListener(queryListener) })
         })
     }
 
-    private fun isOfficeDataComplete(): Boolean {
-        return true
-    }
+    private fun isOfficeDataComplete() = true
 }
