@@ -1,5 +1,7 @@
 package pl.droidsonroids.droidsmap.feature.office.mvp
 
 interface OfficeMvpView {
-    fun showMap(uiModel: OfficeUiModel)
+    fun setMapPanningConstraints(uiModel: OfficeUiModel)
+    fun focusMapOnOfficeLocation(uiModel: OfficeUiModel)
+    fun displayOfficeRooms(uiModel: OfficeUiModel)
 }

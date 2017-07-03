@@ -15,6 +15,7 @@ class RoomDataInteractor : BaseFirebaseInteractor<Pair<OfficeEntity, OperationSt
     override fun setDatabaseNode() {
         databaseQueryNode = firebaseDatabase.reference
                 .child("rooms")
+                .child("employees_rooms")
     }
 
     override fun getRoomData(): Observable<Pair<List<RoomEntity>, OperationStatus>> {

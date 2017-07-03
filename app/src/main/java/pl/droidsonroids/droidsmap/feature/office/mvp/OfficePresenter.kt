@@ -12,7 +12,9 @@ class OfficePresenter private constructor(private val view: OfficeMvpView) {
     })
 
     private fun updateUi(uiModel: OfficeUiModel) {
-        view.showMap(uiModel)
+        view.setMapPanningConstraints(uiModel)
+        view.focusMapOnOfficeLocation(uiModel)
+        view.displayOfficeRooms(uiModel)
     }
 
     companion object {

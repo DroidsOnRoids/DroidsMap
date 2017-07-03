@@ -94,19 +94,25 @@ class OfficeUiFeatureView(private val activity: MapActivity) : OfficeMvpView {
         }
     }
 
-    override fun showMap(uiModel: OfficeUiModel) {
-        if (googleMap == null) UiCommandInvoker.queueInvokement { performShowMap(uiModel) } else performShowMap(uiModel)
+    override fun setMapPanningConstraints(uiModel: OfficeUiModel) {
+        if (googleMap == null) UiCommandInvoker.queueInvokement { performSetMapPanningConstraints(uiModel) } else performSetMapPanningConstraints(uiModel)
     }
 
-    private fun performShowMap(uiModel: OfficeUiModel) {
-        val officeCenterCoordinates = LatLng(uiModel.centerLatitude, uiModel.centerLongitude)
-
+    private fun performSetMapPanningConstraints(uiModel: OfficeUiModel) {
         val bounds = LatLngBounds.builder()
                 .include(LatLng(uiModel.centerLatitude - uiModel.mapViewportConstraint, uiModel.centerLongitude - uiModel.mapViewportConstraint))
                 .include(LatLng(uiModel.centerLatitude + uiModel.mapViewportConstraint, uiModel.centerLongitude + uiModel.mapViewportConstraint))
                 .build()
 
         googleMap?.setLatLngBoundsForCameraTarget(bounds)
+    }
+
+    override fun focusMapOnOfficeLocation(uiModel: OfficeUiModel) {
+        if (googleMap == null) UiCommandInvoker.queueInvokement { performFocusMapOnOfficeLocation(uiModel) } else performFocusMapOnOfficeLocation(uiModel)
+    }
+
+    private fun performFocusMapOnOfficeLocation(uiModel: OfficeUiModel) {
+        val officeCenterCoordinates = LatLng(uiModel.centerLatitude, uiModel.centerLongitude)
 
         val cameraPosition = CameraPosition.Builder()
                 .bearing(uiModel.mapViewportBearing.toFloat())
@@ -117,11 +123,17 @@ class OfficeUiFeatureView(private val activity: MapActivity) : OfficeMvpView {
         val cameraUpdate = CameraUpdateFactory.newCameraPosition(cameraPosition)
         googleMap?.moveCamera(cameraUpdate)
         googleMap?.moveCamera(CameraUpdateFactory.newLatLng(officeCenterCoordinates))
-
-        roomsList.forEach { createMapOverlay(it, uiModel) }
     }
 
-    private fun createMapOverlay(room: Room, uiModel: OfficeUiModel) {
+    override fun displayOfficeRooms(uiModel: OfficeUiModel) {
+        if (googleMap == null) UiCommandInvoker.queueInvokement { performDisplayOfficeRooms(uiModel) } else performDisplayOfficeRooms(uiModel)
+    }
+
+    private fun performDisplayOfficeRooms(uiModel: OfficeUiModel) {
+        roomsList.forEach { createAndDisplayMapOverlay(it, uiModel) }
+    }
+
+    private fun createAndDisplayMapOverlay(room: Room, uiModel: OfficeUiModel) {
         val overlayOptions = GroundOverlayOptions()
                 .image(createMarkerBitmapDescriptor(room.imageResource))
                 .transparency(0f)
@@ -137,6 +149,17 @@ class OfficeUiFeatureView(private val activity: MapActivity) : OfficeMvpView {
             overlay.tag = room.tag
             groundOverlayList.add(overlay)
         }
+    }
+
+    private fun createMarkerBitmapDescriptor(imageResource: Int): BitmapDescriptor {
+        val vectorDrawable = ContextCompat.getDrawable(activity, imageResource)
+        val width = vectorDrawable.intrinsicWidth
+        val height = vectorDrawable.intrinsicHeight
+        vectorDrawable.setBounds(0, 0, width, height)
+        val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+        vectorDrawable.draw(canvas)
+        return BitmapDescriptorFactory.fromBitmap(bitmap)
     }
 
     fun onGroundOverlayClick(groundOverlay: GroundOverlay) {
@@ -197,17 +220,6 @@ class OfficeUiFeatureView(private val activity: MapActivity) : OfficeMvpView {
             }))
             TransitionManager.go(officeScene, sceneTransition)
         }
-    }
-
-    private fun createMarkerBitmapDescriptor(imageResource: Int): BitmapDescriptor {
-        val vectorDrawable = ContextCompat.getDrawable(activity, imageResource)
-        val width = vectorDrawable.intrinsicWidth
-        val height = vectorDrawable.intrinsicHeight
-        vectorDrawable.setBounds(0, 0, width, height)
-        val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
-        val canvas = Canvas(bitmap)
-        vectorDrawable.draw(canvas)
-        return BitmapDescriptorFactory.fromBitmap(bitmap)
     }
 
     object UiCommandInvoker {
