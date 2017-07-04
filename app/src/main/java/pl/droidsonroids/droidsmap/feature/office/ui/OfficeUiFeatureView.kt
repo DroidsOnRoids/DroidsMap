@@ -47,9 +47,46 @@ class OfficeUiFeatureView(private val activity: MapActivity) : OfficeMvpView {
         mapFragment.getMapAsync {
             googleMap = it
             it.setup()
+            it.setOnGroundOverlayClickListener {
+                onGroundOverlayClick(it)
+            }
             checkLocationPermission()
             createRoomList()
             UiCommandInvoker.invokeQueuedChain()
+        }
+    }
+
+    private fun onGroundOverlayClick(it: GroundOverlay) {
+        val cameraPosition = CameraPosition.Builder()
+                .bearing(MAP_BEARING)
+                .target(it.position)
+                .zoom(MAX_MAP_ZOOM)
+                .build()
+
+        val roomImageResource = roomsList
+                .filter { it.tag == it.tag }
+                .first()
+                .imageResource
+
+        val cameraUpdate = CameraUpdateFactory.newCameraPosition(cameraPosition)
+        with(activity.roomImage) {
+            googleMap?.animateCamera(cameraUpdate, CAMERA_TRANSITION_DURATION_MILLIS, CameraListenerAdapter({
+                val imageDrawable = ContextCompat.getDrawable(activity, roomImageResource)
+                setImageDrawable(imageDrawable)
+                layoutParams.width = ((imageDrawable).intrinsicWidth * 2.2f).toInt()
+                layoutParams.height = ((imageDrawable).intrinsicHeight * 2.2f).toInt()
+
+                googleMap?.run {
+                    with(projection.visibleRegion) {
+                        addMarker(MarkerOptions().position(nearLeft).title("Near left"))
+                        addMarker(MarkerOptions().position(nearRight).title("Near right"))
+                        addMarker(MarkerOptions().position(farLeft).title("Far left"))
+                        addMarker(MarkerOptions().position(farRight).title("Far right"))
+                    }
+                }
+
+                performRoomTransition()
+            }))
         }
     }
 
@@ -160,40 +197,6 @@ class OfficeUiFeatureView(private val activity: MapActivity) : OfficeMvpView {
         val canvas = Canvas(bitmap)
         vectorDrawable.draw(canvas)
         return BitmapDescriptorFactory.fromBitmap(bitmap)
-    }
-
-    fun onGroundOverlayClick(groundOverlay: GroundOverlay) {
-        val cameraPosition = CameraPosition.Builder()
-                .bearing(MAP_BEARING)
-                .target(groundOverlay.position)
-                .zoom(MAX_MAP_ZOOM)
-                .build()
-
-        val roomImageResource = roomsList
-                .filter { it.tag == groundOverlay.tag }
-                .first()
-                .imageResource
-
-        val cameraUpdate = CameraUpdateFactory.newCameraPosition(cameraPosition)
-        with(activity.roomImage) {
-            googleMap?.animateCamera(cameraUpdate, CAMERA_TRANSITION_DURATION_MILLIS, CameraListenerAdapter({
-                val imageDrawable = ContextCompat.getDrawable(activity, roomImageResource)
-                setImageDrawable(imageDrawable)
-                layoutParams.width = ((imageDrawable).intrinsicWidth * 2.2f).toInt()
-                layoutParams.height = ((imageDrawable).intrinsicHeight * 2.2f).toInt()
-
-                googleMap?.run {
-                    with(projection.visibleRegion) {
-                        addMarker(MarkerOptions().position(nearLeft).title("Near left"))
-                        addMarker(MarkerOptions().position(nearRight).title("Near right"))
-                        addMarker(MarkerOptions().position(farLeft).title("Far left"))
-                        addMarker(MarkerOptions().position(farRight).title("Far right"))
-                    }
-                }
-
-                performRoomTransition()
-            }))
-        }
     }
 
     fun performRoomTransition() {
