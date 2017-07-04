@@ -23,8 +23,8 @@ android {
 
 ext {
 	build_version = "25.3.1"
-	gms_components_version = "11.0.1"
-	firebase_components_version = "11.0.1"
+	gms_components_version = "11.0.2"
+	firebase_components_version = "11.0.2"
 }
 
 dependencies {
@@ -43,19 +43,19 @@ dependencies {
 	compile "com.android.support:appcompat-v7:${build_version}"
 
 	compile fileTree(dir: 'libs', include: ['*.jar'])
-	androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-		exclude group: 'com.android.support', module: 'support-annotations'
-	})
+
 	compile 'com.android.support.constraint:constraint-layout:1.0.2'
 	compile 'com.github.ReactiveX:RxKotlin:1.0.0'
 	compile 'io.reactivex:rxandroid:1.2.1'
-	compile 'com.google.firebase:firebase-database:10.0.1'
+
 	testCompile 'junit:junit:4.12'
+	testCompile 'org.mockito:mockito-core:2.7.13'
+	testCompile('com.nhaarman:mockito-kotlin:1.5.0') {
+		transitive = false
+	}
 }
 repositories {
 	mavenCentral()
 }
-
-//apply plugin: 'com.google.gms.google-services'
 
 apply plugin: 'com.google.gms.google-services'
