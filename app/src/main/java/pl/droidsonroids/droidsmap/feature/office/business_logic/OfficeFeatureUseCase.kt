@@ -2,18 +2,17 @@ package pl.droidsonroids.droidsmap.feature.office.business_logic
 
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import pl.droidsonroids.droidsmap.DataObserverAdapter
+import pl.droidsonroids.droidsmap.DisposableHandler
 import pl.droidsonroids.droidsmap.feature.office.repository.OfficeRepository
 
 class OfficeFeatureUseCase : OfficeFeatureBoundary {
-
     val officeRepository: OfficeRepository = OfficeRepository()
-    val disposablesList = mutableListOf<Disposable>()
+    val disposableHandler = DisposableHandler()
 
     override fun requestOffice(dataObserver: DataObserverAdapter<OfficeEntity>) {
-        disposablesList += officeRepository
+        disposableHandler handle officeRepository
                 .query()
                 .toObservable()
                 .applySchedulers()

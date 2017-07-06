@@ -12,4 +12,3 @@ interface OfficeFeatureBoundary {
         fun create() = OfficeFeatureUseCase()
     }
 }
-

@@ -27,7 +27,6 @@ class OfficeDataInteractor : BaseFirebaseInteractor<OfficeEntity>(), OfficeDataE
             }
             emitter.setCancellable({ databaseQueryNode.removeEventListener(queryListener) })
             databaseQueryNode.addListenerForSingleValueEvent(queryListener)
-
         }
     }
 
