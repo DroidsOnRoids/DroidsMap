@@ -1,9 +1,6 @@
 package pl.droidsonroids.droidsmap
 
-import com.nhaarman.mockito_kotlin.any
-import com.nhaarman.mockito_kotlin.mock
-import com.nhaarman.mockito_kotlin.verify
-import com.nhaarman.mockito_kotlin.whenever
+import com.nhaarman.mockito_kotlin.*
 import org.junit.Before
 import org.junit.Test
 import pl.droidsonroids.droidsmap.feature.office.business_logic.OfficeEntity
@@ -33,6 +30,12 @@ class OfficePresenterTest {
         }
 
         presenter.onRequestOffice()
-        verify(officeView).displayOfficeRooms(OfficeUiModel.from(officeEntity))
+        with(OfficeUiModel.from(officeEntity)) {
+            inOrder(officeView) {
+                verify(officeView).setMapPanningConstraints(this@with)
+                verify(officeView).focusMapOnOfficeLocation(this@with)
+                verify(officeView).displayOfficeRooms(this@with)
+            }
+        }
     }
 }
