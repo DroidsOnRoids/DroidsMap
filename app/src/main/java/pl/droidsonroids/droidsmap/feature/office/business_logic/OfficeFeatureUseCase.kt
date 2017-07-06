@@ -1,9 +1,9 @@
 package pl.droidsonroids.droidsmap.feature.office.business_logic
 
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import pl.droidsonroids.droidsmap.feature.office.repository.OfficeRepository
-import rx.Observable
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
 
 class OfficeFeatureUseCase : OfficeFeatureBoundary {
 
@@ -13,7 +13,7 @@ class OfficeFeatureUseCase : OfficeFeatureBoundary {
         officeRepository
                 .query()
                 .applySchedulers()
-                .subscribe({ gateway.onOfficeEntityAvailable(it.first) })
+                .subscribe { gateway.onOfficeEntityAvailable(it.first) }
     }
 
     override fun setOfficeCenterLocation() {

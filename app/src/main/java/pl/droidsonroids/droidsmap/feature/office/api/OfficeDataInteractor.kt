@@ -3,11 +3,9 @@ package pl.droidsonroids.droidsmap.feature.office.api
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
+import io.reactivex.Observable
 import pl.droidsonroids.droidsmap.feature.office.business_logic.OfficeEntity
 import pl.droidsonroids.droidsmap.model.OperationStatus
-import rx.Observable
-import rx.Observable.create
-import rx.subscriptions.Subscriptions
 
 class OfficeDataInteractor : BaseFirebaseInteractor<Pair<OfficeEntity, OperationStatus>>(), OfficeDataEndpoint {
 
@@ -18,24 +16,22 @@ class OfficeDataInteractor : BaseFirebaseInteractor<Pair<OfficeEntity, Operation
 
     override fun getOfficeData(): Observable<Pair<OfficeEntity, OperationStatus>> {
         setDatabaseNode()
-        return create({
+        return Observable.create({ emitter ->
             val queryListener = object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    it.onNext(Pair(
+                    emitter.onNext(Pair(
                             snapshot.getValue(OfficeEntity::class.java) as OfficeEntity,
                             if (isOfficeDataComplete()) OperationStatus.SUCCESS else OperationStatus.FAILURE))
-                    it.onCompleted()
+                    emitter.onComplete()
                 }
 
                 override fun onCancelled(databaseError: DatabaseError) {
-                    it.onNext(Pair(OfficeEntity(), OperationStatus.FAILURE))
-                    it.onCompleted()
+                    emitter.onNext(Pair(OfficeEntity(), OperationStatus.FAILURE))
+                    emitter.onComplete()
                 }
             }
-
+            emitter.setCancellable({ databaseQueryNode.removeEventListener(queryListener) })
             databaseQueryNode.addListenerForSingleValueEvent(queryListener)
-
-            it.add(Subscriptions.create { databaseQueryNode.removeEventListener(queryListener) })
         })
     }
 
