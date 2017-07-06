@@ -1,6 +1,9 @@
 package pl.droidsonroids.droidsmap
 
-import com.nhaarman.mockito_kotlin.*
+import com.nhaarman.mockito_kotlin.any
+import com.nhaarman.mockito_kotlin.inOrder
+import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockito_kotlin.whenever
 import org.junit.Before
 import org.junit.Test
 import pl.droidsonroids.droidsmap.feature.office.business_logic.OfficeEntity
@@ -24,9 +27,10 @@ class OfficePresenterTest {
 
     @Test
     fun `should show map once data is provided`() {
+
         val officeEntity = OfficeEntity()
         whenever(officeBoundary.requestOffice(any())).thenAnswer {
-            (it.arguments[0] as OfficeFeatureBoundary.Gateway).onOfficeEntityAvailable(officeEntity)
+            (it.arguments[0] as OfficePresenter.OfficeDataObserver).onNext(officeEntity)
         }
 
         presenter.onRequestOffice()
