@@ -20,6 +20,7 @@ import kotlinx.android.synthetic.main.activity_map.*
 import kotlinx.android.synthetic.main.scene_office_map.*
 import pl.droidsonroids.droidsmap.MapActivity
 import pl.droidsonroids.droidsmap.R
+import pl.droidsonroids.droidsmap.feature.office.business_logic.OfficeFeatureBoundary
 import pl.droidsonroids.droidsmap.feature.office.mvp.OfficeMvpView
 import pl.droidsonroids.droidsmap.feature.office.mvp.OfficePresenter
 import pl.droidsonroids.droidsmap.feature.office.mvp.OfficeUiModel
@@ -35,7 +36,7 @@ private const val MAX_MAP_ZOOM = 25f
 private const val ROOM_TRANSITION_NAME = "room_transition"
 
 class OfficeUiFeatureView(private val activity: MapActivity) : OfficeMvpView {
-    private val presenter = OfficePresenter.create(this)
+    private val presenter = OfficePresenter.create(this, OfficeFeatureBoundary.create())
     private val viewBinder = OfficeUiViewBinder(activity)
     private var googleMap: GoogleMap? = null
     private val roomsList = ArrayList<Room>()
