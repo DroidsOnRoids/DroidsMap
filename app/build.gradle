@@ -44,8 +44,8 @@ dependencies {
 	compile fileTree(dir: 'libs', include: ['*.jar'])
 
 	compile 'com.android.support.constraint:constraint-layout:1.0.2'
-	compile 'com.github.ReactiveX:RxKotlin:1.0.0'
-	compile 'io.reactivex:rxandroid:1.2.1'
+	compile 'io.reactivex.rxjava2:rxkotlin:2.1.0'
+	compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
 
 	testCompile 'junit:junit:4.12'
 	testCompile 'org.mockito:mockito-core:2.7.13'

@@ -1,14 +1,12 @@
 package pl.droidsonroids.droidsmap.feature.office.business_logic
 
+import pl.droidsonroids.droidsmap.DataObserverAdapter
+
 interface OfficeFeatureBoundary {
 
-    fun requestOffice(gateway: Gateway)
+    fun requestOffice(dataObserver: DataObserverAdapter<OfficeEntity>)
 
     fun setOfficeCenterLocation()
-
-    interface Gateway {
-        fun onOfficeEntityAvailable(entity: OfficeEntity)
-    }
 
     companion object {
         fun create() = OfficeFeatureUseCase()
