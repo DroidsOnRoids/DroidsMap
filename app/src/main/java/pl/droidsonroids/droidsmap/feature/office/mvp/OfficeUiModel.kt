@@ -20,7 +20,6 @@ data class OfficeUiModel private constructor(
                 entity.mapViewportBearing,
                 entity.translatedMapViewportBearing,
                 entity.mapViewportConstraint
-
         )
     }
 }

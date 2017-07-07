@@ -27,14 +27,14 @@ class OfficePresenterTest {
 
     @Test
     fun `should show map once data is provided`() {
-        val officeEntity = OfficeEntity()
+        val officeUiModel = OfficeUiModel.from(OfficeEntity())
         whenever(officeBoundary.requestOffice(any())).thenAnswer {
-            (it.arguments[0] as OfficePresenter.OfficeDataObserver).onNext(officeEntity)
+            (it.arguments[0] as OfficePresenter.OfficeDataObserver).onNext(officeUiModel)
         }
 
         presenter.onRequestOffice()
 
-        with(OfficeUiModel.from(officeEntity)) {
+        with(officeUiModel) {
             inOrder(officeView) {
                 verify(officeView).setMapPanningConstraints(this@with)
                 verify(officeView).focusMapOnOfficeLocation(this@with)
