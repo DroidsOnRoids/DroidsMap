@@ -4,9 +4,10 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import io.reactivex.Single
+import pl.droidsonroids.droidsmap.base.BaseFirebaseInteractor
 import pl.droidsonroids.droidsmap.feature.office.business_logic.OfficeEntity
 
-class OfficeDataInteractor : BaseFirebaseInteractor<OfficeEntity>(), OfficeDataEndpoint {
+class OfficeDataInteractor : BaseFirebaseInteractor(), OfficeDataEndpoint {
 
     override fun setDatabaseNode() {
         databaseQueryNode = firebaseDatabase.reference

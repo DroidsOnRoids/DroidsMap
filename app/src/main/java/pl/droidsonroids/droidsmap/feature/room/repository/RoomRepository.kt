@@ -1,13 +1,25 @@
 package pl.droidsonroids.droidsmap.feature.room.repository
 
-import io.reactivex.Observable
+import io.reactivex.Single
+import pl.droidsonroids.droidsmap.feature.room.api.RoomDataEndpoint
 import pl.droidsonroids.droidsmap.feature.room.api.RoomDataInteractor
-import pl.droidsonroids.droidsmap.feature.room.business_logic.RoomEntity
-import pl.droidsonroids.droidsmap.model.OperationStatus
+import pl.droidsonroids.droidsmap.feature.room.api.RoomImagesEndpoint
+import pl.droidsonroids.droidsmap.feature.room.api.RoomImagesInteractor
+import pl.droidsonroids.droidsmap.feature.room.mvp.RoomUiModel
 import pl.droidsonroids.droidsmap.repository_operation.QueryMultipleRepositoryOperation
 
-class RoomRepository : QueryMultipleRepositoryOperation<RoomEntity> {
-    private val roomDataSource: RoomDataInteractor = RoomDataInteractor()
+class RoomRepository : QueryMultipleRepositoryOperation<RoomUiModel> {
+    private val roomDataSource: RoomDataEndpoint = RoomDataInteractor()
+    private val roomImagesDataSource : RoomImagesEndpoint = RoomImagesInteractor()
 
-    override fun query(): Observable<Pair<List<RoomEntity>, OperationStatus>> = roomDataSource.getRoomData()
+    override fun query(): Single<List<RoomUiModel>> =
+            roomDataSource.getRoomData()
+                    .flatMap { (room, roomId) ->
+                        roomImagesDataSource
+                                .getRoomData(roomId)
+                                .map {
+                                    roomUriString -> RoomUiModel.from(room, roomUriString)
+                                }
+                                .toObservable()
+                    }.toList()
 }

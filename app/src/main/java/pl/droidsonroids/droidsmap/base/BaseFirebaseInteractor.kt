@@ -1,9 +1,9 @@
-package pl.droidsonroids.droidsmap.feature.office.api
+package pl.droidsonroids.droidsmap.base
 
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 
-abstract class BaseFirebaseInteractor<T> {
+abstract class BaseFirebaseInteractor {
     protected val firebaseDatabase: FirebaseDatabase = FirebaseDatabase.getInstance()
     protected lateinit var databaseQueryNode: DatabaseReference
 

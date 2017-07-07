@@ -4,45 +4,44 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import io.reactivex.Observable
-import pl.droidsonroids.droidsmap.feature.office.api.BaseFirebaseInteractor
+import pl.droidsonroids.droidsmap.base.BaseFirebaseInteractor
 import pl.droidsonroids.droidsmap.feature.office.business_logic.OfficeEntity
 import pl.droidsonroids.droidsmap.feature.room.business_logic.RoomEntity
+import pl.droidsonroids.droidsmap.feature.room.business_logic.RoomEntityHolder
 import pl.droidsonroids.droidsmap.model.OperationStatus
 
-class RoomDataInteractor : BaseFirebaseInteractor<Pair<OfficeEntity, OperationStatus>>(), RoomDataEndpoint {
+class RoomDataInteractor : BaseFirebaseInteractor(), RoomDataEndpoint {
 
     override fun setDatabaseNode() {
         databaseQueryNode = firebaseDatabase.reference
                 .child("rooms")
-                .child("employees_rooms")
     }
 
-    override fun getRoomData(): Observable<Pair<List<RoomEntity>, OperationStatus>> {
+    override fun getRoomData(): Observable<RoomEntityHolder> {
         setDatabaseNode()
-        return Observable.create({
+        return Observable.create({ emitter ->
             val queryListener = object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot?) {
-                    it.onNext(Pair(
-                            retrieveRoomsList(snapshot),
-                            if (isOfficeDataComplete(snapshot)) OperationStatus.SUCCESS else OperationStatus.FAILURE))
-                    it.onComplete()
+                    retrieveRoomsList(snapshot).forEach { roomHolder ->
+                        emitter.onNext(roomHolder)
+                    }
+                    emitter.onComplete()
                 }
 
-                override fun onCancelled(p0: DatabaseError?) {
-                    it.onNext(Pair(emptyList(), OperationStatus.FAILURE))
-                    it.onComplete()
+                override fun onCancelled(databaseError: DatabaseError) {
+                    emitter.onError(databaseError.toException())
                 }
             }
 
-            it.setCancellable { databaseQueryNode.removeEventListener(queryListener) }
+            emitter.setCancellable { databaseQueryNode.removeEventListener(queryListener) }
             databaseQueryNode.addListenerForSingleValueEvent(queryListener)
         })
     }
 
-    private fun isOfficeDataComplete(snapshot: DataSnapshot?): Boolean = true
-
-    private fun retrieveRoomsList(snapshot: DataSnapshot?): List<RoomEntity> =
-            snapshot?.children?.map { it.getValue<RoomEntity>() } ?: emptyList<RoomEntity>()
+    private fun retrieveRoomsList(snapshot: DataSnapshot?): List<RoomEntityHolder> =
+            snapshot?.children?.map {
+                RoomEntityHolder(it.getValue<RoomEntity>(), it.key)
+            } ?: emptyList<RoomEntityHolder>()
 
     private inline fun <reified T> DataSnapshot.getValue() = getValue(T::class.java) as T
 
