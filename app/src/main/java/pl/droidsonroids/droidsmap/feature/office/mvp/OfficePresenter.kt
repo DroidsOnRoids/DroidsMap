@@ -4,7 +4,7 @@ import pl.droidsonroids.droidsmap.base.DataObserverAdapter
 import pl.droidsonroids.droidsmap.feature.office.business_logic.OfficeFeatureBoundary
 
 class OfficePresenter private constructor(
-        private val view: OfficeMvpView,
+        private val view: OfficeMvpView<OfficeUiModel>,
         private val officeFeatureBoundary : OfficeFeatureBoundary) {
 
     fun onRequestOffice() = officeFeatureBoundary.requestOffice(OfficeDataObserver())
@@ -16,7 +16,7 @@ class OfficePresenter private constructor(
     }
 
     companion object {
-        fun create(view: OfficeMvpView, officeFeatureBoundary: OfficeFeatureBoundary)
+        fun create(view: OfficeMvpView<OfficeUiModel>, officeFeatureBoundary: OfficeFeatureBoundary)
                 = OfficePresenter(view, officeFeatureBoundary)
     }
 

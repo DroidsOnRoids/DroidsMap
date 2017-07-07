@@ -8,7 +8,7 @@ import pl.droidsonroids.droidsmap.base.BaseFirebaseInteractor
 import pl.droidsonroids.droidsmap.base.OFFICE_NODE
 import pl.droidsonroids.droidsmap.feature.office.business_logic.OfficeEntity
 
-class OfficeDataInteractor : BaseFirebaseInteractor(), OfficeDataEndpoint {
+open class OfficeDataInteractor : BaseFirebaseInteractor(), OfficeDataEndpoint {
 
     override fun setDatabaseNode() {
         databaseQueryNode = firebaseDatabase.reference

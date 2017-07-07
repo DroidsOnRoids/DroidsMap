@@ -3,7 +3,7 @@ package pl.droidsonroids.droidsmap.feature.office.mvp
 import pl.droidsonroids.droidsmap.base.UiModel
 import pl.droidsonroids.droidsmap.feature.office.business_logic.OfficeEntity
 
-data class OfficeUiModel private constructor(
+data class OfficeUiModel(
         val centerLatitude: Double,
         val centerLongitude: Double,
         val leftTopCornerLatitude: Double,

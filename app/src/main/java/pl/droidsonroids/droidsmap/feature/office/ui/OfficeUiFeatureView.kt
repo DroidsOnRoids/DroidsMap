@@ -35,9 +35,8 @@ private const val MIN_MAP_ZOOM = 18f
 private const val MAX_MAP_ZOOM = 25f
 private const val ROOM_TRANSITION_NAME = "room_transition"
 
-class OfficeUiFeatureView(private val activity: MapActivity) : OfficeMvpView {
+class OfficeUiFeatureView(private val activity: MapActivity) : OfficeMvpView<OfficeUiModel> {
     private val presenter = OfficePresenter.create(this, OfficeFeatureBoundary.create())
-    private val viewBinder = OfficeUiViewBinder(activity)
     private var googleMap: GoogleMap? = null
     private val roomsList = ArrayList<Room>()
     private val groundOverlayList = ArrayList<GroundOverlay>()
@@ -49,7 +48,7 @@ class OfficeUiFeatureView(private val activity: MapActivity) : OfficeMvpView {
             googleMap = it
             it.setup()
             it.setOnGroundOverlayClickListener {
-                onGroundOverlayClick(it)
+                onGroundOverlayClicked(it)
             }
             checkLocationPermission()
             createRoomList()
@@ -57,7 +56,7 @@ class OfficeUiFeatureView(private val activity: MapActivity) : OfficeMvpView {
         }
     }
 
-    private fun onGroundOverlayClick(it: GroundOverlay) {
+    private fun onGroundOverlayClicked(it: GroundOverlay) {
         val cameraPosition = CameraPosition.Builder()
                 .bearing(MAP_BEARING)
                 .target(it.position)

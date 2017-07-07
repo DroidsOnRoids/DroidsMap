@@ -5,12 +5,13 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import pl.droidsonroids.droidsmap.base.DataObserverAdapter
 import pl.droidsonroids.droidsmap.base.DisposableHandler
+import pl.droidsonroids.droidsmap.feature.office.api.OfficeDataEndpoint
 import pl.droidsonroids.droidsmap.feature.office.mvp.OfficeUiModel
 import pl.droidsonroids.droidsmap.feature.office.repository.OfficeRepository
 
 class OfficeFeatureUseCase : OfficeFeatureBoundary {
 
-    val officeRepository: OfficeRepository = OfficeRepository()
+    val officeRepository: OfficeRepository = OfficeRepository(OfficeDataEndpoint.create())
     val disposableHandler = DisposableHandler()
 
     override fun requestOffice(dataObserver: DataObserverAdapter<OfficeUiModel>) {
