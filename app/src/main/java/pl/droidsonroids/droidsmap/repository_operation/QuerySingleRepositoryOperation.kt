@@ -1,9 +1,8 @@
 package pl.droidsonroids.droidsmap.repository_operation
 
 import io.reactivex.Single
-import pl.droidsonroids.droidsmap.feature.office.business_logic.OfficeEntity
-import pl.droidsonroids.droidsmap.model.Entity
+import pl.droidsonroids.droidsmap.base.UiModel
 
-public interface QuerySingleRepositoryOperation<T : Entity> {
-    fun query(): Single<OfficeEntity>
+public interface QuerySingleRepositoryOperation<T : UiModel> {
+    fun query(): Single<T>
 }

@@ -1,7 +1,6 @@
 package pl.droidsonroids.droidsmap.feature.office.mvp
 
 import pl.droidsonroids.droidsmap.base.DataObserverAdapter
-import pl.droidsonroids.droidsmap.feature.office.business_logic.OfficeEntity
 import pl.droidsonroids.droidsmap.feature.office.business_logic.OfficeFeatureBoundary
 
 class OfficePresenter private constructor(
@@ -21,9 +20,9 @@ class OfficePresenter private constructor(
                 = OfficePresenter(view, officeFeatureBoundary)
     }
 
-    inner class OfficeDataObserver : DataObserverAdapter<OfficeEntity>() {
-        override fun onNext(entity: OfficeEntity) {
-            updateUi(OfficeUiModel.from(entity))
+    inner class OfficeDataObserver : DataObserverAdapter<OfficeUiModel>() {
+        override fun onNext(model: OfficeUiModel) {
+            updateUi(model)
         }
 
         override fun onError(e: Throwable) {

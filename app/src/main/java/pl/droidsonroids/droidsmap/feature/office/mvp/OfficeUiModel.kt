@@ -1,5 +1,6 @@
 package pl.droidsonroids.droidsmap.feature.office.mvp
 
+import pl.droidsonroids.droidsmap.base.UiModel
 import pl.droidsonroids.droidsmap.feature.office.business_logic.OfficeEntity
 
 data class OfficeUiModel private constructor(
@@ -9,7 +10,7 @@ data class OfficeUiModel private constructor(
         val leftTopCornerLongitude: Double,
         val mapViewportBearing: Double,
         val translatedMapViewportBearing: Double,
-        val mapViewportConstraint: Double) {
+        val mapViewportConstraint: Double) : UiModel {
     companion object {
         fun from(entity: OfficeEntity) = OfficeUiModel(
                 entity.centerLatitude,
