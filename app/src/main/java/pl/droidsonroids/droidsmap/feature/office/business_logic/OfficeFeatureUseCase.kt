@@ -26,7 +26,7 @@ class OfficeFeatureUseCase(roomBoundary: RoomFeatureBoundary?, val officeReposit
                 .subscribeWith(dataObserver)
     }
 
-    override fun changeToRoomPerspective() = Unit
+    override fun changeToRoomPerspective() = roomFeatureBoundary.onRoomPerspectiveGained()
 }
 
 fun <T> Observable<T>.applySchedulers(): Observable<T> {
