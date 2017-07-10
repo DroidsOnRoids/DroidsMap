@@ -22,9 +22,7 @@ class OfficeFeatureUseCase : OfficeFeatureBoundary {
                 .subscribeWith(dataObserver)
     }
 
-    override fun setOfficeCenterLocation() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    override fun changeToRoomPerspective() = Unit
 }
 
 fun <T> Observable<T>.applySchedulers(): Observable<T> {

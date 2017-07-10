@@ -11,13 +11,13 @@ import pl.droidsonroids.droidsmap.feature.office.mvp.OfficeUiModel
 
 class OfficePresenterTest {
 
-    lateinit var officeView: OfficeMvpView<Any?>
+    lateinit var officeView: OfficeMvpView<OfficeUiModel>
     lateinit var officeBoundary : OfficeFeatureBoundary
     lateinit var presenter: OfficePresenter
 
     @Before
     fun setUp() {
-        officeView = mock<OfficeMvpView<Any?>>()
+        officeView = mock<OfficeMvpView<OfficeUiModel>>()
         officeBoundary = mock<OfficeFeatureBoundary>()
         presenter = OfficePresenter.create(officeView, officeBoundary)
     }

@@ -7,11 +7,9 @@ interface OfficeFeatureBoundary {
 
     fun requestOffice(dataObserver: DataObserverAdapter<OfficeUiModel>)
 
-    fun setOfficeCenterLocation()
+    fun changeToRoomPerspective()
 
     companion object {
         fun create() = OfficeFeatureUseCase()
     }
-
-    fun changeToRoomPerspective() = Unit
 }
