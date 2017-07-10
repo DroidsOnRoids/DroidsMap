@@ -13,7 +13,7 @@ class RoomImagesInteractor : BaseFirebaseStorageInteractor(), RoomImagesEndpoint
                 .child("rooms")
     }
 
-    override fun getRoomData(imageId: String): Single<String> {
+    override fun getRoomImageUrl(imageId: String): Single<String> {
         setStorageNode()
 
         val downloadingTask = storageQueryNode.downloadUrl

@@ -20,7 +20,7 @@ class RoomDataInteractor : BaseFirebaseInteractor(), RoomDataEndpoint {
         return Observable.create({ emitter ->
             val queryListener = object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot?) {
-                    retrieveRoomsList(snapshot).forEach { emitter.onNext(it) }
+                    retrieveRoomsList(snapshot).forEach(emitter::onNext)
                     emitter.onComplete()
                 }
 
