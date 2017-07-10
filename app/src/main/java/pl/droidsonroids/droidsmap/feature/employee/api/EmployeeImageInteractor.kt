@@ -1,4 +1,4 @@
-package pl.droidsonroids.droidsmap.feature.room.api
+package pl.droidsonroids.droidsmap.feature.employee.api
 
 import android.net.Uri
 import com.google.android.gms.tasks.OnCompleteListener
@@ -8,17 +8,17 @@ import io.reactivex.Single.create
 import pl.droidsonroids.droidsmap.base.BaseFirebaseStorageInteractor
 
 
-class RoomImagesInteractor : BaseFirebaseStorageInteractor(), RoomImagesEndpoint {
+class EmployeeImageInteractor  : BaseFirebaseStorageInteractor(), EmployeeImageEndpoint {
 
     override fun setStorageNode() {
         storageQueryNode = firebaseStorage.reference
-                .child("rooms")
+                .child("employees")
     }
 
-    override fun getRoomImageUrl(imageId: String): Single<String> {
+    override fun getEmployeeImageUrl(employeeId: String): Single<String> {
         return create { emitter ->
             setStorageNode()
-            val downloadingTask = storageQueryNode.child(imageId + ".svg").downloadUrl
+            val downloadingTask = storageQueryNode.child(employeeId + ".jpg").downloadUrl
 
             val queryListener = object : OnCompleteListener<Uri> {
                 override fun onComplete(task: Task<Uri>) {

@@ -1,11 +1,11 @@
-package pl.droidsonroids.droidsmap.feature.worker.business_logic
+package pl.droidsonroids.droidsmap.feature.employee.business_logic
 
 import pl.droidsonroids.droidsmap.base.DataObserverAdapter
 import pl.droidsonroids.droidsmap.base.DisposableHandler
 import pl.droidsonroids.droidsmap.feature.office.business_logic.OfficeEntity
 import pl.droidsonroids.droidsmap.feature.office.repository.OfficeRepository
 
-class WorkerFeatureUseCase : WorkerFeatureBoundary {
+class EmployeeFeatureUseCase : EmployeeFeatureBoundary {
 
     val officeRepository: OfficeRepository = OfficeRepository()
     val disposableHandler = DisposableHandler()
