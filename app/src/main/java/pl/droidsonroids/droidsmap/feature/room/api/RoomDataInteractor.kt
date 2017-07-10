@@ -5,10 +5,8 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import io.reactivex.Observable
 import pl.droidsonroids.droidsmap.base.BaseFirebaseInteractor
-import pl.droidsonroids.droidsmap.feature.office.business_logic.OfficeEntity
 import pl.droidsonroids.droidsmap.feature.room.business_logic.RoomEntity
 import pl.droidsonroids.droidsmap.feature.room.business_logic.RoomEntityHolder
-import pl.droidsonroids.droidsmap.model.OperationStatus
 
 class RoomDataInteractor : BaseFirebaseInteractor(), RoomDataEndpoint {
 
@@ -26,9 +24,7 @@ class RoomDataInteractor : BaseFirebaseInteractor(), RoomDataEndpoint {
                     emitter.onComplete()
                 }
 
-                override fun onCancelled(databaseError: DatabaseError) {
-                    emitter.onError(databaseError.toException())
-                }
+                override fun onCancelled(databaseError: DatabaseError) = emitter.onError(databaseError.toException())
             }
 
             emitter.setCancellable { databaseQueryNode.removeEventListener(queryListener) }
@@ -38,9 +34,9 @@ class RoomDataInteractor : BaseFirebaseInteractor(), RoomDataEndpoint {
 
     private fun retrieveRoomsList(snapshot: DataSnapshot?): List<RoomEntityHolder> =
             snapshot?.children?.map {
-                RoomEntityHolder(it.getValue<RoomEntity>(), it.key)
+                RoomEntityHolder(it.getSnapshotValue<RoomEntity>(), it.key)
             } ?: emptyList<RoomEntityHolder>()
 
-    private inline fun <reified T> DataSnapshot.getValue() = getValue(T::class.java) as T
+    private inline fun <reified T> DataSnapshot.getSnapshotValue() = getValue(T::class.java) as T
 
 }

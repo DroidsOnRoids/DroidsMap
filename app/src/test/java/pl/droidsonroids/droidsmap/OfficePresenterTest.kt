@@ -14,27 +14,27 @@ import pl.droidsonroids.droidsmap.feature.office.mvp.OfficeUiModel
 
 class OfficePresenterTest {
 
-    lateinit var officeView : OfficeMvpView
+    lateinit var officeView: OfficeMvpView<Any?>
     lateinit var officeBoundary : OfficeFeatureBoundary
     lateinit var presenter: OfficePresenter
 
     @Before
     fun setUp() {
-        officeView = mock<OfficeMvpView>()
+        officeView = mock<OfficeMvpView<Any?>>()
         officeBoundary = mock<OfficeFeatureBoundary>()
         presenter = OfficePresenter.create(officeView, officeBoundary)
     }
 
     @Test
     fun `should show map once data is provided`() {
-        val officeEntity = OfficeEntity()
+        val officeUiModel = OfficeUiModel.from(OfficeEntity())
         whenever(officeBoundary.requestOffice(any())).thenAnswer {
-            (it.arguments[0] as OfficePresenter.OfficeDataObserver).onNext(officeEntity)
+            (it.arguments[0] as OfficePresenter.OfficeDataObserver).onNext(officeUiModel)
         }
 
         presenter.onRequestOffice()
 
-        with(OfficeUiModel.from(officeEntity)) {
+        with(officeUiModel) {
             inOrder(officeView) {
                 verify(officeView).setMapPanningConstraints(this@with)
                 verify(officeView).focusMapOnOfficeLocation(this@with)
