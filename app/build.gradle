@@ -24,7 +24,6 @@ android {
 ext {
 	build_version = "25.3.1"
 	google_services_version = "11.0.2"
-	firebase_components_version = "11.0.2"
 }
 
 dependencies {

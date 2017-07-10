@@ -1,9 +1,6 @@
 package pl.droidsonroids.droidsmap
 
-import com.nhaarman.mockito_kotlin.any
-import com.nhaarman.mockito_kotlin.inOrder
-import com.nhaarman.mockito_kotlin.mock
-import com.nhaarman.mockito_kotlin.whenever
+import com.nhaarman.mockito_kotlin.*
 import org.junit.Before
 import org.junit.Test
 import pl.droidsonroids.droidsmap.feature.office.business_logic.OfficeEntity
@@ -41,5 +38,12 @@ class OfficePresenterTest {
                 verify(officeView).displayOfficeRooms(this@with)
             }
         }
+    }
+
+    @Test
+    fun `use case is informed once app perspective changes from office to particular room`() {
+        presenter.onRoomClicked()
+
+        verify(officeBoundary).changeToRoomPerspective()
     }
 }

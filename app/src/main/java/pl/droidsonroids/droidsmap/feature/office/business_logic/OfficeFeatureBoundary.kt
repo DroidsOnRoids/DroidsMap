@@ -12,4 +12,6 @@ interface OfficeFeatureBoundary {
     companion object {
         fun create() = OfficeFeatureUseCase()
     }
+
+    fun changeToRoomPerspective() = Unit
 }
