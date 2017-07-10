@@ -56,15 +56,16 @@ class OfficeUiFeatureView(private val activity: MapActivity) : OfficeMvpView<Off
         }
     }
 
-    private fun onGroundOverlayClicked(it: GroundOverlay) {
+    private fun onGroundOverlayClicked(groundOverlay: GroundOverlay) {
+        presenter.onRoomClicked()
         val cameraPosition = CameraPosition.Builder()
                 .bearing(MAP_BEARING)
-                .target(it.position)
+                .target(groundOverlay.position)
                 .zoom(MAX_MAP_ZOOM)
                 .build()
 
         val roomImageResource = roomsList
-                .filter { it.tag == it.tag }
+                .filter { it.tag == groundOverlay.tag }
                 .first()
                 .imageResource
 
