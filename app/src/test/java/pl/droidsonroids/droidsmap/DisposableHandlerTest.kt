@@ -1,12 +1,16 @@
 package pl.droidsonroids.droidsmap
 
 import io.reactivex.disposables.Disposables
+import org.assertj.core.api.Assertions
+import org.assertj.core.api.JUnitSoftAssertions
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import pl.droidsonroids.droidsmap.base.DisposableHandler
 
 class DisposableHandlerTest {
 
+    @get:Rule val softly = JUnitSoftAssertions()
     lateinit var handler: DisposableHandler
 
     @Before
@@ -16,31 +20,31 @@ class DisposableHandlerTest {
 
     @Test
     fun `disposables are being added to maintained list`() {
-        val iterations = 5
-        (0..iterations).forEach { handler handle Disposables.empty() }
+        val iterationsCount = 4
+        (0..iterationsCount - 1).forEach { handler handle Disposables.empty() }
 
-        assert(handler.disposablesList.size == iterations)
+        Assertions.assertThat(handler.disposablesList).hasSize(iterationsCount)
     }
 
     @Test
     fun `disposables are disposed by the handler`() {
-        val iterations = 5
-        (0..iterations).forEach { handler handle Disposables.empty() }
+        val iterationsCount = 5
+        (0..iterationsCount - 1).forEach { handler handle Disposables.empty() }
 
-        handler.disposablesList.forEach { assert(!it.isDisposed) }
+        handler.disposablesList.forEach { softly.assertThat(it.isDisposed).isFalse }
 
         handler.dispose()
 
-        handler.disposablesList.forEach { assert(it.isDisposed) }
+        handler.disposablesList.forEach { softly.assertThat(it.isDisposed).isTrue }
     }
 
     @Test
     fun `disposables are not deleted by the handler`() {
         val iterationsCount = 5
-        (0..iterationsCount).forEach { handler handle Disposables.empty() }
+        (0..iterationsCount - 1).forEach { handler handle Disposables.empty() }
 
         handler.dispose()
 
-        assert(handler.disposablesList.size == iterationsCount)
+        Assertions.assertThat(handler.disposablesList).hasSize(iterationsCount)
     }
 }
