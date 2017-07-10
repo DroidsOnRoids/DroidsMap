@@ -1,5 +1,7 @@
 package pl.droidsonroids.droidsmap.feature.room.business_logic
 
-class RoomFeatureUseCase : RoomFeatureBoundary {
+import pl.droidsonroids.droidsmap.feature.office.business_logic.OfficeFeatureBoundary
+
+open class RoomFeatureUseCase(private val officeFeatureBoundary: OfficeFeatureBoundary) : RoomFeatureBoundary {
     //no-op
 }
