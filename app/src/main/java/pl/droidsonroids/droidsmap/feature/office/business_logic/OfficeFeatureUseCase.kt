@@ -12,11 +12,7 @@ import pl.droidsonroids.droidsmap.feature.room.business_logic.RoomFeatureBoundar
 class OfficeFeatureUseCase(roomBoundary: RoomFeatureBoundary?, val officeRepository: OfficeRepository) : OfficeFeatureBoundary {
 
     val disposableHandler = DisposableHandler()
-    val roomFeatureBoundary: RoomFeatureBoundary
-
-    init {
-        if (roomBoundary == null) roomFeatureBoundary = RoomFeatureBoundary.create(this) else roomFeatureBoundary = roomBoundary
-    }
+    val roomFeatureBoundary = roomBoundary ?: RoomFeatureBoundary.create(this)
 
     override fun requestOffice(dataObserver: DataObserverAdapter<OfficeUiModel>) {
         disposableHandler handle officeRepository

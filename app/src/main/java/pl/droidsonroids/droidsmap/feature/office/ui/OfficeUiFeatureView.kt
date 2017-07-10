@@ -29,7 +29,6 @@ import pl.droidsonroids.droidsmap.feature.office.repository.OfficeRepository
 import pl.droidsonroids.droidsmap.model.Room
 import java.util.*
 
-
 private const val LOCATION_REQUEST_CODE = 1
 private const val CAMERA_TRANSITION_DURATION_MILLIS = 300
 private const val MAP_BEARING = 201.5f
