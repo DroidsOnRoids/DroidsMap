@@ -1,6 +1,6 @@
 package pl.droidsonroids.droidsmap.feature.office.mvp
 
-import pl.droidsonroids.droidsmap.DataObserverAdapter
+import pl.droidsonroids.droidsmap.base.DataObserverAdapter
 import pl.droidsonroids.droidsmap.feature.office.business_logic.OfficeEntity
 import pl.droidsonroids.droidsmap.feature.office.business_logic.OfficeFeatureBoundary
 

@@ -1,4 +1,4 @@
-package pl.droidsonroids.droidsmap
+package pl.droidsonroids.droidsmap.base
 
 import io.reactivex.disposables.Disposable
 
