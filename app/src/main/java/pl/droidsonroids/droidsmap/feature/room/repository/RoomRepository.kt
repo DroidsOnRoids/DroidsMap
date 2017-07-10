@@ -16,7 +16,7 @@ class RoomRepository : QueryMultipleRepositoryOperation<RoomUiModel> {
             roomDataSource.getRoomData()
                     .flatMap { (room, roomId) ->
                         roomImagesDataSource
-                                .getRoomData(roomId)
+                                .getRoomImageUrl(roomId)
                                 .map {
                                     roomUriString -> RoomUiModel.from(room, roomUriString)
                                 }
