@@ -26,6 +26,7 @@ import pl.droidsonroids.droidsmap.feature.office.mvp.OfficeMvpView
 import pl.droidsonroids.droidsmap.feature.office.mvp.OfficePresenter
 import pl.droidsonroids.droidsmap.feature.office.mvp.OfficeUiModel
 import pl.droidsonroids.droidsmap.feature.office.repository.OfficeRepository
+import pl.droidsonroids.droidsmap.model.Coordinates
 import pl.droidsonroids.droidsmap.model.Room
 import java.util.*
 
@@ -37,6 +38,7 @@ private const val MAX_MAP_ZOOM = 25f
 private const val ROOM_TRANSITION_NAME = "room_transition"
 
 class OfficeUiFeatureView(private val activity: MapActivity) : OfficeMvpView<OfficeUiModel> {
+
     private val presenter = OfficePresenter.create(this, OfficeFeatureBoundary.create(repository = OfficeRepository(OfficeDataEndpoint.create())))
     private var googleMap: GoogleMap? = null
     private val roomsList = ArrayList<Room>()
@@ -58,7 +60,7 @@ class OfficeUiFeatureView(private val activity: MapActivity) : OfficeMvpView<Off
     }
 
     private fun onGroundOverlayClicked(groundOverlay: GroundOverlay) {
-        presenter.onRoomClicked()
+        presenter.onRoomClicked(Coordinates.from(groundOverlay.position))
         val cameraPosition = CameraPosition.Builder()
                 .bearing(MAP_BEARING)
                 .target(groundOverlay.position)
@@ -71,6 +73,7 @@ class OfficeUiFeatureView(private val activity: MapActivity) : OfficeMvpView<Off
                 .imageResource
 
         val cameraUpdate = CameraUpdateFactory.newCameraPosition(cameraPosition)
+
         with(activity.roomImage) {
             googleMap?.animateCamera(cameraUpdate, CAMERA_TRANSITION_DURATION_MILLIS, CameraListenerAdapter({
                 val imageDrawable = ContextCompat.getDrawable(activity, roomImageResource)
@@ -90,6 +93,10 @@ class OfficeUiFeatureView(private val activity: MapActivity) : OfficeMvpView<Off
                 performRoomTransition()
             }))
         }
+    }
+
+    override fun animateCameraToClickedRoom() {
+        TODO()
     }
 
     private fun createRoomList() {

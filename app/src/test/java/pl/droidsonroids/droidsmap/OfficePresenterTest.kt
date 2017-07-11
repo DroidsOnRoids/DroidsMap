@@ -8,6 +8,7 @@ import pl.droidsonroids.droidsmap.feature.office.business_logic.OfficeFeatureBou
 import pl.droidsonroids.droidsmap.feature.office.mvp.OfficeMvpView
 import pl.droidsonroids.droidsmap.feature.office.mvp.OfficePresenter
 import pl.droidsonroids.droidsmap.feature.office.mvp.OfficeUiModel
+import pl.droidsonroids.droidsmap.model.Coordinates
 
 class OfficePresenterTest {
 
@@ -42,8 +43,15 @@ class OfficePresenterTest {
 
     @Test
     fun `use case is informed once app perspective changes from office to particular room`() {
-        presenter.onRoomClicked()
+        presenter.onRoomClicked(Coordinates(0.0, 0.0))
 
         verify(officeBoundary).changeToRoomPerspective()
+    }
+
+    @Test
+    fun `view animates camera to clicked room`() {
+        presenter.onRoomClicked(Coordinates(0.0, 0.0))
+
+        verify(officeView).animateCameraToClickedRoom()
     }
 }
