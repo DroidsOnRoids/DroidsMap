@@ -2,6 +2,7 @@ package pl.droidsonroids.droidsmap.feature.office.mvp
 
 import pl.droidsonroids.droidsmap.base.DataObserverAdapter
 import pl.droidsonroids.droidsmap.feature.office.business_logic.OfficeFeatureBoundary
+import pl.droidsonroids.droidsmap.model.Coordinates
 
 class OfficePresenter private constructor(
         private val view: OfficeMvpView<OfficeUiModel>,
@@ -9,7 +10,10 @@ class OfficePresenter private constructor(
 
     fun onRequestOffice() = officeFeatureBoundary.requestOffice(OfficeDataObserver())
 
-    fun onRoomClicked() = officeFeatureBoundary.changeToRoomPerspective()
+    fun onRoomClicked(coordinates: Coordinates) {
+        officeFeatureBoundary.changeToRoomPerspective()
+        view.animateCameraToClickedRoom(coordinates)
+    }
 
     private fun updateUi(uiModel: OfficeUiModel) {
         view.setMapPanningConstraints(uiModel)
