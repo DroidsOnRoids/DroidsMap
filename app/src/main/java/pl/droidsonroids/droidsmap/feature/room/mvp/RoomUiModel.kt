@@ -3,7 +3,7 @@ package pl.droidsonroids.droidsmap.feature.room.mvp
 import pl.droidsonroids.droidsmap.base.UiModel
 import pl.droidsonroids.droidsmap.feature.room.business_logic.RoomEntity
 
-class RoomUiModel(
+data class RoomUiModel(
         val roomHeightPx: Int,
         val roomWidthPx: Int,
         val relativeCenterXPositionPx: Double,

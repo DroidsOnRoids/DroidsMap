@@ -20,13 +20,14 @@ import kotlinx.android.synthetic.main.activity_map.*
 import kotlinx.android.synthetic.main.scene_office_map.*
 import pl.droidsonroids.droidsmap.MapActivity
 import pl.droidsonroids.droidsmap.R
+import pl.droidsonroids.droidsmap.feature.office.api.OfficeDataEndpoint
 import pl.droidsonroids.droidsmap.feature.office.business_logic.OfficeFeatureBoundary
 import pl.droidsonroids.droidsmap.feature.office.mvp.OfficeMvpView
 import pl.droidsonroids.droidsmap.feature.office.mvp.OfficePresenter
 import pl.droidsonroids.droidsmap.feature.office.mvp.OfficeUiModel
+import pl.droidsonroids.droidsmap.feature.office.repository.OfficeRepository
 import pl.droidsonroids.droidsmap.model.Room
 import java.util.*
-
 
 private const val LOCATION_REQUEST_CODE = 1
 private const val CAMERA_TRANSITION_DURATION_MILLIS = 300
@@ -35,9 +36,8 @@ private const val MIN_MAP_ZOOM = 18f
 private const val MAX_MAP_ZOOM = 25f
 private const val ROOM_TRANSITION_NAME = "room_transition"
 
-class OfficeUiFeatureView(private val activity: MapActivity) : OfficeMvpView {
-    private val presenter = OfficePresenter.create(this, OfficeFeatureBoundary.create())
-    private val viewBinder = OfficeUiViewBinder(activity)
+class OfficeUiFeatureView(private val activity: MapActivity) : OfficeMvpView<OfficeUiModel> {
+    private val presenter = OfficePresenter.create(this, OfficeFeatureBoundary.create(repository = OfficeRepository(OfficeDataEndpoint.create())))
     private var googleMap: GoogleMap? = null
     private val roomsList = ArrayList<Room>()
     private val groundOverlayList = ArrayList<GroundOverlay>()
@@ -49,7 +49,7 @@ class OfficeUiFeatureView(private val activity: MapActivity) : OfficeMvpView {
             googleMap = it
             it.setup()
             it.setOnGroundOverlayClickListener {
-                onGroundOverlayClick(it)
+                onGroundOverlayClicked(it)
             }
             checkLocationPermission()
             createRoomList()
@@ -57,15 +57,16 @@ class OfficeUiFeatureView(private val activity: MapActivity) : OfficeMvpView {
         }
     }
 
-    private fun onGroundOverlayClick(it: GroundOverlay) {
+    private fun onGroundOverlayClicked(groundOverlay: GroundOverlay) {
+        presenter.onRoomClicked()
         val cameraPosition = CameraPosition.Builder()
                 .bearing(MAP_BEARING)
-                .target(it.position)
+                .target(groundOverlay.position)
                 .zoom(MAX_MAP_ZOOM)
                 .build()
 
         val roomImageResource = roomsList
-                .filter { it.tag == it.tag }
+                .filter { it.tag == groundOverlay.tag }
                 .first()
                 .imageResource
 

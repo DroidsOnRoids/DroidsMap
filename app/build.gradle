@@ -24,7 +24,6 @@ android {
 ext {
 	build_version = "25.3.1"
 	google_services_version = "11.0.2"
-	firebase_components_version = "11.0.2"
 }
 
 dependencies {
@@ -48,6 +47,7 @@ dependencies {
 	compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
 
 	testCompile 'junit:junit:4.12'
+	testCompile group: 'org.assertj', name: 'assertj-core', version: '3.8.0'
 	testCompile 'org.mockito:mockito-core:2.7.13'
 	testCompile('com.nhaarman:mockito-kotlin:1.5.0') {
 		transitive = false

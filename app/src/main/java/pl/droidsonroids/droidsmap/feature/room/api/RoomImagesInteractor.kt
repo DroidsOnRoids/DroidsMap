@@ -7,7 +7,6 @@ import io.reactivex.Single
 import io.reactivex.Single.create
 import pl.droidsonroids.droidsmap.base.BaseFirebaseStorageInteractor
 
-
 class RoomImagesInteractor : BaseFirebaseStorageInteractor(), RoomImagesEndpoint {
 
     override fun setStorageNode() {

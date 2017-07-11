@@ -5,13 +5,14 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import io.reactivex.Single
 import pl.droidsonroids.droidsmap.base.BaseFirebaseInteractor
+import pl.droidsonroids.droidsmap.base.OFFICE_NODE
 import pl.droidsonroids.droidsmap.feature.office.business_logic.OfficeEntity
 
-class OfficeDataInteractor : BaseFirebaseInteractor(), OfficeDataEndpoint {
+open class OfficeDataInteractor : BaseFirebaseInteractor(), OfficeDataEndpoint {
 
     override fun setDatabaseNode() {
         databaseQueryNode = firebaseDatabase.reference
-                .child("office")
+                .child(OFFICE_NODE)
     }
 
     override fun getOfficeData(): Single<OfficeEntity> {

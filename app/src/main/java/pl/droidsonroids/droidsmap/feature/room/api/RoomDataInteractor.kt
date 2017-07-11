@@ -24,9 +24,7 @@ class RoomDataInteractor : BaseFirebaseInteractor(), RoomDataEndpoint {
                     emitter.onComplete()
                 }
 
-                override fun onCancelled(databaseError: DatabaseError) {
-                    emitter.onError(databaseError.toException())
-                }
+                override fun onCancelled(databaseError: DatabaseError) = emitter.onError(databaseError.toException())
             }
 
             emitter.setCancellable { databaseQueryNode.removeEventListener(queryListener) }
@@ -36,9 +34,9 @@ class RoomDataInteractor : BaseFirebaseInteractor(), RoomDataEndpoint {
 
     private fun retrieveRoomsList(snapshot: DataSnapshot?): List<RoomEntityHolder> =
             snapshot?.children?.map {
-                RoomEntityHolder(it.getValue<RoomEntity>(), it.key)
+                RoomEntityHolder(it.getSnapshotValue<RoomEntity>(), it.key)
             } ?: emptyList<RoomEntityHolder>()
 
-    private inline fun <reified T> DataSnapshot.getValue() = getValue(T::class.java) as T
+    private inline fun <reified T> DataSnapshot.getSnapshotValue() = getValue(T::class.java) as T
 
 }
