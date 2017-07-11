@@ -1,8 +1,11 @@
 package pl.droidsonroids.droidsmap
 
 import com.nhaarman.mockito_kotlin.*
+import org.assertj.core.api.JUnitSoftAssertions
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
+import org.mockito.ArgumentCaptor
 import pl.droidsonroids.droidsmap.feature.office.business_logic.OfficeEntity
 import pl.droidsonroids.droidsmap.feature.office.business_logic.OfficeFeatureBoundary
 import pl.droidsonroids.droidsmap.feature.office.mvp.OfficeMvpView
@@ -10,11 +13,13 @@ import pl.droidsonroids.droidsmap.feature.office.mvp.OfficePresenter
 import pl.droidsonroids.droidsmap.feature.office.mvp.OfficeUiModel
 import pl.droidsonroids.droidsmap.model.Coordinates
 
+
 class OfficePresenterTest {
 
     lateinit var officeView: OfficeMvpView<OfficeUiModel>
     lateinit var officeBoundary : OfficeFeatureBoundary
     lateinit var presenter: OfficePresenter
+    @get:Rule val softly = JUnitSoftAssertions()
 
     @Before
     fun setUp() {
@@ -52,6 +57,16 @@ class OfficePresenterTest {
     fun `view animates camera to clicked room`() {
         presenter.onRoomClicked(Coordinates(0.0, 0.0))
 
-        verify(officeView).animateCameraToClickedRoom(Coordinates(0.0, 0.0))
+        verify(officeView).animateCameraToClickedRoom(Coordinates(50.0, 17.0))
+    }
+
+    @Test
+    fun `view animates the camera using the exact coordinates taken from map ground overlay`() {
+        val coordinates = Coordinates(51.002345, 17.289457)
+        presenter.onRoomClicked(coordinates)
+
+        val argument = ArgumentCaptor.forClass<Coordinates, Coordinates>(Coordinates::class.java)
+        verify(officeView).animateCameraToClickedRoom(argument.capture())
+        softly.assertThat(argument.value).isEqualTo(coordinates)
     }
 }
