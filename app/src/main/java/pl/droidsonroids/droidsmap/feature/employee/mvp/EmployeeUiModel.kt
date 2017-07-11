@@ -4,7 +4,7 @@ import pl.droidsonroids.droidsmap.base.UiModel
 import pl.droidsonroids.droidsmap.feature.employee.business_logic.EmployeeEntity
 
 
-class EmployeeUiModel (
+data class EmployeeUiModel (
     val name : String,
     val surname : String,
     val position : String,
