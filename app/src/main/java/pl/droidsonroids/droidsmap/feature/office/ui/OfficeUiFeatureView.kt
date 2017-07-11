@@ -26,8 +26,10 @@ import pl.droidsonroids.droidsmap.feature.office.mvp.OfficeMvpView
 import pl.droidsonroids.droidsmap.feature.office.mvp.OfficePresenter
 import pl.droidsonroids.droidsmap.feature.office.mvp.OfficeUiModel
 import pl.droidsonroids.droidsmap.feature.office.repository.OfficeRepository
+import pl.droidsonroids.droidsmap.model.Coordinates
 import pl.droidsonroids.droidsmap.model.Room
 import java.util.*
+
 
 private const val LOCATION_REQUEST_CODE = 1
 private const val CAMERA_TRANSITION_DURATION_MILLIS = 300
@@ -37,6 +39,7 @@ private const val MAX_MAP_ZOOM = 25f
 private const val ROOM_TRANSITION_NAME = "room_transition"
 
 class OfficeUiFeatureView(private val activity: MapActivity) : OfficeMvpView<OfficeUiModel> {
+
     private val presenter = OfficePresenter.create(this, OfficeFeatureBoundary.create(repository = OfficeRepository(OfficeDataEndpoint.create())))
     private var googleMap: GoogleMap? = null
     private val roomsList = ArrayList<Room>()
@@ -58,25 +61,27 @@ class OfficeUiFeatureView(private val activity: MapActivity) : OfficeMvpView<Off
     }
 
     private fun onGroundOverlayClicked(groundOverlay: GroundOverlay) {
-        presenter.onRoomClicked()
+        presenter.onRoomClicked(Coordinates.from(groundOverlay.position))
+    }
+
+    override fun animateCameraToClickedRoom(coordinates: Coordinates) {
         val cameraPosition = CameraPosition.Builder()
                 .bearing(MAP_BEARING)
-                .target(groundOverlay.position)
+                .target(LatLng(coordinates.latitude, coordinates.longitude))
                 .zoom(MAX_MAP_ZOOM)
                 .build()
 
-        val roomImageResource = roomsList
-                .filter { it.tag == groundOverlay.tag }
-                .first()
-                .imageResource
-
         val cameraUpdate = CameraUpdateFactory.newCameraPosition(cameraPosition)
+
         with(activity.roomImage) {
             googleMap?.animateCamera(cameraUpdate, CAMERA_TRANSITION_DURATION_MILLIS, CameraListenerAdapter({
-                val imageDrawable = ContextCompat.getDrawable(activity, roomImageResource)
-                setImageDrawable(imageDrawable)
-                layoutParams.width = ((imageDrawable).intrinsicWidth * 2.2f).toInt()
-                layoutParams.height = ((imageDrawable).intrinsicHeight * 2.2f).toInt()
+                val resources = activity.resources
+                val resourceId = resources.getIdentifier("room_3", "drawable", activity.packageName)
+                val roomImageDrawable = resources.getDrawable(resourceId)
+
+                setImageDrawable(roomImageDrawable)
+                layoutParams.width = ((roomImageDrawable).intrinsicWidth * 2.2f).toInt()
+                layoutParams.height = ((roomImageDrawable).intrinsicHeight * 2.2f).toInt()
 
                 googleMap?.run {
                     with(projection.visibleRegion) {
