@@ -30,6 +30,7 @@ import pl.droidsonroids.droidsmap.model.Coordinates
 import pl.droidsonroids.droidsmap.model.Room
 import java.util.*
 
+
 private const val LOCATION_REQUEST_CODE = 1
 private const val CAMERA_TRANSITION_DURATION_MILLIS = 300
 private const val MAP_BEARING = 201.5f
@@ -70,21 +71,17 @@ class OfficeUiFeatureView(private val activity: MapActivity) : OfficeMvpView<Off
                 .zoom(MAX_MAP_ZOOM)
                 .build()
 
-        val roomImageResource = R.drawable.room_3
-
-        /*roomsList
-                .filter { it.tag == groundOverlay.tag }
-                .first()
-                .imageResource TODO("remove hardcode & recognize image tag") */
-
         val cameraUpdate = CameraUpdateFactory.newCameraPosition(cameraPosition)
 
         with(activity.roomImage) {
             googleMap?.animateCamera(cameraUpdate, CAMERA_TRANSITION_DURATION_MILLIS, CameraListenerAdapter({
-                val imageDrawable = ContextCompat.getDrawable(activity, roomImageResource)
-                setImageDrawable(imageDrawable)
-                layoutParams.width = ((imageDrawable).intrinsicWidth * 2.2f).toInt()
-                layoutParams.height = ((imageDrawable).intrinsicHeight * 2.2f).toInt()
+                val resources = activity.resources
+                val resourceId = resources.getIdentifier("room_3", "drawable", activity.packageName)
+                val roomImageDrawable = resources.getDrawable(resourceId)
+
+                setImageDrawable(roomImageDrawable)
+                layoutParams.width = ((roomImageDrawable).intrinsicWidth * 2.2f).toInt()
+                layoutParams.height = ((roomImageDrawable).intrinsicHeight * 2.2f).toInt()
 
                 googleMap?.run {
                     with(projection.visibleRegion) {
