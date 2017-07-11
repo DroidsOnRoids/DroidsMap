@@ -61,16 +61,21 @@ class OfficeUiFeatureView(private val activity: MapActivity) : OfficeMvpView<Off
 
     private fun onGroundOverlayClicked(groundOverlay: GroundOverlay) {
         presenter.onRoomClicked(Coordinates.from(groundOverlay.position))
+    }
+
+    override fun animateCameraToClickedRoom(coordinates: Coordinates) {
         val cameraPosition = CameraPosition.Builder()
                 .bearing(MAP_BEARING)
-                .target(groundOverlay.position)
+                .target(LatLng(coordinates.latitude, coordinates.longitude))
                 .zoom(MAX_MAP_ZOOM)
                 .build()
 
-        val roomImageResource = roomsList
+        val roomImageResource = R.drawable.room_3
+
+        /*roomsList
                 .filter { it.tag == groundOverlay.tag }
                 .first()
-                .imageResource
+                .imageResource TODO("remove hardcode & recognize image tag") */
 
         val cameraUpdate = CameraUpdateFactory.newCameraPosition(cameraPosition)
 
@@ -93,10 +98,6 @@ class OfficeUiFeatureView(private val activity: MapActivity) : OfficeMvpView<Off
                 performRoomTransition()
             }))
         }
-    }
-
-    override fun animateCameraToClickedRoom() {
-        TODO()
     }
 
     private fun createRoomList() {

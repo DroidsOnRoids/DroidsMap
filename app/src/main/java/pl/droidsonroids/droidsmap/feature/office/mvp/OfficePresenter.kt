@@ -12,7 +12,7 @@ class OfficePresenter private constructor(
 
     fun onRoomClicked(coordinates: Coordinates) {
         officeFeatureBoundary.changeToRoomPerspective()
-        view.animateCameraToClickedRoom()
+        view.animateCameraToClickedRoom(Coordinates(0.0, 0.0))
     }
 
     private fun updateUi(uiModel: OfficeUiModel) {

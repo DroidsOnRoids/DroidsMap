@@ -52,6 +52,6 @@ class OfficePresenterTest {
     fun `view animates camera to clicked room`() {
         presenter.onRoomClicked(Coordinates(0.0, 0.0))
 
-        verify(officeView).animateCameraToClickedRoom()
+        verify(officeView).animateCameraToClickedRoom(Coordinates(0.0, 0.0))
     }
 }
