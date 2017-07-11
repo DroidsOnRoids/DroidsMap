@@ -5,14 +5,14 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import pl.droidsonroids.droidsmap.base.DataObserverAdapter
 import pl.droidsonroids.droidsmap.base.DisposableHandler
-import pl.droidsonroids.droidsmap.feature.office.api.OfficeDataEndpoint
 import pl.droidsonroids.droidsmap.feature.office.mvp.OfficeUiModel
 import pl.droidsonroids.droidsmap.feature.office.repository.OfficeRepository
+import pl.droidsonroids.droidsmap.feature.room.business_logic.RoomFeatureBoundary
 
-class OfficeFeatureUseCase : OfficeFeatureBoundary {
+class OfficeFeatureUseCase(roomBoundary: RoomFeatureBoundary?, val officeRepository: OfficeRepository) : OfficeFeatureBoundary {
 
-    val officeRepository: OfficeRepository = OfficeRepository(OfficeDataEndpoint.create())
     val disposableHandler = DisposableHandler()
+    val roomFeatureBoundary = roomBoundary ?: RoomFeatureBoundary.create(this)
 
     override fun requestOffice(dataObserver: DataObserverAdapter<OfficeUiModel>) {
         disposableHandler handle officeRepository
@@ -22,9 +22,7 @@ class OfficeFeatureUseCase : OfficeFeatureBoundary {
                 .subscribeWith(dataObserver)
     }
 
-    override fun setOfficeCenterLocation() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    override fun changeToRoomPerspective() = roomFeatureBoundary.onRoomPerspectiveGained()
 }
 
 fun <T> Observable<T>.applySchedulers(): Observable<T> {

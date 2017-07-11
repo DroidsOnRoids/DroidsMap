@@ -5,7 +5,7 @@ import pl.droidsonroids.droidsmap.feature.office.api.OfficeDataEndpoint
 import pl.droidsonroids.droidsmap.feature.office.mvp.OfficeUiModel
 import pl.droidsonroids.droidsmap.repository_operation.QuerySingleRepositoryOperation
 
-class OfficeRepository(private val officeDataSource: OfficeDataEndpoint) : QuerySingleRepositoryOperation<OfficeUiModel> {
+open class OfficeRepository(private val officeDataSource: OfficeDataEndpoint) : QuerySingleRepositoryOperation<OfficeUiModel> {
 
     override fun query(): Single<OfficeUiModel> = officeDataSource
             .getOfficeData()

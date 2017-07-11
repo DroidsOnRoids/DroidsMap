@@ -9,6 +9,8 @@ class OfficePresenter private constructor(
 
     fun onRequestOffice() = officeFeatureBoundary.requestOffice(OfficeDataObserver())
 
+    fun onRoomClicked() = officeFeatureBoundary.changeToRoomPerspective()
+
     private fun updateUi(uiModel: OfficeUiModel) {
         view.setMapPanningConstraints(uiModel)
         view.focusMapOnOfficeLocation(uiModel)
