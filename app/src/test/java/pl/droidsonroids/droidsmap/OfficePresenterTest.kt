@@ -5,7 +5,6 @@ import org.assertj.core.api.JUnitSoftAssertions
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.mockito.ArgumentCaptor
 import pl.droidsonroids.droidsmap.feature.office.business_logic.OfficeEntity
 import pl.droidsonroids.droidsmap.feature.office.business_logic.OfficeFeatureBoundary
 import pl.droidsonroids.droidsmap.feature.office.mvp.OfficeMvpView
@@ -57,7 +56,7 @@ class OfficePresenterTest {
     fun `view animates camera to clicked room`() {
         presenter.onRoomClicked(Coordinates(0.0, 0.0))
 
-        verify(officeView).animateCameraToClickedRoom(Coordinates(50.0, 17.0))
+        verify(officeView).animateCameraToClickedRoom(any())
     }
 
     @Test
@@ -65,8 +64,8 @@ class OfficePresenterTest {
         val coordinates = Coordinates(51.002345, 17.289457)
         presenter.onRoomClicked(coordinates)
 
-        val argument = ArgumentCaptor.forClass<Coordinates, Coordinates>(Coordinates::class.java)
-        verify(officeView).animateCameraToClickedRoom(argument.capture())
-        softly.assertThat(argument.value).isEqualTo(coordinates)
+        val captor = argumentCaptor<Coordinates>()
+        verify(officeView).animateCameraToClickedRoom(captor.capture())
+        softly.assertThat(captor.firstValue).isEqualTo(coordinates)
     }
 }
