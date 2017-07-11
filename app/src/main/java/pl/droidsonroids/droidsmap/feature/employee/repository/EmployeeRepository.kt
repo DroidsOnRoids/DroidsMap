@@ -8,10 +8,9 @@ import pl.droidsonroids.droidsmap.feature.employee.api.EmployeeImageInteractor
 import pl.droidsonroids.droidsmap.feature.employee.mvp.EmployeeUiModel
 import pl.droidsonroids.droidsmap.repository_operation.QueryMultipleRepositoryOperation
 
-
 class EmployeeRepository(
-        private val employeeDataSource : EmployeeDataEndpoint = EmployeeDataInteractor(),
-        private val employeeImageDataSource : EmployeeImageEndpoint = EmployeeImageInteractor()
+        private val employeeDataSource: EmployeeDataEndpoint = EmployeeDataInteractor(),
+        private val employeeImageDataSource: EmployeeImageEndpoint = EmployeeImageInteractor()
 ) : QueryMultipleRepositoryOperation<EmployeeUiModel> {
 
     override fun query(): Single<List<EmployeeUiModel>> =

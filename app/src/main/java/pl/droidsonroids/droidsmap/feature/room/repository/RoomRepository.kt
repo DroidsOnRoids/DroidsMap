@@ -10,7 +10,7 @@ import pl.droidsonroids.droidsmap.repository_operation.QueryMultipleRepositoryOp
 
 class RoomRepository : QueryMultipleRepositoryOperation<RoomUiModel> {
     private val roomDataSource: RoomDataEndpoint = RoomDataInteractor()
-    private val roomImagesDataSource : RoomImagesEndpoint = RoomImagesInteractor()
+    private val roomImagesDataSource: RoomImagesEndpoint = RoomImagesInteractor()
 
     override fun query(): Single<List<RoomUiModel>> =
             roomDataSource.getRoomData()

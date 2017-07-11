@@ -12,7 +12,7 @@ import pl.droidsonroids.droidsmap.feature.office.mvp.OfficeUiModel
 class OfficePresenterTest {
 
     lateinit var officeView: OfficeMvpView<OfficeUiModel>
-    lateinit var officeBoundary : OfficeFeatureBoundary
+    lateinit var officeBoundary: OfficeFeatureBoundary
     lateinit var presenter: OfficePresenter
 
     @Before

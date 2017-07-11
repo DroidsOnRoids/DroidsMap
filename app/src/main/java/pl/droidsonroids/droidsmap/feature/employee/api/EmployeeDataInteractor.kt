@@ -12,15 +12,15 @@ class EmployeeDataInteractor : BaseFirebaseInteractor(), EmployeeDataEndpoint {
 
     override fun setDatabaseNode() {
         databaseQueryNode = firebaseDatabase.reference
-                .child("employees")
+                .child(EMPLOYEES_NODE)
     }
 
     override fun getAllEmployees(): Observable<EmployeeEntityHolder> {
         setDatabaseNode()
         return Observable.create({ emitter ->
-            val queryListener = object : ValueEventListener {
+            val queryListener = object: ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot?) {
-                    retrieveRoomsList(snapshot).forEach(emitter::onNext)
+                    retrieveEmployeesList(snapshot).forEach(emitter::onNext)
                     emitter.onComplete()
                 }
 
@@ -34,7 +34,7 @@ class EmployeeDataInteractor : BaseFirebaseInteractor(), EmployeeDataEndpoint {
         })
     }
 
-    private fun retrieveRoomsList(snapshot: DataSnapshot?): List<EmployeeEntityHolder> =
+    private fun retrieveEmployeesList(snapshot: DataSnapshot?): List<EmployeeEntityHolder> =
             snapshot?.children?.map {
                 EmployeeEntityHolder(it.getValue<EmployeeEntity>(), it.key)
             } ?: emptyList<EmployeeEntityHolder>()

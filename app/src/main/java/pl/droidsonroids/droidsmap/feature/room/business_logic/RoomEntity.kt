@@ -10,8 +10,8 @@ data class RoomEntity(
         val roomHeightPx: Int = 0,
         val roomWidthPx: Int = 0,
         val relativeCenterXPositionPx: Double = 0.0,
-        val relativeCenterYPositionPx: Double = 0.0)
-    : Entity() {
+        val relativeCenterYPositionPx: Double = 0.0
+) : Entity() {
 
     fun getRoomHeightMeters() = roomHeightPx * PX_TO_METERS_FACTOR
 

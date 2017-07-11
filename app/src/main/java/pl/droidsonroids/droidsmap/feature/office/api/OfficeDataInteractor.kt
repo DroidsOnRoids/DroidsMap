@@ -5,7 +5,6 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import io.reactivex.Single
 import pl.droidsonroids.droidsmap.base.BaseFirebaseInteractor
-import pl.droidsonroids.droidsmap.base.OFFICE_NODE
 import pl.droidsonroids.droidsmap.feature.office.business_logic.OfficeEntity
 
 open class OfficeDataInteractor : BaseFirebaseInteractor(), OfficeDataEndpoint {
@@ -18,7 +17,7 @@ open class OfficeDataInteractor : BaseFirebaseInteractor(), OfficeDataEndpoint {
     override fun getOfficeData(): Single<OfficeEntity> {
         setDatabaseNode()
         return Single.create { emitter ->
-            val queryListener = object : ValueEventListener {
+            val queryListener = object: ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     emitter.onSuccess(snapshot.getValue(OfficeEntity::class.java) as OfficeEntity)
                 }

@@ -32,16 +32,16 @@ class EmployeeRepositoryTest {
     val employeeDataEndpointMock: EmployeeDataEndpoint = mock()
     val employeeImageEndpointMock: EmployeeImageEndpoint = mock()
 
-    lateinit var employeeRepository : EmployeeRepository
+    lateinit var employeeRepository: EmployeeRepository
 
     @Before
     fun setUp() {
-        val mockedEmployeesList : List<EmployeeEntityHolder> = listOf(
+        val mockedEmployeesList: List<EmployeeEntityHolder> = listOf(
                 EmployeeEntityHolder(TEST_EMPLOYEE_FIRST, TEST_EMPLOYEE_FIRST_ID),
                 EmployeeEntityHolder(TEST_EMPLOYEE_SECOND, TEST_EMPLOYEE_SECOND_ID)
         )
 
-        val mockedImageUrls : Map<String, String> = mapOf(
+        val mockedImageUrls: Map<String, String> = mapOf(
                 Pair(TEST_EMPLOYEE_FIRST_ID, TEST_EMPLOYEE_FIRST_IMAGE_URL),
                 Pair(TEST_EMPLOYEE_SECOND_ID, TEST_EMPLOYEE_SECOND_IMAGE_URL)
         )

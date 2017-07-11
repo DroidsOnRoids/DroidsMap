@@ -10,7 +10,7 @@ data class RoomUiModel(
         val relativeCenterYPositionPx: Double,
         val imageUrl: String) : UiModel {
     companion object {
-        fun from(entity: RoomEntity, imageUrl : String) = RoomUiModel(
+        fun from(entity: RoomEntity, imageUrl: String) = RoomUiModel(
                 entity.roomHeightPx,
                 entity.roomWidthPx,
                 entity.relativeCenterXPositionPx,
