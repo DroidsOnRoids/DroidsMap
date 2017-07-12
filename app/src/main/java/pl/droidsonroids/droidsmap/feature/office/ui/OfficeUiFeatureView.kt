@@ -26,6 +26,9 @@ import pl.droidsonroids.droidsmap.feature.office.mvp.OfficeMvpView
 import pl.droidsonroids.droidsmap.feature.office.mvp.OfficePresenter
 import pl.droidsonroids.droidsmap.feature.office.mvp.OfficeUiModel
 import pl.droidsonroids.droidsmap.feature.office.repository.OfficeRepository
+import pl.droidsonroids.droidsmap.feature.room.business_logic.RoomFeatureBoundary
+import pl.droidsonroids.droidsmap.feature.room.mvp.RoomMvpView
+import pl.droidsonroids.droidsmap.feature.room.mvp.RoomUiModel
 import pl.droidsonroids.droidsmap.model.Coordinates
 import pl.droidsonroids.droidsmap.model.Room
 import java.util.*
@@ -40,7 +43,8 @@ private const val ROOM_TRANSITION_NAME = "room_transition"
 
 class OfficeUiFeatureView(private val activity: MapActivity) : OfficeMvpView<OfficeUiModel> {
 
-    private val presenter = OfficePresenter.create(this, OfficeFeatureBoundary.create(repository = OfficeRepository(OfficeDataEndpoint.create())))
+    private val officeBoundary = OfficeFeatureBoundary.create(repository = OfficeRepository(OfficeDataEndpoint.create()));
+    private val presenter = OfficePresenter.create(this, officeBoundary)
     private var googleMap: GoogleMap? = null
     private val roomsList = ArrayList<Room>()
     private val groundOverlayList = ArrayList<GroundOverlay>()
@@ -169,12 +173,12 @@ class OfficeUiFeatureView(private val activity: MapActivity) : OfficeMvpView<Off
         googleMap?.moveCamera(CameraUpdateFactory.newLatLng(officeCenterCoordinates))
     }
 
-    override fun displayOfficeRooms(uiModel: OfficeUiModel) {
-        if (googleMap == null) UiCommandInvoker.queueInvokement { performDisplayOfficeRooms(uiModel) } else performDisplayOfficeRooms(uiModel)
+    override fun displayOfficeRooms(roomModels: Collection<RoomUiModel>) {
+        if (googleMap == null) UiCommandInvoker.queueInvokement { performDisplayOfficeRooms(roomModels) } else performDisplayOfficeRooms(roomModels)
     }
 
-    private fun performDisplayOfficeRooms(uiModel: OfficeUiModel) {
-        roomsList.forEach { createAndDisplayMapOverlay(it, uiModel) }
+    private fun performDisplayOfficeRooms(roomModels: Collection<RoomUiModel>) {
+        TODO()
     }
 
     private fun createAndDisplayMapOverlay(room: Room, uiModel: OfficeUiModel) {

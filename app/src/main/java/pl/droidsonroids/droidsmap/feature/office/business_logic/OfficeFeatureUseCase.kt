@@ -8,6 +8,7 @@ import pl.droidsonroids.droidsmap.base.DisposableHandler
 import pl.droidsonroids.droidsmap.feature.office.mvp.OfficeUiModel
 import pl.droidsonroids.droidsmap.feature.office.repository.OfficeRepository
 import pl.droidsonroids.droidsmap.feature.room.business_logic.RoomFeatureBoundary
+import pl.droidsonroids.droidsmap.feature.room.mvp.RoomUiModel
 
 class OfficeFeatureUseCase(roomBoundary: RoomFeatureBoundary?, val officeRepository: OfficeRepository) : OfficeFeatureBoundary {
 
@@ -20,6 +21,10 @@ class OfficeFeatureUseCase(roomBoundary: RoomFeatureBoundary?, val officeReposit
                 .toObservable()
                 .applySchedulers()
                 .subscribeWith(dataObserver)
+    }
+
+    override fun requestRooms(dataObserver: DataObserverAdapter<Collection<RoomUiModel>>) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun changeToRoomPerspective() = roomFeatureBoundary.onRoomPerspectiveGained()
