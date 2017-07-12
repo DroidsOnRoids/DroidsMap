@@ -1,4 +1,4 @@
-package pl.droidsonroids.droidsmap
+package pl.droidsonroids.droidsmap.presentation_logic
 
 import com.nhaarman.mockito_kotlin.*
 import org.assertj.core.api.JUnitSoftAssertions

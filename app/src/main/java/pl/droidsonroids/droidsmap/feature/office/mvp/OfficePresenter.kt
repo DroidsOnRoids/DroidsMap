@@ -19,7 +19,7 @@ class OfficePresenter private constructor(
         view.prepareForRoomTransition()
     }
 
-    private fun updateUi(uiModel: OfficeUiModel) {
+    private fun showOfficeMap(uiModel: OfficeUiModel) {
         view.setMapPanningConstraints(uiModel)
         view.focusMapOnOfficeLocation(uiModel)
         view.displayOfficeRooms(uiModel)
@@ -32,11 +32,11 @@ class OfficePresenter private constructor(
 
     inner class OfficeDataObserver : DataObserverAdapter<OfficeUiModel>() {
         override fun onNext(model: OfficeUiModel) {
-            updateUi(model)
+            showOfficeMap(model)
         }
 
         override fun onError(e: Throwable) {
-            TODO("NYI") // implement data fetch error
+            TODO()
         }
     }
 

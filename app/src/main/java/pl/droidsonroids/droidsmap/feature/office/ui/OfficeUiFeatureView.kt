@@ -26,6 +26,7 @@ import pl.droidsonroids.droidsmap.feature.office.mvp.OfficeMvpView
 import pl.droidsonroids.droidsmap.feature.office.mvp.OfficePresenter
 import pl.droidsonroids.droidsmap.feature.office.mvp.OfficeUiModel
 import pl.droidsonroids.droidsmap.feature.office.repository.OfficeRepository
+import pl.droidsonroids.droidsmap.feature.room.mvp.RoomMvpView
 import pl.droidsonroids.droidsmap.model.Coordinates
 import pl.droidsonroids.droidsmap.model.Room
 import java.util.*
@@ -38,7 +39,7 @@ private const val MIN_MAP_ZOOM = 18f
 private const val MAX_MAP_ZOOM = 25f
 private const val ROOM_TRANSITION_NAME = "room_transition"
 
-class OfficeUiFeatureView(private val activity: MapActivity) : OfficeMvpView<OfficeUiModel> {
+class OfficeUiFeatureView(private val activity: MapActivity) : OfficeMvpView<OfficeUiModel>, RoomMvpView {
 
     private val presenter = OfficePresenter.create(this, OfficeFeatureBoundary.create(repository = OfficeRepository(OfficeDataEndpoint.create())))
     private var googleMap: GoogleMap? = null
@@ -96,8 +97,6 @@ class OfficeUiFeatureView(private val activity: MapActivity) : OfficeMvpView<Off
                     addMarker(MarkerOptions().position(farRight).title("Far right"))
                 }
             }
-
-            performRoomTransition()
         }
     }
 
@@ -210,10 +209,8 @@ class OfficeUiFeatureView(private val activity: MapActivity) : OfficeMvpView<Off
         return BitmapDescriptorFactory.fromBitmap(bitmap)
     }
 
-    fun performRoomTransition() {
+    override fun performRoomTransition() {
         with(activity) {
-            //            shouldMoveBack = false
-            roomImage.transitionName = ROOM_TRANSITION_NAME
             val roomScene = Scene.getSceneForLayout(rootLayout, R.layout.scene_room, this)
             roomScene.setEnterAction {
                 val roomSceneImage = (roomScene.sceneRoot.findViewById(R.id.zoomedRoomImage) as ImageView)
@@ -224,13 +221,11 @@ class OfficeUiFeatureView(private val activity: MapActivity) : OfficeMvpView<Off
         }
     }
 
-    internal fun performOfficeTransition() {
+    override fun performOfficeTransition() {
         with(activity) {
             val sceneTransition = TransitionInflater.from(this).inflateTransition(R.transition.room_scene_exit_transition)
             sceneTransition.addListener(TransitionListenerAdapter({
-                roomImage.transitionName = ""
                 roomImage.setImageDrawable(null)
-
             }))
             TransitionManager.go(officeScene, sceneTransition)
         }

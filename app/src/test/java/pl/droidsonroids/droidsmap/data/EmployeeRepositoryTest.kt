@@ -1,4 +1,4 @@
-package pl.droidsonroids.droidsmap
+package pl.droidsonroids.droidsmap.data
 
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.doReturn
@@ -17,23 +17,23 @@ import pl.droidsonroids.droidsmap.feature.employee.business_logic.EmployeeEntity
 import pl.droidsonroids.droidsmap.feature.employee.mvp.EmployeeUiModel
 import pl.droidsonroids.droidsmap.feature.employee.repository.EmployeeRepository
 
-val TEST_EMPLOYEE_FIRST = EmployeeEntity("Jesica", "Kowalsky", "manager")
-val TEST_EMPLOYEE_SECOND = EmployeeEntity("Brian", "Nowak", "programmer")
-
-val TEST_EMPLOYEE_FIRST_ID = "employee_1"
-val TEST_EMPLOYEE_SECOND_ID = "employee_2"
-
-val TEST_EMPLOYEE_FIRST_IMAGE_URL = "http://example.com/employee_1.jpg"
-val TEST_EMPLOYEE_SECOND_IMAGE_URL = "http://example.com/employee_2.jpg"
-
 class EmployeeRepositoryTest {
 
     @get:Rule val softly = JUnitSoftAssertions()
 
     lateinit var employeeDataEndpointMock: EmployeeDataEndpoint
+    lateinit var employeeRepository: EmployeeRepository
+
     val employeeImageEndpointMock: EmployeeImageEndpoint = mock()
 
-    lateinit var employeeRepository: EmployeeRepository
+    val TEST_EMPLOYEE_FIRST = EmployeeEntity("Jessica", "Kowalsky", "manager")
+    val TEST_EMPLOYEE_SECOND = EmployeeEntity("Brian", "Nowak", "programmer")
+
+    val TEST_EMPLOYEE_FIRST_ID = "employee_1"
+    val TEST_EMPLOYEE_SECOND_ID = "employee_2"
+
+    val TEST_EMPLOYEE_FIRST_IMAGE_URL = "http://example.com/employee_1.jpg"
+    val TEST_EMPLOYEE_SECOND_IMAGE_URL = "http://example.com/employee_2.jpg"
 
     @Before
     fun setUp() {
@@ -52,16 +52,15 @@ class EmployeeRepositoryTest {
                     Observable.fromArray(mockedEmployeesList).flatMapIterable { list -> list }
         }
 
-
         whenever(employeeImageEndpointMock.getEmployeeImageUrl(any()))
-                .thenAnswer { return@thenAnswer Single.just(mockedImageUrls.get(it.arguments[0])) }
+                .thenAnswer { return@thenAnswer Single.just(mockedImageUrls[it.arguments[0]]) }
 
         employeeRepository = EmployeeRepository(employeeDataEndpointMock, employeeImageEndpointMock)
     }
 
     @Test
     fun `emitted employees list has proper size`() {
-        var employees = employeeRepository.query().blockingGet()
+        val employees = employeeRepository.query().blockingGet()
         softly.assertThat(employees).hasSize(2)
     }
 

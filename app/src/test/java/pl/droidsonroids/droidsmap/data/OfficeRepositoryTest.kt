@@ -1,4 +1,4 @@
-package pl.droidsonroids.droidsmap
+package pl.droidsonroids.droidsmap.data
 
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.whenever
