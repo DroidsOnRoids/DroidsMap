@@ -79,7 +79,7 @@ class OfficePresenterTest {
             (it.arguments[0] as DataObserverAdapter<Collection<RoomUiModel>>).onNext(listOf(roomUiModel))
         }
 
-        presenter.onRequestOffice()
+        presenter.onRequestRooms()
 
         val captor = argumentCaptor<Collection<RoomUiModel>>()
         verify(officeView).displayOfficeRooms(captor.capture())

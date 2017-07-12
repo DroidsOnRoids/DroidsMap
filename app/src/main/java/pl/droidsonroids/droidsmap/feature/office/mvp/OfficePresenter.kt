@@ -4,6 +4,7 @@ import pl.droidsonroids.droidsmap.base.DataObserverAdapter
 import pl.droidsonroids.droidsmap.feature.office.business_logic.OfficeFeatureBoundary
 import pl.droidsonroids.droidsmap.feature.room.business_logic.RoomFeatureBoundary
 import pl.droidsonroids.droidsmap.feature.room.mvp.RoomMvpView
+import pl.droidsonroids.droidsmap.feature.room.mvp.RoomUiModel
 import pl.droidsonroids.droidsmap.model.Coordinates
 
 class OfficePresenter private constructor(
@@ -11,6 +12,8 @@ class OfficePresenter private constructor(
         private val officeFeatureBoundary: OfficeFeatureBoundary) {
 
     fun onRequestOffice() = officeFeatureBoundary.requestOffice(OfficeDataObserver())
+
+    fun onRequestRooms() = officeFeatureBoundary.requestRooms(RoomsDataObserver())
 
     fun onRoomClicked(coordinates: Coordinates) {
         officeFeatureBoundary.changeToRoomPerspective()
@@ -20,7 +23,10 @@ class OfficePresenter private constructor(
     private fun updateUi(uiModel: OfficeUiModel) {
         officeView.setMapPanningConstraints(uiModel)
         officeView.focusMapOnOfficeLocation(uiModel)
-        //roomsView.displayOfficeRooms(uiModel)
+    }
+
+    private fun updateRoomsUi(rooms: Collection<RoomUiModel>) {
+        officeView.displayOfficeRooms(rooms)
     }
 
     companion object {
@@ -31,6 +37,16 @@ class OfficePresenter private constructor(
     inner class OfficeDataObserver : DataObserverAdapter<OfficeUiModel>() {
         override fun onNext(model: OfficeUiModel) {
             updateUi(model)
+        }
+
+        override fun onError(e: Throwable) {
+            TODO("NYI") // implement data fetch error
+        }
+    }
+
+    inner class RoomsDataObserver : DataObserverAdapter<Collection<RoomUiModel>>() {
+        override fun onNext(rooms: Collection<RoomUiModel>) {
+            updateRoomsUi(rooms)
         }
 
         override fun onError(e: Throwable) {

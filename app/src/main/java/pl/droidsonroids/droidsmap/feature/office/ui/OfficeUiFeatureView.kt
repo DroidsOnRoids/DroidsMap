@@ -29,6 +29,7 @@ import pl.droidsonroids.droidsmap.feature.office.repository.OfficeRepository
 import pl.droidsonroids.droidsmap.feature.room.business_logic.RoomFeatureBoundary
 import pl.droidsonroids.droidsmap.feature.room.mvp.RoomMvpView
 import pl.droidsonroids.droidsmap.feature.room.mvp.RoomUiModel
+import pl.droidsonroids.droidsmap.feature.room.repository.RoomRepository
 import pl.droidsonroids.droidsmap.model.Coordinates
 import pl.droidsonroids.droidsmap.model.Room
 import java.util.*
@@ -43,7 +44,9 @@ private const val ROOM_TRANSITION_NAME = "room_transition"
 
 class OfficeUiFeatureView(private val activity: MapActivity) : OfficeMvpView<OfficeUiModel> {
 
-    private val officeBoundary = OfficeFeatureBoundary.create(repository = OfficeRepository(OfficeDataEndpoint.create()));
+    private val officeBoundary
+            = OfficeFeatureBoundary.create(officeRepository = OfficeRepository(OfficeDataEndpoint.create()),
+            roomRepository = RoomRepository())
     private val presenter = OfficePresenter.create(this, officeBoundary)
     private var googleMap: GoogleMap? = null
     private val roomsList = ArrayList<Room>()
