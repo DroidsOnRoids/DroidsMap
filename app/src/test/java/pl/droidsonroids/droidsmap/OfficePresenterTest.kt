@@ -68,4 +68,11 @@ class OfficePresenterTest {
         verify(officeView).animateCameraToClickedRoom(captor.capture())
         softly.assertThat(captor.firstValue).isEqualTo(coordinates)
     }
+
+    @Test
+    fun `view prepares for room transition once map camera animation has completed`() {
+        presenter.onMapCameraAnimationCompleted()
+
+        verify(officeView).prepareForRoomTransition()
+    }
 }

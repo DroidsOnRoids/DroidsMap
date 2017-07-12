@@ -73,27 +73,31 @@ class OfficeUiFeatureView(private val activity: MapActivity) : OfficeMvpView<Off
 
         val cameraUpdate = CameraUpdateFactory.newCameraPosition(cameraPosition)
 
+        googleMap?.animateCamera(cameraUpdate, CAMERA_TRANSITION_DURATION_MILLIS, CameraListenerAdapter({
+            presenter.onMapCameraAnimationCompleted()
+        }))
+    }
+
+    override fun prepareForRoomTransition() {
         with(activity.roomImage) {
-            googleMap?.animateCamera(cameraUpdate, CAMERA_TRANSITION_DURATION_MILLIS, CameraListenerAdapter({
-                val resources = activity.resources
-                val resourceId = resources.getIdentifier("room_3", "drawable", activity.packageName)
-                val roomImageDrawable = resources.getDrawable(resourceId)
+            val resources = activity.resources
+            val resourceId = resources.getIdentifier("room_3", "drawable", activity.packageName)
+            val roomImageDrawable = resources.getDrawable(resourceId)
 
-                setImageDrawable(roomImageDrawable)
-                layoutParams.width = ((roomImageDrawable).intrinsicWidth * 2.2f).toInt()
-                layoutParams.height = ((roomImageDrawable).intrinsicHeight * 2.2f).toInt()
+            setImageDrawable(roomImageDrawable)
+            layoutParams.width = ((roomImageDrawable).intrinsicWidth * 2.2f).toInt()
+            layoutParams.height = ((roomImageDrawable).intrinsicHeight * 2.2f).toInt()
 
-                googleMap?.run {
-                    with(projection.visibleRegion) {
-                        addMarker(MarkerOptions().position(nearLeft).title("Near left"))
-                        addMarker(MarkerOptions().position(nearRight).title("Near right"))
-                        addMarker(MarkerOptions().position(farLeft).title("Far left"))
-                        addMarker(MarkerOptions().position(farRight).title("Far right"))
-                    }
+            googleMap?.run {
+                with(projection.visibleRegion) {
+                    addMarker(MarkerOptions().position(nearLeft).title("Near left"))
+                    addMarker(MarkerOptions().position(nearRight).title("Near right"))
+                    addMarker(MarkerOptions().position(farLeft).title("Far left"))
+                    addMarker(MarkerOptions().position(farRight).title("Far right"))
                 }
+            }
 
-                performRoomTransition()
-            }))
+            performRoomTransition()
         }
     }
 

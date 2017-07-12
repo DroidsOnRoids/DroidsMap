@@ -15,6 +15,10 @@ class OfficePresenter private constructor(
         view.animateCameraToClickedRoom(coordinates)
     }
 
+    fun onMapCameraAnimationCompleted() {
+        TODO()
+    }
+
     private fun updateUi(uiModel: OfficeUiModel) {
         view.setMapPanningConstraints(uiModel)
         view.focusMapOnOfficeLocation(uiModel)
@@ -35,4 +39,5 @@ class OfficePresenter private constructor(
             TODO("NYI") // implement data fetch error
         }
     }
+
 }
