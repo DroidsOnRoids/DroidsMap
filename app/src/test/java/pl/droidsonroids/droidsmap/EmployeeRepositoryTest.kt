@@ -1,6 +1,7 @@
 package pl.droidsonroids.droidsmap
 
 import com.nhaarman.mockito_kotlin.any
+import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Observable
@@ -29,7 +30,7 @@ class EmployeeRepositoryTest {
 
     @get:Rule val softly = JUnitSoftAssertions()
 
-    val employeeDataEndpointMock: EmployeeDataEndpoint = mock()
+    lateinit var employeeDataEndpointMock: EmployeeDataEndpoint
     val employeeImageEndpointMock: EmployeeImageEndpoint = mock()
 
     lateinit var employeeRepository: EmployeeRepository
@@ -46,8 +47,11 @@ class EmployeeRepositoryTest {
                 Pair(TEST_EMPLOYEE_SECOND_ID, TEST_EMPLOYEE_SECOND_IMAGE_URL)
         )
 
-        whenever(employeeDataEndpointMock.getAllEmployees())
-                .thenReturn(Observable.fromArray(mockedEmployeesList).flatMapIterable { list -> list })
+        employeeDataEndpointMock = mock<EmployeeDataEndpoint> {
+            on { getAllEmployees() } doReturn
+                    Observable.fromArray(mockedEmployeesList).flatMapIterable { list -> list }
+        }
+
 
         whenever(employeeImageEndpointMock.getEmployeeImageUrl(any()))
                 .thenAnswer { return@thenAnswer Single.just(mockedImageUrls.get(it.arguments[0])) }
