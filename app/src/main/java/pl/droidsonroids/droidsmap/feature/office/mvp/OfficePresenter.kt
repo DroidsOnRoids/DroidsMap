@@ -16,7 +16,7 @@ class OfficePresenter private constructor(
     }
 
     fun onMapCameraAnimationCompleted() {
-        TODO()
+        view.prepareForRoomTransition()
     }
 
     private fun updateUi(uiModel: OfficeUiModel) {
