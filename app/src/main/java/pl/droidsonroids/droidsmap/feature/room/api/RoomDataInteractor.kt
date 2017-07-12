@@ -18,7 +18,7 @@ class RoomDataInteractor : BaseFirebaseInteractor(), RoomDataEndpoint {
     override fun getRoomData(): Observable<RoomEntityHolder> {
         setDatabaseNode()
         return Observable.create({ emitter ->
-            val queryListener = object : ValueEventListener {
+            val queryListener = object: ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot?) {
                     retrieveRoomsList(snapshot).forEach(emitter::onNext)
                     emitter.onComplete()

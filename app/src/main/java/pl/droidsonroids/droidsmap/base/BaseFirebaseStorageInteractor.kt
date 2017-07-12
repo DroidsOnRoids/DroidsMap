@@ -8,4 +8,8 @@ abstract class BaseFirebaseStorageInteractor {
     protected lateinit var storageQueryNode: StorageReference
 
     abstract fun setStorageNode()
+
+    companion object {
+        const val EMPLOYEES_NODE = "employees"
+    }
 }
