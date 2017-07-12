@@ -3,12 +3,12 @@ package pl.droidsonroids.droidsmap
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import pl.droidsonroids.droidsmap.feature.office.ui.OfficeUiFeatureView
+import pl.droidsonroids.droidsmap.feature.room.ui.RoomUiFeatureView
 
 class MapActivity : AppCompatActivity() {
 
     private lateinit var officeFeature: OfficeUiFeatureView
-
-    private var shouldMoveBack = true
+    private lateinit var roomFeature: RoomUiFeatureView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -16,15 +16,13 @@ class MapActivity : AppCompatActivity() {
 
         officeFeature = OfficeUiFeatureView(this)
         officeFeature.requestOffice()
+
+        roomFeature = RoomUiFeatureView(this)
     }
 
     override fun onBackPressed() {
-        if (shouldMoveBack) {
-            super.onBackPressed()
-        } else {
-            officeFeature.performOfficeTransition()
-            shouldMoveBack = true
-        }
+        officeFeature.onBackButtonPressed()
+        roomFeature.onBackButtonPressed()
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {

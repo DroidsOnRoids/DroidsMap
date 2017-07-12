@@ -20,6 +20,7 @@ import kotlinx.android.synthetic.main.activity_map.*
 import kotlinx.android.synthetic.main.scene_office_map.*
 import pl.droidsonroids.droidsmap.MapActivity
 import pl.droidsonroids.droidsmap.R
+import pl.droidsonroids.droidsmap.base.BaseFeatureView
 import pl.droidsonroids.droidsmap.feature.office.api.OfficeDataEndpoint
 import pl.droidsonroids.droidsmap.feature.office.business_logic.OfficeFeatureBoundary
 import pl.droidsonroids.droidsmap.feature.office.mvp.OfficeMvpView
@@ -37,17 +38,16 @@ private const val CAMERA_TRANSITION_DURATION_MILLIS = 300
 private const val MAP_BEARING = 201.5f
 private const val MIN_MAP_ZOOM = 18f
 private const val MAX_MAP_ZOOM = 25f
-private const val ROOM_TRANSITION_NAME = "room_transition"
 
-class OfficeUiFeatureView(private val activity: MapActivity) : OfficeMvpView<OfficeUiModel>, RoomMvpView {
+class OfficeUiFeatureView(private val activity: MapActivity) : BaseFeatureView<OfficePresenter>(), OfficeMvpView<OfficeUiModel>, RoomMvpView {
 
-    private val presenter = OfficePresenter.create(this, OfficeFeatureBoundary.create(repository = OfficeRepository(OfficeDataEndpoint.create())))
     private var googleMap: GoogleMap? = null
     private val roomsList = ArrayList<Room>()
     private val groundOverlayList = ArrayList<GroundOverlay>()
     private var officeScene: Scene = Scene(activity.rootLayout, activity.officeSceneLayout)
 
     init {
+        presenter = OfficePresenter.create(this, OfficeFeatureBoundary.create(repository = OfficeRepository(OfficeDataEndpoint.create())))
         val mapFragment = activity.supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync {
             googleMap = it
@@ -275,6 +275,10 @@ class OfficeUiFeatureView(private val activity: MapActivity) : OfficeMvpView<Off
         override fun onCancel() {
             //no-op
         }
+    }
+
+    fun onBackButtonPressed() {
+        presenter.onBackButtonPressed()
     }
 }
 
