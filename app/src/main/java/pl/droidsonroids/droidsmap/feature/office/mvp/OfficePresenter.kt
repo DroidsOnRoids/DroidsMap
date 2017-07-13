@@ -11,6 +11,9 @@ class OfficePresenter private constructor(
         private val officeView: OfficeMvpView<OfficeUiModel>,
         private val officeFeatureBoundary: OfficeFeatureBoundary) {
 
+    var officeUiModel: OfficeUiModel? = null
+    var roomUiModels: Collection<RoomUiModel>? = null
+
     fun onRequestOffice() = officeFeatureBoundary.requestOffice(OfficeDataObserver())
 
     fun onRequestRooms() = officeFeatureBoundary.requestRooms(RoomsDataObserver())
@@ -21,13 +24,21 @@ class OfficePresenter private constructor(
     }
 
     private fun updateUi(uiModel: OfficeUiModel) {
+        officeUiModel = uiModel
         officeView.setMapPanningConstraints(uiModel)
         officeView.focusMapOnOfficeLocation(uiModel)
+        updateRoomsUi()
     }
 
     private fun updateRoomsUi(rooms: Collection<RoomUiModel>) {
-        val emptyOfficeUiModel = OfficeUiModel(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0)
-        officeView.displayOfficeRooms(emptyOfficeUiModel, rooms)
+        roomUiModels = rooms
+        updateRoomsUi()
+    }
+
+    private fun updateRoomsUi() {
+        if (officeUiModel != null && roomUiModels != null) {
+            officeView.displayOfficeRooms(officeUiModel!!, roomUiModels!!)
+        }
     }
 
     companion object {
