@@ -1,4 +1,4 @@
-package pl.droidsonroids.droidsmap
+package pl.droidsonroids.droidsmap.business_logic
 
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify

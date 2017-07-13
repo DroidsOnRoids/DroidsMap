@@ -1,4 +1,4 @@
-package pl.droidsonroids.droidsmap
+package pl.droidsonroids.droidsmap.presentation_logic
 
 import com.nhaarman.mockito_kotlin.*
 import org.assertj.core.api.JUnitSoftAssertions
@@ -116,5 +116,12 @@ class OfficePresenterTest {
         softly.assertThat(roomsCaptor.firstValue).hasSize(1)
         softly.assertThat(roomsCaptor.firstValue.elementAt(0)).isEqualTo(roomUiModel)
         softly.assertThat(officeCaptor.firstValue).isEqualTo(officeUiModel)
+    }
+
+    @Test
+    fun `view prepares for room transition once map camera animation has completed`() {
+        presenter.onMapCameraAnimationCompleted()
+
+        verify(officeView).prepareForRoomTransition()
     }
 }

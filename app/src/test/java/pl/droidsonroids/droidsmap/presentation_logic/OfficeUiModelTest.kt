@@ -1,4 +1,4 @@
-package pl.droidsonroids.droidsmap
+package pl.droidsonroids.droidsmap.presentation_logic
 
 import org.junit.Before
 import org.junit.Test

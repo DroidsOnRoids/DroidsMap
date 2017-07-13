@@ -8,4 +8,6 @@ interface OfficeMvpView<in T> {
     fun focusMapOnOfficeLocation(uiModel: T)
     fun displayOfficeRooms(officeUiModel: OfficeUiModel, roomUiModels: Collection<RoomUiModel>)
     fun animateCameraToClickedRoom(coordinates: Coordinates)
+    fun prepareForRoomTransition()
+    fun performOfficeTransition()
 }

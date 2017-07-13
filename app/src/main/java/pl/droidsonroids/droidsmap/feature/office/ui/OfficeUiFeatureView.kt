@@ -20,6 +20,7 @@ import kotlinx.android.synthetic.main.activity_map.*
 import kotlinx.android.synthetic.main.scene_office_map.*
 import pl.droidsonroids.droidsmap.MapActivity
 import pl.droidsonroids.droidsmap.R
+import pl.droidsonroids.droidsmap.base.BaseFeatureView
 import pl.droidsonroids.droidsmap.feature.office.api.OfficeDataEndpoint
 import pl.droidsonroids.droidsmap.feature.office.business_logic.OfficeFeatureBoundary
 import pl.droidsonroids.droidsmap.feature.office.mvp.OfficeMvpView
@@ -28,6 +29,7 @@ import pl.droidsonroids.droidsmap.feature.office.mvp.OfficeUiModel
 import pl.droidsonroids.droidsmap.feature.office.repository.OfficeRepository
 import pl.droidsonroids.droidsmap.feature.room.mvp.RoomUiModel
 import pl.droidsonroids.droidsmap.feature.room.repository.RoomRepository
+import pl.droidsonroids.droidsmap.feature.room.mvp.RoomMvpView
 import pl.droidsonroids.droidsmap.model.Coordinates
 import pl.droidsonroids.droidsmap.model.Room
 import java.util.*
@@ -38,20 +40,20 @@ private const val CAMERA_TRANSITION_DURATION_MILLIS = 300
 private const val MAP_BEARING = 201.5f
 private const val MIN_MAP_ZOOM = 18f
 private const val MAX_MAP_ZOOM = 25f
-private const val ROOM_TRANSITION_NAME = "room_transition"
 
-class OfficeUiFeatureView(private val activity: MapActivity) : OfficeMvpView<OfficeUiModel> {
+class OfficeUiFeatureView(private val activity: MapActivity) : BaseFeatureView<OfficePresenter>(), OfficeMvpView<OfficeUiModel>, RoomMvpView {
+
 
     private val officeBoundary
             = OfficeFeatureBoundary.create(officeRepository = OfficeRepository(OfficeDataEndpoint.create()),
             roomRepository = RoomRepository())
-    private val presenter = OfficePresenter.create(this, officeBoundary)
     private var googleMap: GoogleMap? = null
     private val roomsList = ArrayList<Room>()
     private val groundOverlayList = ArrayList<GroundOverlay>()
     private var officeScene: Scene = Scene(activity.rootLayout, activity.officeSceneLayout)
 
     init {
+        presenter = OfficePresenter.create(this, officeBoundary)
         val mapFragment = activity.supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync {
             googleMap = it
@@ -78,27 +80,29 @@ class OfficeUiFeatureView(private val activity: MapActivity) : OfficeMvpView<Off
 
         val cameraUpdate = CameraUpdateFactory.newCameraPosition(cameraPosition)
 
+        googleMap?.animateCamera(cameraUpdate, CAMERA_TRANSITION_DURATION_MILLIS, CameraListenerAdapter({
+            presenter.onMapCameraAnimationCompleted()
+        }))
+    }
+
+    override fun prepareForRoomTransition() {
         with(activity.roomImage) {
-            googleMap?.animateCamera(cameraUpdate, CAMERA_TRANSITION_DURATION_MILLIS, CameraListenerAdapter({
-                val resources = activity.resources
-                val resourceId = resources.getIdentifier("room_3", "drawable", activity.packageName)
-                val roomImageDrawable = resources.getDrawable(resourceId)
+            val resources = activity.resources
+            val resourceId = resources.getIdentifier("room_3", "drawable", activity.packageName)
+            val roomImageDrawable = resources.getDrawable(resourceId)
 
-                setImageDrawable(roomImageDrawable)
-                layoutParams.width = ((roomImageDrawable).intrinsicWidth * 2.2f).toInt()
-                layoutParams.height = ((roomImageDrawable).intrinsicHeight * 2.2f).toInt()
+            setImageDrawable(roomImageDrawable)
+            layoutParams.width = ((roomImageDrawable).intrinsicWidth * 2.2f).toInt()
+            layoutParams.height = ((roomImageDrawable).intrinsicHeight * 2.2f).toInt()
 
-                googleMap?.run {
-                    with(projection.visibleRegion) {
-                        addMarker(MarkerOptions().position(nearLeft).title("Near left"))
-                        addMarker(MarkerOptions().position(nearRight).title("Near right"))
-                        addMarker(MarkerOptions().position(farLeft).title("Far left"))
-                        addMarker(MarkerOptions().position(farRight).title("Far right"))
-                    }
+            googleMap?.run {
+                with(projection.visibleRegion) {
+                    addMarker(MarkerOptions().position(nearLeft).title("Near left"))
+                    addMarker(MarkerOptions().position(nearRight).title("Near right"))
+                    addMarker(MarkerOptions().position(farLeft).title("Far left"))
+                    addMarker(MarkerOptions().position(farRight).title("Far right"))
                 }
-
-                performRoomTransition()
-            }))
+            }
         }
     }
 
@@ -217,10 +221,8 @@ class OfficeUiFeatureView(private val activity: MapActivity) : OfficeMvpView<Off
         return BitmapDescriptorFactory.fromBitmap(bitmap)
     }
 
-    fun performRoomTransition() {
+    override fun performRoomTransition() {
         with(activity) {
-            //            shouldMoveBack = false
-            roomImage.transitionName = ROOM_TRANSITION_NAME
             val roomScene = Scene.getSceneForLayout(rootLayout, R.layout.scene_room, this)
             roomScene.setEnterAction {
                 val roomSceneImage = (roomScene.sceneRoot.findViewById(R.id.zoomedRoomImage) as ImageView)
@@ -231,13 +233,11 @@ class OfficeUiFeatureView(private val activity: MapActivity) : OfficeMvpView<Off
         }
     }
 
-    internal fun performOfficeTransition() {
+    override fun performOfficeTransition() {
         with(activity) {
             val sceneTransition = TransitionInflater.from(this).inflateTransition(R.transition.room_scene_exit_transition)
             sceneTransition.addListener(TransitionListenerAdapter({
-                roomImage.transitionName = ""
                 roomImage.setImageDrawable(null)
-
             }))
             TransitionManager.go(officeScene, sceneTransition)
         }
@@ -287,6 +287,10 @@ class OfficeUiFeatureView(private val activity: MapActivity) : OfficeMvpView<Off
         override fun onCancel() {
             //no-op
         }
+    }
+
+    fun onBackButtonPressed() {
+        presenter.onBackButtonPressed()
     }
 }
 
