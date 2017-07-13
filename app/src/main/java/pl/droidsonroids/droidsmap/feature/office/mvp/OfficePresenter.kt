@@ -26,7 +26,8 @@ class OfficePresenter private constructor(
     }
 
     private fun updateRoomsUi(rooms: Collection<RoomUiModel>) {
-        officeView.displayOfficeRooms(rooms)
+        val emptyOfficeUiModel = OfficeUiModel(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0)
+        officeView.displayOfficeRooms(emptyOfficeUiModel, rooms)
     }
 
     companion object {

@@ -81,7 +81,34 @@ class OfficePresenterTest {
         presenter.onRequestRooms()
 
         val captor = argumentCaptor<Collection<RoomUiModel>>()
-        verify(officeView).displayOfficeRooms(captor.capture())
+        verify(officeView).displayOfficeRooms(any(), captor.capture())
         softly.assertThat(captor.firstValue).hasSize(1)
+    }
+
+    @Test
+    fun `rooms list is passed after office UI model is captured`() {
+        val officeUiModel = OfficeUiModel.from(OfficeEntity(1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0))
+        whenever(officeBoundary.requestOffice(any())).thenAnswer {
+            (it.arguments[0] as OfficePresenter.OfficeDataObserver).onNext(officeUiModel)
+        }
+
+        val roomUiModel = RoomUiModel(0, 0, 0.0, 0.0, "")
+        whenever(officeBoundary.requestRooms(any())).thenAnswer {
+            (it.arguments[0] as DataObserverAdapter<Collection<RoomUiModel>>).onNext(listOf(roomUiModel))
+        }
+
+        presenter.onRequestRooms()
+
+        verify(officeView, never()).displayOfficeRooms(any(), any())
+
+        presenter.onRequestOffice()
+
+        val officeCaptor = argumentCaptor<OfficeUiModel>()
+        val roomsCaptor = argumentCaptor<Collection<RoomUiModel>>()
+
+        verify(officeView).displayOfficeRooms(officeCaptor.capture(), roomsCaptor.capture())
+        softly.assertThat(roomsCaptor.firstValue).hasSize(1)
+        softly.assertThat(roomsCaptor.firstValue.elementAt(0)).isEqualTo(roomUiModel)
+        softly.assertThat(officeCaptor.firstValue).isEqualTo(officeUiModel)
     }
 }

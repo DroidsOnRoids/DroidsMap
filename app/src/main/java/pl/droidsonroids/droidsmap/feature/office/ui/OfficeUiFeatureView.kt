@@ -26,8 +26,6 @@ import pl.droidsonroids.droidsmap.feature.office.mvp.OfficeMvpView
 import pl.droidsonroids.droidsmap.feature.office.mvp.OfficePresenter
 import pl.droidsonroids.droidsmap.feature.office.mvp.OfficeUiModel
 import pl.droidsonroids.droidsmap.feature.office.repository.OfficeRepository
-import pl.droidsonroids.droidsmap.feature.room.business_logic.RoomFeatureBoundary
-import pl.droidsonroids.droidsmap.feature.room.mvp.RoomMvpView
 import pl.droidsonroids.droidsmap.feature.room.mvp.RoomUiModel
 import pl.droidsonroids.droidsmap.feature.room.repository.RoomRepository
 import pl.droidsonroids.droidsmap.model.Coordinates
@@ -178,11 +176,15 @@ class OfficeUiFeatureView(private val activity: MapActivity) : OfficeMvpView<Off
         googleMap?.moveCamera(CameraUpdateFactory.newLatLng(officeCenterCoordinates))
     }
 
-    override fun displayOfficeRooms(roomModels: Collection<RoomUiModel>) {
-        if (googleMap == null) UiCommandInvoker.queueInvokement { performDisplayOfficeRooms(roomModels) } else performDisplayOfficeRooms(roomModels)
+    override fun displayOfficeRooms(officeUiModel: OfficeUiModel, roomModels: Collection<RoomUiModel>) {
+        if (googleMap == null) {
+            UiCommandInvoker.queueInvokement { performDisplayOfficeRooms(officeUiModel, roomModels) }
+        } else {
+            performDisplayOfficeRooms(officeUiModel, roomModels)
+        }
     }
 
-    private fun performDisplayOfficeRooms(roomModels: Collection<RoomUiModel>) {
+    private fun performDisplayOfficeRooms(officeUiModel: OfficeUiModel, roomModels: Collection<RoomUiModel>) {
         TODO()
     }
 
