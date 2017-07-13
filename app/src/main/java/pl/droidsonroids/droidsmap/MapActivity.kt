@@ -16,6 +16,7 @@ class MapActivity : AppCompatActivity() {
 
         officeFeature = OfficeUiFeatureView(this)
         officeFeature.requestOffice()
+        officeFeature.requestRooms()
     }
 
     override fun onBackPressed() {

@@ -43,7 +43,6 @@ class OfficePresenterTest {
             inOrder(officeView) {
                 verify(officeView).setMapPanningConstraints(this@with)
                 verify(officeView).focusMapOnOfficeLocation(this@with)
-//                verify(officeView).displayOfficeRooms(any())
             }
         }
     }

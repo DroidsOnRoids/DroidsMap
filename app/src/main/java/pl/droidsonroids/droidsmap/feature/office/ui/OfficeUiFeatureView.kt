@@ -133,6 +133,8 @@ class OfficeUiFeatureView(private val activity: MapActivity) : OfficeMvpView<Off
 
     fun requestOffice() = presenter.onRequestOffice()
 
+    fun requestRooms() = presenter.onRequestRooms()
+
     fun onRequestPermissionsResult(requestCode: Int, grantResults: IntArray) {
         when (requestCode) {
             LOCATION_REQUEST_CODE -> {
