@@ -6,6 +6,7 @@ import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Observable
 import io.reactivex.Single
+import org.assertj.core.api.Assertions
 import org.assertj.core.api.JUnitSoftAssertions
 import org.junit.Before
 import org.junit.Rule
@@ -42,12 +43,12 @@ class OfficeRepositoryTest {
 
     @Before
     fun setUp() {
-        val mockedEmployeesList: List<RoomEntityHolder> = listOf(
+        val mockedEmployeesList = listOf(
                 RoomEntityHolder(roomFirst, roomFirstId),
                 RoomEntityHolder(roomSecond, roomSecondId)
         )
 
-        val mockedImageUrls: Map<String, String> = mapOf(
+        val mockedImageUrls = mapOf(
                 Pair(roomFirstId, roomFirstImageUrl),
                 Pair(roomSecondId, roomSecondImageUrl)
         )
@@ -81,6 +82,6 @@ class OfficeRepositoryTest {
     @Test
     fun `repository merges data from various endpoints`() {
         val officeUiModel = repository.query().blockingGet()
-        softly.assertThat(officeUiModel).isEqualTo(mappedUiModel)
+        Assertions.assertThat(officeUiModel).isEqualTo(mappedUiModel)
     }
 }
