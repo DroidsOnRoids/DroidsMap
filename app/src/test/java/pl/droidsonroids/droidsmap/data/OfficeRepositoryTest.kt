@@ -37,7 +37,7 @@ class OfficeRepositoryTest {
     val roomFirstImageUrl = "http://image.first.com"
     val roomSecondImageUrl = "http://image.second.com"
 
-    val mappedUiModel = OfficeUiModel.from(officeEntity, emptyList())
+    lateinit var mappedUiModel: OfficeUiModel
     val dataEmitter: Single<OfficeEntity> = Single.create<OfficeEntity> { it.onSuccess(officeEntity) }
 
     @Before
@@ -62,6 +62,9 @@ class OfficeRepositoryTest {
         whenever(roomImageEndpoint.getRoomImageUrl(any()))
                 .thenAnswer { return@thenAnswer Single.just(mockedImageUrls[it.arguments[0]]) }
         repository = OfficeRepository(officeDataEndpoint, roomDataEndpoint, roomImageEndpoint)
+
+        mappedUiModel = OfficeUiModel.from(officeEntity,
+                listOf(RoomUiModel.from(roomFirst, roomFirstImageUrl), RoomUiModel.from(roomSecond, roomSecondImageUrl)))
     }
 
     @Test
@@ -77,9 +80,7 @@ class OfficeRepositoryTest {
 
     @Test
     fun `repository merges data from various endpoints`() {
-        val expectedUiModel = OfficeUiModel.from(officeEntity,
-                listOf(RoomUiModel.from(roomFirst, roomFirstImageUrl), RoomUiModel.from(roomSecond, roomSecondImageUrl)))
         val officeUiModel = repository.query().blockingGet()
-        softly.assertThat(officeUiModel).isEqualTo(expectedUiModel)
+        softly.assertThat(officeUiModel).isEqualTo(mappedUiModel)
     }
 }

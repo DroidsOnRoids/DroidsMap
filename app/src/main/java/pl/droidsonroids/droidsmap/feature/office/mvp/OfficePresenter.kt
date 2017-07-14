@@ -32,7 +32,7 @@ class OfficePresenter private constructor(
         officeUiModel = uiModel
         officeView.setMapPanningConstraints(uiModel)
         officeView.focusMapOnOfficeLocation(uiModel)
-        updateRoomsUi()
+        officeView.displayOfficeRooms(uiModel, uiModel.roomUiModels)
     }
 
     private fun updateRoomsUi(rooms: Collection<RoomUiModel>) {
@@ -42,7 +42,7 @@ class OfficePresenter private constructor(
 
     private fun updateRoomsUi() {
         if (officeUiModel != null && roomUiModels != null) {
-            officeView.displayOfficeRooms(officeUiModel!!, roomUiModels!!)
+
         }
     }
 
