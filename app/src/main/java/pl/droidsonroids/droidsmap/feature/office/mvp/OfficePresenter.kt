@@ -15,8 +15,6 @@ class OfficePresenter private constructor(
 
     fun onRequestOffice() = officeFeatureBoundary.requestOffice(OfficeDataObserver())
 
-    fun onRequestRooms() = officeFeatureBoundary.requestRooms(RoomsDataObserver())
-
     fun onRoomClicked(coordinates: Coordinates) {
         officeFeatureBoundary.changeToRoomPerspective()
         officeView.animateCameraToClickedRoom(coordinates)
@@ -60,16 +58,6 @@ class OfficePresenter private constructor(
 
         override fun onError(e: Throwable) {
             TODO()
-        }
-    }
-
-    inner class RoomsDataObserver : DataObserverAdapter<Collection<RoomUiModel>>() {
-        override fun onNext(rooms: Collection<RoomUiModel>) {
-            updateRoomsUi(rooms)
-        }
-
-        override fun onError(e: Throwable) {
-            TODO("NYI") // implement data fetch error
         }
     }
 }

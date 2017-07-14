@@ -49,7 +49,7 @@ class EmployeeRepositoryTest {
 
         employeeDataEndpointMock = mock<EmployeeDataEndpoint> {
             on { getAllEmployees() } doReturn
-                    Observable.fromArray(mockedEmployeesList).flatMapIterable { list -> list }
+                    Observable.just(mockedEmployeesList).flatMapIterable { list -> list }
         }
 
         whenever(employeeImageEndpointMock.getEmployeeImageUrl(any()))

@@ -22,6 +22,7 @@ class OfficeFeatureUseCaseTest {
     fun setUp() {
         roomBoundary = mock<RoomFeatureUseCase>()
         officeRepository = mock<OfficeRepository>()
+        roomRepository = mock()
         useCase = OfficeFeatureBoundary.create(roomBoundary, officeRepository, roomRepository)
     }
 

@@ -27,6 +27,8 @@ import pl.droidsonroids.droidsmap.feature.office.mvp.OfficeMvpView
 import pl.droidsonroids.droidsmap.feature.office.mvp.OfficePresenter
 import pl.droidsonroids.droidsmap.feature.office.mvp.OfficeUiModel
 import pl.droidsonroids.droidsmap.feature.office.repository.OfficeRepository
+import pl.droidsonroids.droidsmap.feature.room.api.RoomDataEndpoint
+import pl.droidsonroids.droidsmap.feature.room.api.RoomImagesEndpoint
 import pl.droidsonroids.droidsmap.feature.room.mvp.RoomMvpView
 import pl.droidsonroids.droidsmap.feature.room.mvp.RoomUiModel
 import pl.droidsonroids.droidsmap.feature.room.repository.RoomRepository
@@ -44,8 +46,8 @@ private const val MAX_MAP_ZOOM = 25f
 class OfficeUiFeatureView(private val activity: MapActivity) : BaseFeatureView<OfficePresenter>(), OfficeMvpView<OfficeUiModel>, RoomMvpView {
 
 
-    private val officeBoundary
-            = OfficeFeatureBoundary.create(officeRepository = OfficeRepository(OfficeDataEndpoint.create()),
+    private val officeBoundary = OfficeFeatureBoundary.create(
+            officeRepository = OfficeRepository(OfficeDataEndpoint.create(), RoomDataEndpoint.create(), RoomImagesEndpoint.create()),
             roomRepository = RoomRepository())
     private var googleMap: GoogleMap? = null
     private val roomsList = ArrayList<Room>()
@@ -134,8 +136,6 @@ class OfficeUiFeatureView(private val activity: MapActivity) : BaseFeatureView<O
     }
 
     fun requestOffice() = presenter.onRequestOffice()
-
-    fun requestRooms() = presenter.onRequestRooms()
 
     fun onRequestPermissionsResult(requestCode: Int, grantResults: IntArray) {
         when (requestCode) {

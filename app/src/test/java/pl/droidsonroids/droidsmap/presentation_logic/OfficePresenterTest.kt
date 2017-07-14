@@ -5,7 +5,6 @@ import org.assertj.core.api.JUnitSoftAssertions
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import pl.droidsonroids.droidsmap.base.DataObserverAdapter
 import pl.droidsonroids.droidsmap.feature.office.business_logic.OfficeEntity
 import pl.droidsonroids.droidsmap.feature.office.business_logic.OfficeFeatureBoundary
 import pl.droidsonroids.droidsmap.feature.office.mvp.OfficeMvpView
@@ -31,7 +30,7 @@ class OfficePresenterTest {
 
     @Test
     fun `should show map once data is provided`() {
-        val officeUiModel = OfficeUiModel.from(OfficeEntity())
+        val officeUiModel = OfficeUiModel.from(OfficeEntity(), emptyList())
         whenever(officeBoundary.requestOffice(any())).thenAnswer {
             (it.arguments[0] as OfficePresenter.OfficeDataObserver).onNext(officeUiModel)
         }
@@ -72,19 +71,12 @@ class OfficePresenterTest {
 
     @Test
     fun `rooms list is passed after office UI model is captured`() {
-        val officeUiModel = OfficeUiModel.from(OfficeEntity(1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0))
+        val roomUiModel = RoomUiModel(0, 0, 0.0, 0.0, "")
+        val officeUiModel
+                = OfficeUiModel.from(OfficeEntity(1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0), listOf(roomUiModel))
         whenever(officeBoundary.requestOffice(any())).thenAnswer {
             (it.arguments[0] as OfficePresenter.OfficeDataObserver).onNext(officeUiModel)
         }
-
-        val roomUiModel = RoomUiModel(0, 0, 0.0, 0.0, "")
-        whenever(officeBoundary.requestRooms(any())).thenAnswer {
-            (it.arguments[0] as DataObserverAdapter<Collection<RoomUiModel>>).onNext(listOf(roomUiModel))
-        }
-
-        presenter.onRequestRooms()
-
-        verify(officeView, never()).displayOfficeRooms(any(), any())
 
         presenter.onRequestOffice()
 

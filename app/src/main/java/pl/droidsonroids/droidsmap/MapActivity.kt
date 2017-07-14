@@ -16,7 +16,6 @@ class MapActivity : AppCompatActivity() {
 
         officeFeature = OfficeUiFeatureView(this)
         officeFeature.requestOffice()
-        officeFeature.requestRooms()
         roomFeature = RoomUiFeatureView(this)
     }
 
