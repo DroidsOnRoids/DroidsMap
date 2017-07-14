@@ -11,7 +11,6 @@ import pl.droidsonroids.droidsmap.feature.office.business_logic.OfficeFeatureBou
 import pl.droidsonroids.droidsmap.feature.office.mvp.OfficeMvpView
 import pl.droidsonroids.droidsmap.feature.office.mvp.OfficePresenter
 import pl.droidsonroids.droidsmap.feature.office.mvp.OfficeUiModel
-import pl.droidsonroids.droidsmap.feature.room.business_logic.RoomFeatureBoundary
 import pl.droidsonroids.droidsmap.feature.room.mvp.RoomUiModel
 import pl.droidsonroids.droidsmap.model.Coordinates
 
@@ -69,26 +68,6 @@ class OfficePresenterTest {
         val captor = argumentCaptor<Coordinates>()
         verify(officeView).animateCameraToClickedRoom(captor.capture())
         softly.assertThat(captor.firstValue).isEqualTo(coordinates)
-    }
-
-    @Test
-    fun `rooms list is passed to view`() {
-        val officeUiModel = OfficeUiModel.from(OfficeEntity(1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0))
-        whenever(officeBoundary.requestOffice(any())).thenAnswer {
-            (it.arguments[0] as OfficePresenter.OfficeDataObserver).onNext(officeUiModel)
-        }
-
-        val roomUiModel = RoomUiModel(0, 0, 0.0, 0.0, "")
-        whenever(officeBoundary.requestRooms(any())).thenAnswer {
-            (it.arguments[0] as DataObserverAdapter<Collection<RoomUiModel>>).onNext(listOf(roomUiModel))
-        }
-
-        presenter.onRequestOffice()
-        presenter.onRequestRooms()
-
-        val captor = argumentCaptor<Collection<RoomUiModel>>()
-        verify(officeView).displayOfficeRooms(any(), captor.capture())
-        softly.assertThat(captor.firstValue).hasSize(1)
     }
 
     @Test
