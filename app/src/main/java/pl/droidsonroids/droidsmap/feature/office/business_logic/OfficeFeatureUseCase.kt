@@ -8,10 +8,8 @@ import pl.droidsonroids.droidsmap.base.DisposableHandler
 import pl.droidsonroids.droidsmap.feature.office.mvp.OfficeUiModel
 import pl.droidsonroids.droidsmap.feature.office.repository.OfficeRepository
 import pl.droidsonroids.droidsmap.feature.room.business_logic.RoomFeatureBoundary
-import pl.droidsonroids.droidsmap.feature.room.repository.RoomRepository
 
-class OfficeFeatureUseCase(roomBoundary: RoomFeatureBoundary?, val officeRepository: OfficeRepository,
-                           val roomRepository: RoomRepository) : OfficeFeatureBoundary {
+class OfficeFeatureUseCase(roomBoundary: RoomFeatureBoundary?, val officeRepository: OfficeRepository) : OfficeFeatureBoundary {
 
     val disposableHandler = DisposableHandler()
     val roomFeatureBoundary = roomBoundary ?: RoomFeatureBoundary.create(this)

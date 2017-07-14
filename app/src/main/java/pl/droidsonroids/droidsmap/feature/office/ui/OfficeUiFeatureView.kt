@@ -30,8 +30,6 @@ import pl.droidsonroids.droidsmap.feature.office.repository.OfficeRepository
 import pl.droidsonroids.droidsmap.feature.room.api.RoomDataEndpoint
 import pl.droidsonroids.droidsmap.feature.room.api.RoomImagesEndpoint
 import pl.droidsonroids.droidsmap.feature.room.mvp.RoomMvpView
-import pl.droidsonroids.droidsmap.feature.room.mvp.RoomUiModel
-import pl.droidsonroids.droidsmap.feature.room.repository.RoomRepository
 import pl.droidsonroids.droidsmap.model.Coordinates
 import pl.droidsonroids.droidsmap.model.Room
 import java.util.*
@@ -47,8 +45,7 @@ class OfficeUiFeatureView(private val activity: MapActivity) : BaseFeatureView<O
 
 
     private val officeBoundary = OfficeFeatureBoundary.create(
-            officeRepository = OfficeRepository(OfficeDataEndpoint.create(), RoomDataEndpoint.create(), RoomImagesEndpoint.create()),
-            roomRepository = RoomRepository())
+            officeRepository = OfficeRepository(OfficeDataEndpoint.create(), RoomDataEndpoint.create(), RoomImagesEndpoint.create()))
     private var googleMap: GoogleMap? = null
     private val roomsList = ArrayList<Room>()
     private val groundOverlayList = ArrayList<GroundOverlay>()
@@ -180,15 +177,15 @@ class OfficeUiFeatureView(private val activity: MapActivity) : BaseFeatureView<O
         googleMap?.moveCamera(CameraUpdateFactory.newLatLng(officeCenterCoordinates))
     }
 
-    override fun displayOfficeRooms(officeUiModel: OfficeUiModel, roomModels: Collection<RoomUiModel>) {
+    override fun displayOfficeRooms(officeUiModel: OfficeUiModel) {
         if (googleMap == null) {
-            UiCommandInvoker.queueInvokement { performDisplayOfficeRooms(officeUiModel, roomModels) }
+            UiCommandInvoker.queueInvokement { performDisplayOfficeRooms(officeUiModel) }
         } else {
-            performDisplayOfficeRooms(officeUiModel, roomModels)
+            performDisplayOfficeRooms(officeUiModel)
         }
     }
 
-    private fun performDisplayOfficeRooms(officeUiModel: OfficeUiModel, roomModels: Collection<RoomUiModel>) {
+    private fun performDisplayOfficeRooms(officeUiModel: OfficeUiModel) {
         TODO()
     }
 

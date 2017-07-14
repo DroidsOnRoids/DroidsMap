@@ -81,11 +81,10 @@ class OfficePresenterTest {
         presenter.onRequestOffice()
 
         val officeCaptor = argumentCaptor<OfficeUiModel>()
-        val roomsCaptor = argumentCaptor<Collection<RoomUiModel>>()
 
-        verify(officeView).displayOfficeRooms(officeCaptor.capture(), roomsCaptor.capture())
-        softly.assertThat(roomsCaptor.firstValue).hasSize(1)
-        softly.assertThat(roomsCaptor.firstValue.elementAt(0)).isEqualTo(roomUiModel)
+        verify(officeView).displayOfficeRooms(officeCaptor.capture())
+        softly.assertThat(officeCaptor.firstValue.roomUiModels).hasSize(1)
+        softly.assertThat(officeCaptor.firstValue.roomUiModels.elementAt(0)).isEqualTo(roomUiModel)
         softly.assertThat(officeCaptor.firstValue).isEqualTo(officeUiModel)
     }
 

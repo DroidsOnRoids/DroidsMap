@@ -9,21 +9,18 @@ import pl.droidsonroids.droidsmap.feature.office.business_logic.OfficeFeatureUse
 import pl.droidsonroids.droidsmap.feature.office.repository.OfficeRepository
 import pl.droidsonroids.droidsmap.feature.room.business_logic.RoomFeatureBoundary
 import pl.droidsonroids.droidsmap.feature.room.business_logic.RoomFeatureUseCase
-import pl.droidsonroids.droidsmap.feature.room.repository.RoomRepository
 
 class OfficeFeatureUseCaseTest {
 
     lateinit var useCase: OfficeFeatureUseCase
     lateinit var roomBoundary: RoomFeatureBoundary
     lateinit var officeRepository: OfficeRepository
-    lateinit var roomRepository: RoomRepository
 
     @Before
     fun setUp() {
         roomBoundary = mock<RoomFeatureUseCase>()
         officeRepository = mock<OfficeRepository>()
-        roomRepository = mock()
-        useCase = OfficeFeatureBoundary.create(roomBoundary, officeRepository, roomRepository)
+        useCase = OfficeFeatureBoundary.create(roomBoundary, officeRepository)
     }
 
     @Test
