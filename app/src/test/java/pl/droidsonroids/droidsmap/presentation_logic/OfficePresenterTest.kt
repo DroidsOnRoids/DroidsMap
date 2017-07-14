@@ -10,6 +10,7 @@ import pl.droidsonroids.droidsmap.feature.office.business_logic.OfficeFeatureBou
 import pl.droidsonroids.droidsmap.feature.office.mvp.OfficeMvpView
 import pl.droidsonroids.droidsmap.feature.office.mvp.OfficePresenter
 import pl.droidsonroids.droidsmap.feature.office.mvp.OfficeUiModel
+import pl.droidsonroids.droidsmap.feature.room.mvp.RoomUiModel
 import pl.droidsonroids.droidsmap.model.Coordinates
 
 
@@ -22,14 +23,14 @@ class OfficePresenterTest {
 
     @Before
     fun setUp() {
-        officeView = mock<OfficeMvpView<OfficeUiModel>>()
-        officeBoundary = mock<OfficeFeatureBoundary>()
+        officeView = mock()
+        officeBoundary = mock()
         presenter = OfficePresenter.create(officeView, officeBoundary)
     }
 
     @Test
     fun `should show map once data is provided`() {
-        val officeUiModel = OfficeUiModel.from(OfficeEntity())
+        val officeUiModel = OfficeUiModel.from(OfficeEntity(), emptyList())
         whenever(officeBoundary.requestOffice(any())).thenAnswer {
             (it.arguments[0] as OfficePresenter.OfficeDataObserver).onNext(officeUiModel)
         }
@@ -40,7 +41,6 @@ class OfficePresenterTest {
             inOrder(officeView) {
                 verify(officeView).setMapPanningConstraints(this@with)
                 verify(officeView).focusMapOnOfficeLocation(this@with)
-                verify(officeView).displayOfficeRooms(this@with)
             }
         }
     }
@@ -67,6 +67,25 @@ class OfficePresenterTest {
         val captor = argumentCaptor<Coordinates>()
         verify(officeView).animateCameraToClickedRoom(captor.capture())
         softly.assertThat(captor.firstValue).isEqualTo(coordinates)
+    }
+
+    @Test
+    fun `rooms list is passed after office UI model is captured`() {
+        val roomUiModel = RoomUiModel(0, 0, 0.0, 0.0, "")
+        val officeUiModel
+                = OfficeUiModel.from(OfficeEntity(1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0), listOf(roomUiModel))
+        whenever(officeBoundary.requestOffice(any())).thenAnswer {
+            (it.arguments[0] as OfficePresenter.OfficeDataObserver).onNext(officeUiModel)
+        }
+
+        presenter.onRequestOffice()
+
+        val officeCaptor = argumentCaptor<OfficeUiModel>()
+
+        verify(officeView).displayOfficeRooms(officeCaptor.capture())
+        softly.assertThat(officeCaptor.firstValue.roomUiModels).hasSize(1)
+        softly.assertThat(officeCaptor.firstValue.roomUiModels.elementAt(0)).isEqualTo(roomUiModel)
+        softly.assertThat(officeCaptor.firstValue).isEqualTo(officeUiModel)
     }
 
     @Test

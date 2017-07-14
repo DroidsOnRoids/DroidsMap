@@ -14,13 +14,13 @@ class OfficeFeatureUseCaseTest {
 
     lateinit var useCase: OfficeFeatureUseCase
     lateinit var roomBoundary: RoomFeatureBoundary
-    lateinit var repository: OfficeRepository
+    lateinit var officeRepository: OfficeRepository
 
     @Before
     fun setUp() {
         roomBoundary = mock<RoomFeatureUseCase>()
-        repository = mock<OfficeRepository>()
-        useCase = OfficeFeatureBoundary.create(roomBoundary, repository)
+        officeRepository = mock<OfficeRepository>()
+        useCase = OfficeFeatureBoundary.create(roomBoundary, officeRepository)
     }
 
     @Test

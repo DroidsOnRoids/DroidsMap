@@ -8,7 +8,7 @@ import pl.droidsonroids.droidsmap.feature.room.api.RoomImagesInteractor
 import pl.droidsonroids.droidsmap.feature.room.mvp.RoomUiModel
 import pl.droidsonroids.droidsmap.repository_operation.QueryMultipleRepositoryOperation
 
-class RoomRepository : QueryMultipleRepositoryOperation<RoomUiModel> {
+open class RoomRepository : QueryMultipleRepositoryOperation<RoomUiModel> {
     private val roomDataSource: RoomDataEndpoint = RoomDataInteractor()
     private val roomImagesDataSource: RoomImagesEndpoint = RoomImagesInteractor()
 

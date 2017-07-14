@@ -27,6 +27,8 @@ import pl.droidsonroids.droidsmap.feature.office.mvp.OfficeMvpView
 import pl.droidsonroids.droidsmap.feature.office.mvp.OfficePresenter
 import pl.droidsonroids.droidsmap.feature.office.mvp.OfficeUiModel
 import pl.droidsonroids.droidsmap.feature.office.repository.OfficeRepository
+import pl.droidsonroids.droidsmap.feature.room.api.RoomDataEndpoint
+import pl.droidsonroids.droidsmap.feature.room.api.RoomImagesEndpoint
 import pl.droidsonroids.droidsmap.feature.room.mvp.RoomMvpView
 import pl.droidsonroids.droidsmap.model.Coordinates
 import pl.droidsonroids.droidsmap.model.Room
@@ -41,13 +43,16 @@ private const val MAX_MAP_ZOOM = 25f
 
 class OfficeUiFeatureView(private val activity: MapActivity) : BaseFeatureView<OfficePresenter>(), OfficeMvpView<OfficeUiModel>, RoomMvpView {
 
+
+    private val officeBoundary = OfficeFeatureBoundary.create(
+            officeRepository = OfficeRepository(OfficeDataEndpoint.create(), RoomDataEndpoint.create(), RoomImagesEndpoint.create()))
     private var googleMap: GoogleMap? = null
     private val roomsList = ArrayList<Room>()
     private val groundOverlayList = ArrayList<GroundOverlay>()
     private var officeScene: Scene = Scene(activity.rootLayout, activity.officeSceneLayout)
 
     init {
-        presenter = OfficePresenter.create(this, OfficeFeatureBoundary.create(repository = OfficeRepository(OfficeDataEndpoint.create())))
+        presenter = OfficePresenter.create(this, officeBoundary)
         val mapFragment = activity.supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync {
             googleMap = it
@@ -172,12 +177,16 @@ class OfficeUiFeatureView(private val activity: MapActivity) : BaseFeatureView<O
         googleMap?.moveCamera(CameraUpdateFactory.newLatLng(officeCenterCoordinates))
     }
 
-    override fun displayOfficeRooms(uiModel: OfficeUiModel) {
-        if (googleMap == null) UiCommandInvoker.queueInvokement { performDisplayOfficeRooms(uiModel) } else performDisplayOfficeRooms(uiModel)
+    override fun displayOfficeRooms(officeUiModel: OfficeUiModel) {
+        if (googleMap == null) {
+            UiCommandInvoker.queueInvokement { performDisplayOfficeRooms(officeUiModel) }
+        } else {
+            performDisplayOfficeRooms(officeUiModel)
+        }
     }
 
-    private fun performDisplayOfficeRooms(uiModel: OfficeUiModel) {
-        roomsList.forEach { createAndDisplayMapOverlay(it, uiModel) }
+    private fun performDisplayOfficeRooms(officeUiModel: OfficeUiModel) {
+        TODO()
     }
 
     private fun createAndDisplayMapOverlay(room: Room, uiModel: OfficeUiModel) {

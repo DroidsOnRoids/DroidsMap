@@ -7,11 +7,12 @@ import pl.droidsonroids.droidsmap.feature.room.business_logic.RoomFeatureBoundar
 
 interface OfficeFeatureBoundary {
 
-    fun requestOffice(dataObserver: DataObserverAdapter<OfficeUiModel>)
+    fun requestOffice(officeDataObserver: DataObserverAdapter<OfficeUiModel>)
 
     fun changeToRoomPerspective()
 
     companion object {
-        fun create(roomBoundary: RoomFeatureBoundary? = null, repository: OfficeRepository) = OfficeFeatureUseCase(roomBoundary, repository)
+        fun create(roomBoundary: RoomFeatureBoundary? = null, officeRepository: OfficeRepository)
+                = OfficeFeatureUseCase(roomBoundary, officeRepository)
     }
 }

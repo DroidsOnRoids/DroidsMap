@@ -3,21 +3,25 @@ package pl.droidsonroids.droidsmap.feature.office.mvp
 import pl.droidsonroids.droidsmap.base.DataObserverAdapter
 import pl.droidsonroids.droidsmap.base.Presenter
 import pl.droidsonroids.droidsmap.feature.office.business_logic.OfficeFeatureBoundary
+import pl.droidsonroids.droidsmap.feature.room.mvp.RoomUiModel
 import pl.droidsonroids.droidsmap.model.Coordinates
 
 class OfficePresenter private constructor(
-        private val view: OfficeMvpView<OfficeUiModel>,
+        private val officeView: OfficeMvpView<OfficeUiModel>,
         private val officeFeatureBoundary: OfficeFeatureBoundary) : Presenter {
+
+    var officeUiModel: OfficeUiModel? = null
+    var roomUiModels: Collection<RoomUiModel>? = null
 
     fun onRequestOffice() = officeFeatureBoundary.requestOffice(OfficeDataObserver())
 
     fun onRoomClicked(coordinates: Coordinates) {
         officeFeatureBoundary.changeToRoomPerspective()
-        view.animateCameraToClickedRoom(coordinates)
+        officeView.animateCameraToClickedRoom(coordinates)
     }
 
     fun onMapCameraAnimationCompleted() {
-        view.prepareForRoomTransition()
+        officeView.prepareForRoomTransition()
     }
 
     fun onBackButtonPressed() {
@@ -25,9 +29,10 @@ class OfficePresenter private constructor(
     }
 
     private fun showOfficeMap(uiModel: OfficeUiModel) {
-        view.setMapPanningConstraints(uiModel)
-        view.focusMapOnOfficeLocation(uiModel)
-        view.displayOfficeRooms(uiModel)
+        officeUiModel = uiModel
+        officeView.setMapPanningConstraints(uiModel)
+        officeView.focusMapOnOfficeLocation(uiModel)
+        officeView.displayOfficeRooms(uiModel)
     }
 
     companion object {
