@@ -16,7 +16,7 @@ import pl.droidsonroids.droidsmap.model.Coordinates
 
 class OfficePresenterTest {
 
-    lateinit var officeView: OfficeMvpView<OfficeUiModel>
+    lateinit var officeView: OfficeMvpView
     lateinit var officeBoundary: OfficeFeatureBoundary
     lateinit var presenter: OfficePresenter
     @get:Rule val softly = JUnitSoftAssertions()

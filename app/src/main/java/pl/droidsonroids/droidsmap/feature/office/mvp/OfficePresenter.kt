@@ -7,7 +7,7 @@ import pl.droidsonroids.droidsmap.feature.room.mvp.RoomUiModel
 import pl.droidsonroids.droidsmap.model.Coordinates
 
 class OfficePresenter private constructor(
-        private val officeView: OfficeMvpView<OfficeUiModel>,
+        private val officeView: OfficeMvpView,
         private val officeFeatureBoundary: OfficeFeatureBoundary) : Presenter {
 
     var officeUiModel: OfficeUiModel? = null
@@ -36,7 +36,7 @@ class OfficePresenter private constructor(
     }
 
     companion object {
-        fun create(view: OfficeMvpView<OfficeUiModel>, officeFeatureBoundary: OfficeFeatureBoundary)
+        fun create(view: OfficeMvpView, officeFeatureBoundary: OfficeFeatureBoundary)
                 = OfficePresenter(view, officeFeatureBoundary)
     }
 
