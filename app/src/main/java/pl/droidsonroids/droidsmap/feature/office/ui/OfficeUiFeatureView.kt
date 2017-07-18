@@ -3,7 +3,6 @@ package pl.droidsonroids.droidsmap.feature.office.ui
 import android.Manifest
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
-import android.transition.Scene
 import android.transition.Transition
 import android.widget.Toast
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -40,7 +39,7 @@ open class OfficeUiFeatureView(private val activityWrapper: ActivityWrapper) : B
     private var googleMap: GoogleMapWrapper? = null
     private val roomsList = ArrayList<Room>()
     private val groundOverlayList = ArrayList<GroundOverlay>()
-    private var officeScene: Scene = Scene(activityWrapper.officeRoot, activityWrapper.officeSceneLayout)
+//    private var officeScene: Scene = Scene(activityWrapper.officeRoot, activityWrapper.officeSceneLayout)
 
     init {
         presenter = OfficePresenter.create(this, officeBoundary)
@@ -194,12 +193,12 @@ open class OfficeUiFeatureView(private val activityWrapper: ActivityWrapper) : B
     }
 
     override fun performOfficeTransition() {
-        activityWrapper.performTransition(
-                R.transition.room_scene_exit_transition,
-                officeScene,
-                TransitionListenerAdapter({
-                    activityWrapper.roomImage.setImageDrawable(null)
-                }))
+//        activityWrapper.performTransition(
+//                R.transition.room_scene_exit_transition,
+//                officeScene,
+//                TransitionListenerAdapter({
+//                    activityWrapper.roomImage.setImageDrawable(null)
+//                }))
     }
 
     object UiCommandInvoker {

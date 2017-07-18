@@ -28,13 +28,16 @@ class ActivityWrapper(
         roomFeature: RoomUiFeatureView? = null) {
 
     lateinit private var activity: AppCompatActivity
-    private val officeFeature: OfficeUiFeatureView = officeFeature ?: OfficeUiFeatureView(this)
-    private val roomFeature: RoomUiFeatureView = roomFeature ?: RoomUiFeatureView(this)
+    private val officeFeature: OfficeUiFeatureView
+    private val roomFeature: RoomUiFeatureView
 
     init {
         if (activity != null) {
             this.activity = activity
         }
+        this.officeFeature = officeFeature ?: OfficeUiFeatureView(this)
+        this.roomFeature = roomFeature ?: RoomUiFeatureView(this)
+        this.officeFeature.requestOffice()
     }
 
     val officeRoot: ViewGroup
