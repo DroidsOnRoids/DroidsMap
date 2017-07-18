@@ -58,6 +58,10 @@ class ActivityWrapper(
     val packageName: String
         get() = activity.packageName
 
+    fun getActivity(): AppCompatActivity {
+        return activity
+    }
+
     fun getMapFragmentWrapper(): GoogleMapFragmentWrapper {
         return GoogleMapFragmentWrapper(
                 activity.supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment)

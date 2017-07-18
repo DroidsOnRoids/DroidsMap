@@ -3,14 +3,20 @@ package pl.droidsonroids.droidsmap.feature.office.ui
 import android.Manifest
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.drawable.PictureDrawable
 import android.transition.Transition
 import android.widget.Toast
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.*
 import pl.droidsonroids.droidsmap.ActivityWrapper
 import pl.droidsonroids.droidsmap.GoogleMapWrapper
-import pl.droidsonroids.droidsmap.R
 import pl.droidsonroids.droidsmap.base.BaseFeatureView
 import pl.droidsonroids.droidsmap.feature.office.api.OfficeDataEndpoint
 import pl.droidsonroids.droidsmap.feature.office.business_logic.OfficeFeatureBoundary
@@ -20,8 +26,8 @@ import pl.droidsonroids.droidsmap.feature.office.mvp.OfficeUiModel
 import pl.droidsonroids.droidsmap.feature.office.repository.OfficeRepository
 import pl.droidsonroids.droidsmap.feature.room.api.RoomDataEndpoint
 import pl.droidsonroids.droidsmap.feature.room.api.RoomImagesEndpoint
+import pl.droidsonroids.droidsmap.feature.room.mvp.RoomUiModel
 import pl.droidsonroids.droidsmap.model.Coordinates
-import pl.droidsonroids.droidsmap.model.Room
 import java.util.*
 
 
@@ -37,7 +43,6 @@ open class OfficeUiFeatureView(private val activityWrapper: ActivityWrapper) : B
     private val officeBoundary = OfficeFeatureBoundary.create(
             officeRepository = OfficeRepository(OfficeDataEndpoint.create(), RoomDataEndpoint.create(), RoomImagesEndpoint.create()))
     private var googleMap: GoogleMapWrapper? = null
-    private val roomsList = ArrayList<Room>()
     private val groundOverlayList = ArrayList<GroundOverlay>()
 //    private var officeScene: Scene = Scene(activityWrapper.officeRoot, activityWrapper.officeSceneLayout)
 
@@ -51,7 +56,6 @@ open class OfficeUiFeatureView(private val activityWrapper: ActivityWrapper) : B
                 onGroundOverlayClicked(it)
             }
             checkLocationPermission()
-            createRoomList()
             UiCommandInvoker.invokeQueuedChain()
         }
     }
@@ -95,20 +99,20 @@ open class OfficeUiFeatureView(private val activityWrapper: ActivityWrapper) : B
         }
     }
 
-    private fun createRoomList() {
-        roomsList.add(Room(228f, 144f, 114f, 138f, "skybuds room", R.drawable.room_3))
-        roomsList.add(Room(148f, 204f, 74f, 304f, "server room", R.drawable.room_2))
-        roomsList.add(Room(100f, 168f, 50f, 454f, "server room2", R.drawable.room_2a))
-        roomsList.add(Room(164f, 116f, 174f, 456f, "room 1", R.drawable.room_1))
-        roomsList.add(Room(126f, 142f, 257f, 273f, "room 4", R.drawable.room_4))
-        roomsList.add(Room(166f, 202f, 301f, 607f, "room m", R.drawable.room_m))
-        roomsList.add(Room(144f, 202f, 448f, 607f, "room 5", R.drawable.room_5))
-        roomsList.add(Room(256f, 204f, 562f, 304f, "room 6", R.drawable.room_6))
-        roomsList.add(Room(130f, 70f, 377f, 371f, "wall 1", R.drawable.wall_1))
-        roomsList.add(Room(146f, 202f, 585f, 607f, "room_7", R.drawable.room_7))
-        roomsList.add(Room(194f, 406f, 759f, 203f, "room_fun", R.drawable.room_fun))
-        roomsList.add(Room(206f, 202f, 753f, 607f, "room_9", R.drawable.room_9))
-    }
+//    private fun createRoomList() {
+//        roomsList.add(Room(228f, 144f, 114f, 138f, "skybuds room", R.drawable.room_3))
+//        roomsList.add(Room(148f, 204f, 74f, 304f, "server room", R.drawable.room_2))
+//        roomsList.add(Room(100f, 168f, 50f, 454f, "server room2", R.drawable.room_2a))
+//        roomsList.add(Room(164f, 116f, 174f, 456f, "room 1", R.drawable.room_1))
+//        roomsList.add(Room(126f, 142f, 257f, 273f, "room 4", R.drawable.room_4))
+//        roomsList.add(Room(166f, 202f, 301f, 607f, "room m", R.drawable.room_m))
+//        roomsList.add(Room(144f, 202f, 448f, 607f, "room 5", R.drawable.room_5))
+//        roomsList.add(Room(256f, 204f, 562f, 304f, "room 6", R.drawable.room_6))
+//        roomsList.add(Room(130f, 70f, 377f, 371f, "wall 1", R.drawable.wall_1))
+//        roomsList.add(Room(146f, 202f, 585f, 607f, "room_7", R.drawable.room_7))
+//        roomsList.add(Room(194f, 406f, 759f, 203f, "room_fun", R.drawable.room_fun))
+//        roomsList.add(Room(206f, 202f, 753f, 607f, "room_9", R.drawable.room_9))
+//    }
 
     private fun checkLocationPermission() {
         if (activityWrapper.isLocationPermissionGranted()) {
@@ -171,10 +175,34 @@ open class OfficeUiFeatureView(private val activityWrapper: ActivityWrapper) : B
     }
 
     private fun performDisplayOfficeRooms(officeUiModel: OfficeUiModel) {
-        TODO()
+        officeUiModel.roomUiModels.forEach { roomUiModel ->
+            Glide.with(activityWrapper.getActivity())
+                    .`as`(PictureDrawable::class.java)
+                    .load(roomUiModel.imageUrl)
+                    .listener(object : RequestListener<PictureDrawable> {
+                        override fun onLoadFailed(p0: GlideException?, p1: Any?, target: Target<PictureDrawable>?, p3: Boolean): Boolean {
+                            p0?.printStackTrace()
+                            return false
+                        }
+
+                        override fun onResourceReady(bitmap: PictureDrawable?, p1: Any?, target: Target<PictureDrawable>?, p3: DataSource?, p4: Boolean): Boolean {
+                            var bitmap = pictureDrawableToBitmap(bitmap!!)
+                            createAndDisplayMapOverlay(roomUiModel, officeUiModel, bitmap)
+                            return false
+                        }
+                    })
+                    .submit()
+        }
     }
 
-    private fun createAndDisplayMapOverlay(room: Room, uiModel: OfficeUiModel, bitmap: Bitmap) {
+    private fun pictureDrawableToBitmap(pictureDrawable: PictureDrawable): Bitmap {
+        val bmp = Bitmap.createBitmap(pictureDrawable.intrinsicWidth, pictureDrawable.intrinsicHeight, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bmp)
+        canvas.drawPicture(pictureDrawable.picture)
+        return bmp
+    }
+
+    private fun createAndDisplayMapOverlay(room: RoomUiModel, uiModel: OfficeUiModel, bitmap: Bitmap) {
         val overlayOptions = GroundOverlayOptions()
                 .image(BitmapDescriptorFactory.fromBitmap(bitmap))
                 .transparency(0f)
@@ -186,8 +214,8 @@ open class OfficeUiFeatureView(private val activityWrapper: ActivityWrapper) : B
                 .clickable(true)
 
         googleMap?.let {
-            val overlay = (googleMap as GoogleMap).addGroundOverlay(overlayOptions)
-            overlay.tag = room.tag
+            val overlay = (googleMap as GoogleMapWrapper).addGroundOverlay(overlayOptions)
+//            overlay.tag = room.tag
             groundOverlayList.add(overlay)
         }
     }

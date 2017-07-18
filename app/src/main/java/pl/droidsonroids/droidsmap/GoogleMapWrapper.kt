@@ -4,6 +4,7 @@ import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.Projection
 import com.google.android.gms.maps.model.GroundOverlay
+import com.google.android.gms.maps.model.GroundOverlayOptions
 import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.MarkerOptions
 
@@ -40,6 +41,10 @@ class GoogleMapWrapper(val googleMap: GoogleMap) {
 
     fun moveCamera(cameraUpdate: CameraUpdate) {
         googleMap.moveCamera(cameraUpdate)
+    }
+
+    fun addGroundOverlay(groundOverlayOptions: GroundOverlayOptions): GroundOverlay {
+        return googleMap.addGroundOverlay(groundOverlayOptions)
     }
 
     private fun GoogleMap.setup(minZoom: Float) {
