@@ -71,7 +71,7 @@ class ActivityWrapper(
     }
 
     fun notifyPerspectiveChanged(perspective: Perspective) {
-        TODO()
+        roomFeature.onPerspectiveChanged(perspective)
     }
 
     fun onBackPressed() {

@@ -27,5 +27,6 @@ open class RoomUiFeatureView(private val activityWrapper: ActivityWrapper) : Bas
     }
 
     open fun onPerspectiveChanged(perspective: Perspective) {
+        TODO()
     }
 }
