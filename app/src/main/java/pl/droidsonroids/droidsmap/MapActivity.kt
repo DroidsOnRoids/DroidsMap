@@ -5,21 +5,19 @@ import android.support.v7.app.AppCompatActivity
 
 class MapActivity : AppCompatActivity() {
 
-    private lateinit var activityWrapper: ActivityWrapper
+    private lateinit var flowManager: FlowManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_map)
-
-        activityWrapper = ActivityWrapper(this)
     }
 
     override fun onBackPressed() {
-        activityWrapper.onBackPressed()
+        flowManager.onBackNavigationButtonPressed()
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        activityWrapper.onRequestPermissionsResult(requestCode, grantResults)
+        flowManager.onRequestPermissionsResult(requestCode, grantResults)
     }
 }

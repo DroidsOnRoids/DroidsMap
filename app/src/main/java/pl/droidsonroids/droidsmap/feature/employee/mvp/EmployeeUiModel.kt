@@ -8,7 +8,7 @@ data class EmployeeUiModel (
     val surname: String,
     val position: String,
     val imageUrl: String
-) : UiModel {
+) : UiModel() {
     companion object {
         fun from(entity: EmployeeEntity, imageUrl: String) = EmployeeUiModel(
                 entity.name,

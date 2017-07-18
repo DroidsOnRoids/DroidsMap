@@ -20,7 +20,7 @@ class ActivityWrapperTest {
 
     @Test
     fun `room view gets notified about perspective change`() {
-        val activityWrapper = ActivityWrapper(roomFeature = roomViewMock, officeFeature = officeViewMock)
+        val activityWrapper = FlowManager(roomFeature = roomViewMock, officeFeature = officeViewMock)
 
         activityWrapper.notifyPerspectiveChanged(Perspective.ROOM)
 

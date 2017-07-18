@@ -8,5 +8,5 @@ interface OfficeMvpView {
     fun displayOfficeRooms(officeUiModel: OfficeUiModel)
     fun animateCameraToClickedRoom(coordinates: Coordinates)
     fun prepareForRoomTransition()
-    fun performOfficeTransition()
+    fun performRoomTransition()
 }

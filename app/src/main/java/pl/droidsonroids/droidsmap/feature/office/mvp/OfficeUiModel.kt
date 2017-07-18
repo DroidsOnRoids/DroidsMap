@@ -12,7 +12,7 @@ data class OfficeUiModel(
         val mapViewportBearing: Double,
         val translatedMapViewportBearing: Double,
         val mapViewportConstraint: Double,
-        val roomUiModels: Collection<RoomUiModel>) : UiModel {
+        val roomUiModels: Collection<RoomUiModel>) : UiModel() {
     companion object {
         fun from(entity: OfficeEntity, roomModels: Collection<RoomUiModel>) = OfficeUiModel(
                 entity.centerLatitude,

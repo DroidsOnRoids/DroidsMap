@@ -1,14 +1,14 @@
 package pl.droidsonroids.droidsmap.feature.room.ui
 
-import pl.droidsonroids.droidsmap.ActivityWrapper
+import pl.droidsonroids.droidsmap.FlowManager
 import pl.droidsonroids.droidsmap.Perspective
 import pl.droidsonroids.droidsmap.base.BaseFeatureView
 import pl.droidsonroids.droidsmap.feature.room.mvp.RoomMvpView
 import pl.droidsonroids.droidsmap.feature.room.mvp.RoomPresenter
 
-open class RoomUiFeatureView(private val activityWrapper: ActivityWrapper) : BaseFeatureView<RoomPresenter>(), RoomMvpView {
+open class RoomUiFeatureView(private val activityWrapper: FlowManager) : BaseFeatureView<RoomPresenter>(), RoomMvpView {
 
-    override fun performRoomTransition() {
+    override fun performOfficeTransition() {
         with(activityWrapper) {
 //            val roomScene = android.transition.Scene.getSceneForLayout(roomRoot, pl.droidsonroids.droidsmap.R.layout.scene_room, this)
 //            roomScene.setEnterAction {
