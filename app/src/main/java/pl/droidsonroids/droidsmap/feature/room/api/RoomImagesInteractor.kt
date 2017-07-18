@@ -17,7 +17,7 @@ class RoomImagesInteractor : BaseFirebaseStorageInteractor(), RoomImagesEndpoint
     override fun getRoomImageUrl(imageId: String): Single<String> {
         return create { emitter ->
             setStorageNode()
-            val downloadingTask = storageQueryNode.child(imageId).downloadUrl
+            val downloadingTask = storageQueryNode.child(imageId + ".svg").downloadUrl
 
             val queryListener = object: OnCompleteListener<Uri> {
                 override fun onComplete(task: Task<Uri>) {
