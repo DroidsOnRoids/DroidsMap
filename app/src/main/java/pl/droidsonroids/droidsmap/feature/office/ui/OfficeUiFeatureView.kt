@@ -1,6 +1,5 @@
 package pl.droidsonroids.droidsmap.feature.office.ui
 
-import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.drawable.PictureDrawable
@@ -8,7 +7,6 @@ import android.transition.Scene
 import android.transition.TransitionInflater
 import android.transition.TransitionManager
 import android.widget.ImageView
-import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
@@ -35,7 +33,6 @@ import pl.droidsonroids.droidsmap.feature.room.mvp.RoomUiModel
 import pl.droidsonroids.droidsmap.model.Coordinates
 import java.util.*
 
-private const val LOCATION_REQUEST_CODE = 1
 private const val CAMERA_TRANSITION_DURATION_MILLIS = 300
 private const val MAP_BEARING = 201.5f
 private const val MIN_MAP_ZOOM = 18f
@@ -104,6 +101,14 @@ class OfficeUiFeatureView(private val activityWrapper: MapActivityWrapper) : Bas
         }
     }
 
+    override fun onBackButtonPressed() {
+        TODO()
+    }
+
+    override fun onLocationPermissionGranted() {
+        googleMap?.isMyLocationEnabled = true
+    }
+
 /*    private fun createRoomList() {
         roomsList.add(Room(228f, 144f, 114f, 138f, "skybuds room", R.drawable.room_3))
         roomsList.add(Room(148f, 204f, 74f, 304f, "server room", R.drawable.room_2))
@@ -117,21 +122,10 @@ class OfficeUiFeatureView(private val activityWrapper: MapActivityWrapper) : Bas
         roomsList.add(Room(146f, 202f, 585f, 607f, "room_7", R.drawable.room_7))
         roomsList.add(Room(194f, 406f, 759f, 203f, "room_fun", R.drawable.room_fun))
         roomsList.add(Room(206f, 202f, 753f, 607f, "room_9", R.drawable.room_9))
+        TODO("delete after migrating data to backend")
     }*/
 
     override fun requestOffice() = presenter.onRequestOffice()
-
-    fun onRequestPermissionsResult(requestCode: Int, grantResults: IntArray) {
-        when (requestCode) {
-            LOCATION_REQUEST_CODE -> {
-                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    googleMap?.isMyLocationEnabled = true
-                } else {
-                    Toast.makeText(activityWrapper.activity, "Grant the permission!", Toast.LENGTH_SHORT).show()
-                }
-            }
-        }
-    }
 
     override fun setMapPanningConstraints(uiModel: OfficeUiModel) {
         if (googleMap == null) UiCommandInvoker.queueInvokement { performSetMapPanningConstraints(uiModel) } else performSetMapPanningConstraints(uiModel)
@@ -231,10 +225,6 @@ class OfficeUiFeatureView(private val activityWrapper: MapActivityWrapper) : Bas
         }
     }
 
-    override fun onBackButtonPressed() {
-        presenter.onBackButtonPressed()
-    }
-
     inner class CameraListenerAdapter(private val endAction: () -> Unit) : GoogleMap.CancelableCallback {
         override fun onFinish() {
             endAction()
@@ -258,5 +248,6 @@ class OfficeUiFeatureView(private val activityWrapper: MapActivityWrapper) : Bas
 interface OfficeUiGateway {
     fun requestOffice()
     fun onBackButtonPressed()
+    fun onLocationPermissionGranted()
 }
 

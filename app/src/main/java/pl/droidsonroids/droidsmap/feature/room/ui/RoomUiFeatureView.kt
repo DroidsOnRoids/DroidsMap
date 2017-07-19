@@ -32,7 +32,7 @@ open class RoomUiFeatureView(private val activityWrapper: MapActivityWrapper) : 
     }
 
     override fun onBackButtonPressed() {
-        presenter.onBackButtonPressed()
+        TODO()
     }
 
     override fun onPerspectiveChanged(perspective: Perspective) {
