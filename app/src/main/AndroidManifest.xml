@@ -16,13 +16,13 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAGoSHs_fLSza280Wt5FR55jWrH81gnQL4" />
 
-        <activity android:name=".MapActivity">
+        <activityWrapper android:name=".MapActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
+        </activityWrapper>
     </application>
 
 </manifest>
