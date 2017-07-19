@@ -11,14 +11,16 @@ import pl.droidsonroids.droidsmap.feature.room.ui.RoomUiGateway
 class FlowManagerTest {
 
     lateinit var roomGatewayMock: RoomUiGateway
-    lateinit var OfficeGatewayMock: OfficeUiGateway
+    lateinit var officeGatewayMock: OfficeUiGateway
+    lateinit var terminateListener: Terminatable
     lateinit var flowManager: FlowManager
 
     @Before
     fun setUp() {
         roomGatewayMock = mock()
-        OfficeGatewayMock = mock()
-        flowManager = FlowManager(roomFeatureGateway = roomGatewayMock, officeFeatureGateway = OfficeGatewayMock)
+        officeGatewayMock = mock()
+        terminateListener = mock()
+        flowManager = FlowManager(officeGatewayMock, roomGatewayMock, terminateListener)
     }
 
     @Test
@@ -27,11 +29,11 @@ class FlowManagerTest {
         flowManager.currentPerspective = Perspective.OFFICE
         flowManager.onBackButtonPressed()
 
-        verify(OfficeGatewayMock).onPerspectiveChanged(false)
+        verify(officeGatewayMock).onPerspectiveChanged(false)
 
         verify(roomGatewayMock, never()).onPerspectiveChanged(false)
         verify(roomGatewayMock, never()).onPerspectiveChanged(true)
-        verify(OfficeGatewayMock, never()).onPerspectiveChanged(true)
+        verify(officeGatewayMock, never()).onPerspectiveChanged(true)
     }
 
     @Test
@@ -41,9 +43,9 @@ class FlowManagerTest {
         flowManager.onBackButtonPressed()
 
         verify(roomGatewayMock).onPerspectiveChanged(false)
-        verify(OfficeGatewayMock).onPerspectiveChanged(true)
+        verify(officeGatewayMock).onPerspectiveChanged(true)
 
         verify(roomGatewayMock, never()).onPerspectiveChanged(true)
-        verify(OfficeGatewayMock, never()).onPerspectiveChanged(false)
+        verify(officeGatewayMock, never()).onPerspectiveChanged(false)
     }
 }
