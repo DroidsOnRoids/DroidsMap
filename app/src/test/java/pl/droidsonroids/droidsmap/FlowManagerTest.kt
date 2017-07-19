@@ -12,15 +12,15 @@ class FlowManagerTest {
 
     lateinit var roomGatewayMock: RoomUiGateway
     lateinit var officeGatewayMock: OfficeUiGateway
-    lateinit var terminateListener: Terminatable
+    lateinit var terminateCallbackMock: TerminationCallback
     lateinit var flowManager: FlowManager
 
     @Before
     fun setUp() {
         roomGatewayMock = mock()
         officeGatewayMock = mock()
-        terminateListener = mock()
-        flowManager = FlowManager(officeGatewayMock, roomGatewayMock, terminateListener)
+        terminateCallbackMock = mock()
+        flowManager = FlowManager(officeGatewayMock, roomGatewayMock, terminateCallbackMock)
     }
 
     @Test
@@ -54,6 +54,6 @@ class FlowManagerTest {
         flowManager.currentPerspective = Perspective.OFFICE
         flowManager.onBackButtonPressed()
 
-        verify(terminateListener).onTerminate()
+        verify(terminateCallbackMock).onAppTerminate()
     }
 }

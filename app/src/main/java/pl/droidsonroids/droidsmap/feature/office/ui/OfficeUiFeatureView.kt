@@ -60,9 +60,7 @@ class OfficeUiFeatureView(private val activity: MapActivity) : BaseFeatureView<O
         }
     }
 
-    override fun registerFlowChangeCallback(flowManager: FlowManager) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    override fun registerFlowChangeCallback(flowManager: FlowManager) = Unit
 
     private fun onGroundOverlayClicked(groundOverlay: GroundOverlay) {
         presenter.onRoomClicked(Coordinates.from(groundOverlay.position))
@@ -108,9 +106,7 @@ class OfficeUiFeatureView(private val activity: MapActivity) : BaseFeatureView<O
         googleMap?.isMyLocationEnabled = true
     }
 
-    override fun onPerspectiveChanged(active: Boolean) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    override fun onPerspectiveChanged(active: Boolean) = Unit
 
 /*    private fun createRoomList() {
         roomsList.add(Room(228f, 144f, 114f, 138f, "skybuds room", R.drawable.room_3))

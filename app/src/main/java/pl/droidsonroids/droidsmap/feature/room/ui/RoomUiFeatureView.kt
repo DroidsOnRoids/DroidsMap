@@ -29,13 +29,9 @@ class RoomUiFeatureView(private val activity: MapActivity) : BaseFeatureView<Roo
         }
     }
 
-    override fun registerFlowChangeCallback(flowManager: FlowManager) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    override fun registerFlowChangeCallback(flowManager: FlowManager) = Unit
 
-    override fun onPerspectiveChanged(active: Boolean) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    override fun onPerspectiveChanged(active: Boolean) = Unit
 }
 
 interface RoomUiGateway {

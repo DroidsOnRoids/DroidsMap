@@ -15,8 +15,8 @@ class MapActivity : AppCompatActivity() {
     private lateinit var officeFeature: OfficeUiFeatureView
     private lateinit var roomFeature: RoomUiFeatureView
 
-    val terminateListener = object : Terminatable {
-        override fun onTerminate() {
+    val appTerminateCallback = object : TerminationCallback {
+        override fun onAppTerminate() {
             this@MapActivity.finish()
         }
     }
@@ -26,7 +26,7 @@ class MapActivity : AppCompatActivity() {
         setContentView(R.layout.activity_map)
         officeFeature = OfficeUiFeatureView(this)
         roomFeature = RoomUiFeatureView(this)
-        flowManager = FlowManager(officeFeature, roomFeature, terminateListener)
+        flowManager = FlowManager(officeFeature, roomFeature, appTerminateCallback)
     }
 
     override fun onBackPressed() {
@@ -47,6 +47,6 @@ class MapActivity : AppCompatActivity() {
     }
 }
 
-interface Terminatable {
-    fun onTerminate()
+interface TerminationCallback {
+    fun onAppTerminate()
 }
