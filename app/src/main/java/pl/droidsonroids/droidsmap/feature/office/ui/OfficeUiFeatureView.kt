@@ -82,28 +82,6 @@ class OfficeUiFeatureView(private val activity: MapActivity) : BaseFeatureView<O
         }))
     }
 
-    override fun prepareForRoomTransition() {
-        with(activity) {
-            val resourceId = resources.getIdentifier("room_3", "drawable", this.packageName)
-            val roomImageDrawable = resources.getDrawable(resourceId)
-
-            with(roomImage) {
-                setImageDrawable(roomImageDrawable)
-                layoutParams.width = ((roomImageDrawable).intrinsicWidth * 2.2f).toInt()
-                layoutParams.height = ((roomImageDrawable).intrinsicHeight * 2.2f).toInt()
-            }
-
-            googleMap?.run {
-                with(projection.visibleRegion) {
-                    addMarker(MarkerOptions().position(nearLeft).title("Near left"))
-                    addMarker(MarkerOptions().position(nearRight).title("Near right"))
-                    addMarker(MarkerOptions().position(farLeft).title("Far left"))
-                    addMarker(MarkerOptions().position(farRight).title("Far right"))
-                }
-            }
-        }
-    }
-
     override fun onLocationPermissionGranted() {
         googleMap?.isMyLocationEnabled = true
     }
@@ -113,7 +91,15 @@ class OfficeUiFeatureView(private val activity: MapActivity) : BaseFeatureView<O
     override fun requestOffice() = presenter.onRequestOffice()
 
     override fun setMapPanningConstraints(uiModel: OfficeUiModel) {
-        if (googleMap == null) UiCommandInvoker.queueInvokement { performSetMapPanningConstraints(uiModel) } else performSetMapPanningConstraints(uiModel)
+        appointUiTaskIfMapNull { performSetMapPanningConstraints(uiModel) }
+    }
+
+    private fun appointUiTaskIfMapNull(function: () -> Any) {
+        if (googleMap == null) {
+            UiCommandInvoker.queueInvokement { function }
+        } else {
+            function()
+        }
     }
 
     private fun performSetMapPanningConstraints(uiModel: OfficeUiModel) {
@@ -126,7 +112,7 @@ class OfficeUiFeatureView(private val activity: MapActivity) : BaseFeatureView<O
     }
 
     override fun focusMapOnOfficeLocation(uiModel: OfficeUiModel) {
-        if (googleMap == null) UiCommandInvoker.queueInvokement { performFocusMapOnOfficeLocation(uiModel) } else performFocusMapOnOfficeLocation(uiModel)
+        appointUiTaskIfMapNull { performFocusMapOnOfficeLocation(uiModel) }
     }
 
     private fun performFocusMapOnOfficeLocation(uiModel: OfficeUiModel) {
@@ -143,11 +129,7 @@ class OfficeUiFeatureView(private val activity: MapActivity) : BaseFeatureView<O
     }
 
     override fun displayOfficeRooms(officeUiModel: OfficeUiModel) {
-        if (googleMap == null) {
-            UiCommandInvoker.queueInvokement { performDisplayOfficeRooms(officeUiModel) }
-        } else {
-            performDisplayOfficeRooms(officeUiModel)
-        }
+        appointUiTaskIfMapNull { performDisplayOfficeRooms(officeUiModel) }
     }
 
     private fun performDisplayOfficeRooms(officeUiModel: OfficeUiModel) {
@@ -156,13 +138,13 @@ class OfficeUiFeatureView(private val activity: MapActivity) : BaseFeatureView<O
                     .`as`(PictureDrawable::class.java)
                     .load(roomUiModel.imageUrl)
                     .listener(object : RequestListener<PictureDrawable> {
-                        override fun onLoadFailed(p0: GlideException?, p1: Any?, p2: Target<PictureDrawable>?, p3: Boolean): Boolean {
-                            p0?.printStackTrace()
+                        override fun onLoadFailed(exception: GlideException?, ignored: Any?, target: Target<PictureDrawable>?, aBoolean: Boolean): Boolean {
+                            exception?.printStackTrace()
                             return false
                         }
 
-                        override fun onResourceReady(p0: PictureDrawable?, p1: Any?, p2: Target<PictureDrawable>?, p3: DataSource?, p4: Boolean): Boolean {
-                            val bitmap = convertPictureDrawableToBitmap(p0!!)
+                        override fun onResourceReady(pictureDrawable: PictureDrawable?, ignored: Any?, target: Target<PictureDrawable>?, dataSource: DataSource?, aBoolean: Boolean): Boolean {
+                            val bitmap = convertPictureDrawableToBitmap(pictureDrawable!!)
                             createAndDisplayMapOverlay(roomUiModel, officeUiModel, bitmap)
                             return false
                         }
@@ -196,6 +178,28 @@ class OfficeUiFeatureView(private val activity: MapActivity) : BaseFeatureView<O
         }
     }
 
+    override fun prepareForRoomTransition() {
+        with(activity) {
+            val resourceId = resources.getIdentifier("room_3", "drawable", this.packageName)
+            val roomImageDrawable = resources.getDrawable(resourceId)
+
+            with(roomImage) {
+                setImageDrawable(roomImageDrawable)
+                layoutParams.width = ((roomImageDrawable).intrinsicWidth * 2.2f).toInt()
+                layoutParams.height = ((roomImageDrawable).intrinsicHeight * 2.2f).toInt()
+            }
+
+            googleMap?.run {
+                with(projection.visibleRegion) {
+                    addMarker(MarkerOptions().position(nearLeft).title("Near left"))
+                    addMarker(MarkerOptions().position(nearRight).title("Near right"))
+                    addMarker(MarkerOptions().position(farLeft).title("Far left"))
+                    addMarker(MarkerOptions().position(farRight).title("Far right"))
+                }
+            }
+        }
+    }
+
     override fun performRoomTransition() {
         with(activity) {
             val roomScene = Scene.getSceneForLayout(rootLayout, R.layout.scene_room, this)
@@ -222,9 +226,9 @@ class OfficeUiFeatureView(private val activity: MapActivity) : BaseFeatureView<O
             isCompassEnabled = false
             isMyLocationButtonEnabled = false
         }
-        this.setMinZoomPreference(MIN_MAP_ZOOM)
-        this.mapType = GoogleMap.MAP_TYPE_TERRAIN
-        this.isBuildingsEnabled = true
+        setMinZoomPreference(MIN_MAP_ZOOM)
+        mapType = GoogleMap.MAP_TYPE_TERRAIN
+        isBuildingsEnabled = true
     }
 }
 
