@@ -28,7 +28,7 @@ class FlowManager(
     }
 
     override fun onPerspectiveChanged(newPerspective: Perspective) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        currentPerspective = newPerspective
     }
 }
 
