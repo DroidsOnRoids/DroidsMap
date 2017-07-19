@@ -18,7 +18,7 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import kotlinx.android.synthetic.main.activity_map.*
 import kotlinx.android.synthetic.main.scene_office_map.*
-import pl.droidsonroids.droidsmap.FlowManager
+import pl.droidsonroids.droidsmap.ForwardFlowChangeListener
 import pl.droidsonroids.droidsmap.MapActivity
 import pl.droidsonroids.droidsmap.R
 import pl.droidsonroids.droidsmap.base.BaseFeatureView
@@ -60,7 +60,9 @@ class OfficeUiFeatureView(private val activity: MapActivity) : BaseFeatureView<O
         }
     }
 
-    override fun registerFlowChangeCallback(flowManager: FlowManager) = Unit
+    override fun registerFlowChangeCallback(callback: ForwardFlowChangeListener) {
+        presenter.registerFlowChangeCallback(callback)
+    }
 
     private fun onGroundOverlayClicked(groundOverlay: GroundOverlay) {
         presenter.onRoomClicked(Coordinates.from(groundOverlay.position))
@@ -230,6 +232,6 @@ interface OfficeUiGateway {
     fun requestOffice()
     fun onLocationPermissionGranted()
     fun onPerspectiveChanged(active: Boolean)
-    fun registerFlowChangeCallback(flowManager: FlowManager)
+    fun registerFlowChangeCallback(callback: ForwardFlowChangeListener)
 }
 
