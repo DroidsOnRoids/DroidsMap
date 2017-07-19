@@ -1,3 +1,3 @@
 package pl.droidsonroids.droidsmap.base
 
-interface Presenter
+abstract class Presenter

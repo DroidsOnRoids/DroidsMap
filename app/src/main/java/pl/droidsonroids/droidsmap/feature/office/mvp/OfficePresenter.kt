@@ -7,7 +7,7 @@ import pl.droidsonroids.droidsmap.model.Coordinates
 
 class OfficePresenter private constructor(
         private val officeView: OfficeMvpView,
-        private val officeFeatureBoundary: OfficeFeatureBoundary) : Presenter {
+        private val officeFeatureBoundary: OfficeFeatureBoundary) : Presenter() {
 
     fun onRequestOffice() = officeFeatureBoundary.requestOffice(OfficeDataObserver())
 

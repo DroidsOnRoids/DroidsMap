@@ -108,22 +108,6 @@ class OfficeUiFeatureView(private val activity: MapActivity) : BaseFeatureView<O
 
     override fun onPerspectiveChanged(active: Boolean) = Unit
 
-/*    private fun createRoomList() {
-        roomsList.add(Room(228f, 144f, 114f, 138f, "skybuds room", R.drawable.room_3))
-        roomsList.add(Room(148f, 204f, 74f, 304f, "server room", R.drawable.room_2))
-        roomsList.add(Room(100f, 168f, 50f, 454f, "server room2", R.drawable.room_2a))
-        roomsList.add(Room(164f, 116f, 174f, 456f, "room 1", R.drawable.room_1))
-        roomsList.add(Room(126f, 142f, 257f, 273f, "room 4", R.drawable.room_4))
-        roomsList.add(Room(166f, 202f, 301f, 607f, "room m", R.drawable.room_m))
-        roomsList.add(Room(144f, 202f, 448f, 607f, "room 5", R.drawable.room_5))
-        roomsList.add(Room(256f, 204f, 562f, 304f, "room 6", R.drawable.room_6))
-        roomsList.add(Room(130f, 70f, 377f, 371f, "wall 1", R.drawable.wall_1))
-        roomsList.add(Room(146f, 202f, 585f, 607f, "room_7", R.drawable.room_7))
-        roomsList.add(Room(194f, 406f, 759f, 203f, "room_fun", R.drawable.room_fun))
-        roomsList.add(Room(206f, 202f, 753f, 607f, "room_9", R.drawable.room_9))
-        TODO("delete after migrating data to backend")
-    }*/
-
     override fun requestOffice() = presenter.onRequestOffice()
 
     override fun setMapPanningConstraints(uiModel: OfficeUiModel) {
@@ -176,7 +160,7 @@ class OfficeUiFeatureView(private val activity: MapActivity) : BaseFeatureView<O
                         }
 
                         override fun onResourceReady(p0: PictureDrawable?, p1: Any?, p2: Target<PictureDrawable>?, p3: DataSource?, p4: Boolean): Boolean {
-                            val bitmap = convertpictureDrawableToBitmap(p0!!)
+                            val bitmap = convertPictureDrawableToBitmap(p0!!)
                             createAndDisplayMapOverlay(roomUiModel, officeUiModel, bitmap)
                             return false
                         }
@@ -185,7 +169,7 @@ class OfficeUiFeatureView(private val activity: MapActivity) : BaseFeatureView<O
         }
     }
 
-    private fun convertpictureDrawableToBitmap(pictureDrawable: PictureDrawable): Bitmap {
+    private fun convertPictureDrawableToBitmap(pictureDrawable: PictureDrawable): Bitmap {
         val resultBitmap = Bitmap.createBitmap(pictureDrawable.intrinsicWidth, pictureDrawable.intrinsicHeight, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(resultBitmap)
         canvas.drawPicture(pictureDrawable.picture)
@@ -205,7 +189,7 @@ class OfficeUiFeatureView(private val activity: MapActivity) : BaseFeatureView<O
 
         googleMap?.let {
             val overlay = (googleMap as GoogleMap).addGroundOverlay(overlayOptions)
-//            overlay.tag = room.tag
+//            overlay.tag = room.
             groundOverlayList.add(overlay)
         }
     }
