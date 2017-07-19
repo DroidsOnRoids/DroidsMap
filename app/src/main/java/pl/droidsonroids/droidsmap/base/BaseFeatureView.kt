@@ -1,6 +1,7 @@
 package pl.droidsonroids.droidsmap.base
 
 import android.transition.Transition
+import pl.droidsonroids.droidsmap.MapActivity
 
 abstract class BaseFeatureView<P : Presenter> {
     lateinit var presenter: P
@@ -31,3 +32,5 @@ abstract class BaseFeatureView<P : Presenter> {
         override fun onTransitionEnd(transition: Transition?) = endAction()
     }
 }
+
+class MapActivityWrapper(val activity: MapActivity? = null)

@@ -1,24 +1,33 @@
 package pl.droidsonroids.droidsmap.feature.room.ui
 
-import pl.droidsonroids.droidsmap.FlowManager
+import android.transition.Scene
+import android.transition.TransitionInflater
+import android.transition.TransitionManager
+import android.widget.ImageView
+import kotlinx.android.synthetic.main.scene_office_map.*
+import kotlinx.android.synthetic.main.scene_room.*
 import pl.droidsonroids.droidsmap.Perspective
+import pl.droidsonroids.droidsmap.R
 import pl.droidsonroids.droidsmap.base.BaseFeatureView
+import pl.droidsonroids.droidsmap.base.MapActivityWrapper
 import pl.droidsonroids.droidsmap.feature.room.mvp.RoomMvpView
 import pl.droidsonroids.droidsmap.feature.room.mvp.RoomPresenter
 
-open class RoomUiFeatureView(private val activityWrapper: FlowManager) : BaseFeatureView<RoomPresenter>(), RoomMvpView {
+open class RoomUiFeatureView(private val activityWrapper: MapActivityWrapper) : BaseFeatureView<RoomPresenter>(), RoomMvpView {
 
     override fun performOfficeTransition() {
-        with(activityWrapper) {
-//            val roomScene = android.transition.Scene.getSceneForLayout(roomRoot, pl.droidsonroids.droidsmap.R.layout.scene_room, this)
-//            roomScene.setEnterAction {
-//                val roomSceneImage = (roomScene.sceneRoot.findViewById(pl.droidsonroids.droidsmap.R.id.zoomedRoomImage) as ImageView)
-//                roomSceneImage.setImageDrawable(roomImage.drawable)
-//            }
-//            val sceneTransition = android.transition.TransitionInflater.from(this).inflateTransition(pl.droidsonroids.droidsmap.R.transition.room_scene_enter_transition)
-//            android.transition.TransitionManager.go(roomScene, sceneTransition)
+        with(activityWrapper.activity) {
+            if (this != null) {
+                val roomScene = Scene.getSceneForLayout(roomRootLayout, R.layout.scene_room, this)
+                roomScene.setEnterAction {
+                    val roomSceneImage = (roomScene.sceneRoot.findViewById(R.id.zoomedRoomImage) as ImageView)
+                    roomSceneImage.setImageDrawable(roomImage.drawable)
+                }
+                val sceneTransition = TransitionInflater.from(this).inflateTransition(pl.droidsonroids.droidsmap.R.transition.room_scene_enter_transition)
+                TransitionManager.go(roomScene, sceneTransition)
 
-            TODO()
+                TODO()
+            }
         }
     }
 

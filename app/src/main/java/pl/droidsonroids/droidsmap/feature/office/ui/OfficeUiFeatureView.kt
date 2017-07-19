@@ -5,17 +5,24 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.drawable.PictureDrawable
 import android.transition.Scene
+import android.transition.TransitionInflater
+import android.transition.TransitionManager
 import android.widget.ImageView
 import android.widget.Toast
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import kotlinx.android.synthetic.main.activity_map.*
 import kotlinx.android.synthetic.main.scene_office_map.*
-import pl.droidsonroids.droidsmap.MapActivity
 import pl.droidsonroids.droidsmap.R
 import pl.droidsonroids.droidsmap.base.BaseFeatureView
+import pl.droidsonroids.droidsmap.base.MapActivityWrapper
 import pl.droidsonroids.droidsmap.feature.office.api.OfficeDataEndpoint
 import pl.droidsonroids.droidsmap.feature.office.business_logic.OfficeFeatureBoundary
 import pl.droidsonroids.droidsmap.feature.office.mvp.OfficeMvpView
@@ -34,17 +41,17 @@ private const val MAP_BEARING = 201.5f
 private const val MIN_MAP_ZOOM = 18f
 private const val MAX_MAP_ZOOM = 25f
 
-class OfficeUiFeatureView(private val activity: MapActivity) : BaseFeatureView<OfficePresenter>(), OfficeMvpView {
+class OfficeUiFeatureView(private val activityWrapper: MapActivityWrapper) : BaseFeatureView<OfficePresenter>(), OfficeMvpView {
 
     private val officeBoundary = OfficeFeatureBoundary.create(
             officeRepository = OfficeRepository(OfficeDataEndpoint.create(), RoomDataEndpoint.create(), RoomImagesEndpoint.create()))
     private var googleMap: GoogleMap? = null
     private val groundOverlayList = ArrayList<GroundOverlay>()
-    private var officeScene: Scene = Scene(activity.rootLayout, activity.officeSceneLayout)
+    private var officeScene: Scene = Scene(activityWrapper.activity?.rootLayout, activityWrapper.activity?.officeSceneLayout)
 
     init {
         presenter = OfficePresenter.create(this, officeBoundary)
-        val mapFragment = activity.supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
+        val mapFragment = activityWrapper.activity?.supportFragmentManager?.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync {
             googleMap = it
             it.setup()
@@ -74,21 +81,24 @@ class OfficeUiFeatureView(private val activity: MapActivity) : BaseFeatureView<O
     }
 
     override fun prepareForRoomTransition() {
-        with(activity.roomImage) {
-            val resources = activity.resources
-            val resourceId = resources.getIdentifier("room_3", "drawable", activity.packageName)
-            val roomImageDrawable = resources.getDrawable(resourceId)
+        with(activityWrapper.activity) {
+            if (this != null) {
+                val resourceId = resources.getIdentifier("room_3", "drawable", this.packageName)
+                val roomImageDrawable = resources.getDrawable(resourceId)
 
-            setImageDrawable(roomImageDrawable)
-            layoutParams.width = ((roomImageDrawable).intrinsicWidth * 2.2f).toInt()
-            layoutParams.height = ((roomImageDrawable).intrinsicHeight * 2.2f).toInt()
+                with(roomImage) {
+                    setImageDrawable(roomImageDrawable)
+                    layoutParams.width = ((roomImageDrawable).intrinsicWidth * 2.2f).toInt()
+                    layoutParams.height = ((roomImageDrawable).intrinsicHeight * 2.2f).toInt()
+                }
 
-            googleMap?.run {
-                with(projection.visibleRegion) {
-                    addMarker(MarkerOptions().position(nearLeft).title("Near left"))
-                    addMarker(MarkerOptions().position(nearRight).title("Near right"))
-                    addMarker(MarkerOptions().position(farLeft).title("Far left"))
-                    addMarker(MarkerOptions().position(farRight).title("Far right"))
+                googleMap?.run {
+                    with(projection.visibleRegion) {
+                        addMarker(MarkerOptions().position(nearLeft).title("Near left"))
+                        addMarker(MarkerOptions().position(nearRight).title("Near right"))
+                        addMarker(MarkerOptions().position(farLeft).title("Far left"))
+                        addMarker(MarkerOptions().position(farRight).title("Far right"))
+                    }
                 }
             }
         }
@@ -117,7 +127,7 @@ class OfficeUiFeatureView(private val activity: MapActivity) : BaseFeatureView<O
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     googleMap?.isMyLocationEnabled = true
                 } else {
-                    Toast.makeText(activity, "Grant the permission!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(activityWrapper.activity, "Grant the permission!", Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -163,17 +173,17 @@ class OfficeUiFeatureView(private val activity: MapActivity) : BaseFeatureView<O
 
     private fun performDisplayOfficeRooms(officeUiModel: OfficeUiModel) {
         officeUiModel.roomUiModels.forEach { roomUiModel ->
-            Glide.with(activity)
+            Glide.with(activityWrapper.activity)
                     .`as`(PictureDrawable::class.java)
                     .load(roomUiModel.imageUrl)
                     .listener(object : RequestListener<PictureDrawable> {
-                        override fun onLoadFailed(p0: GlideException?, p1: Any?, target: Target<PictureDrawable>?, p3: Boolean): Boolean {
+                        override fun onLoadFailed(p0: GlideException?, p1: Any?, p2: Target<PictureDrawable>?, p3: Boolean): Boolean {
                             p0?.printStackTrace()
                             return false
                         }
 
-                        override fun onResourceReady(bitmap: PictureDrawable?, p1: Any?, target: Target<PictureDrawable>?, p3: DataSource?, p4: Boolean): Boolean {
-                            var bitmap = pictureDrawableToBitmap(bitmap!!)
+                        override fun onResourceReady(p0: PictureDrawable?, p1: Any?, p2: Target<PictureDrawable>?, p3: DataSource?, p4: Boolean): Boolean {
+                            val bitmap = pictureDrawableToBitmap(p0!!)
                             createAndDisplayMapOverlay(roomUiModel, officeUiModel, bitmap)
                             return false
                         }
@@ -208,15 +218,21 @@ class OfficeUiFeatureView(private val activity: MapActivity) : BaseFeatureView<O
     }
 
     override fun performRoomTransition() {
-        with(activity) {
-            val roomScene = android.transition.Scene.getSceneForLayout(rootLayout, pl.droidsonroids.droidsmap.R.layout.scene_room, this)
-            roomScene.setEnterAction {
-                val roomSceneImage = (roomScene.sceneRoot.findViewById(pl.droidsonroids.droidsmap.R.id.zoomedRoomImage) as ImageView)
-                roomSceneImage.setImageDrawable(roomImage.drawable)
+        with(activityWrapper.activity) {
+            if (this != null) {
+                val roomScene = Scene.getSceneForLayout(rootLayout, R.layout.scene_room, this)
+                roomScene.setEnterAction {
+                    val roomSceneImage = (roomScene.sceneRoot.findViewById(R.id.zoomedRoomImage) as ImageView)
+                    roomSceneImage.setImageDrawable(roomImage.drawable)
+                }
+                val sceneTransition = TransitionInflater.from(this).inflateTransition(R.transition.room_scene_enter_transition)
+                TransitionManager.go(roomScene, sceneTransition)
             }
-            val sceneTransition = android.transition.TransitionInflater.from(this).inflateTransition(pl.droidsonroids.droidsmap.R.transition.room_scene_enter_transition)
-            android.transition.TransitionManager.go(roomScene, sceneTransition)
         }
+    }
+
+    fun onBackButtonPressed() {
+        presenter.onBackButtonPressed()
     }
 
     inner class CameraListenerAdapter(private val endAction: () -> Unit) : GoogleMap.CancelableCallback {
@@ -225,10 +241,6 @@ class OfficeUiFeatureView(private val activity: MapActivity) : BaseFeatureView<O
         }
 
         override fun onCancel() = Unit
-    }
-
-    fun onBackButtonPressed() {
-        presenter.onBackButtonPressed()
     }
 
     private fun GoogleMap.setup() {
