@@ -41,7 +41,7 @@ private const val MAP_BEARING = 201.5f
 private const val MIN_MAP_ZOOM = 18f
 private const val MAX_MAP_ZOOM = 25f
 
-class OfficeUiFeatureView(private val activityWrapper: MapActivityWrapper) : BaseFeatureView<OfficePresenter>(), OfficeMvpView {
+class OfficeUiFeatureView(private val activityWrapper: MapActivityWrapper) : BaseFeatureView<OfficePresenter>(), OfficeMvpView, OfficeUiGateway {
 
     private val officeBoundary = OfficeFeatureBoundary.create(
             officeRepository = OfficeRepository(OfficeDataEndpoint.create(), RoomDataEndpoint.create(), RoomImagesEndpoint.create()))
@@ -119,7 +119,7 @@ class OfficeUiFeatureView(private val activityWrapper: MapActivityWrapper) : Bas
         roomsList.add(Room(206f, 202f, 753f, 607f, "room_9", R.drawable.room_9))
     }*/
 
-    fun requestOffice() = presenter.onRequestOffice()
+    override fun requestOffice() = presenter.onRequestOffice()
 
     fun onRequestPermissionsResult(requestCode: Int, grantResults: IntArray) {
         when (requestCode) {
@@ -231,7 +231,7 @@ class OfficeUiFeatureView(private val activityWrapper: MapActivityWrapper) : Bas
         }
     }
 
-    fun onBackButtonPressed() {
+    override fun onBackButtonPressed() {
         presenter.onBackButtonPressed()
     }
 
@@ -253,5 +253,10 @@ class OfficeUiFeatureView(private val activityWrapper: MapActivityWrapper) : Bas
         this.mapType = GoogleMap.MAP_TYPE_TERRAIN
         this.isBuildingsEnabled = true
     }
+}
+
+interface OfficeUiGateway {
+    fun requestOffice()
+    fun onBackButtonPressed()
 }
 

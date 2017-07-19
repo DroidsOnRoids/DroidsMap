@@ -13,7 +13,7 @@ import pl.droidsonroids.droidsmap.base.MapActivityWrapper
 import pl.droidsonroids.droidsmap.feature.room.mvp.RoomMvpView
 import pl.droidsonroids.droidsmap.feature.room.mvp.RoomPresenter
 
-open class RoomUiFeatureView(private val activityWrapper: MapActivityWrapper) : BaseFeatureView<RoomPresenter>(), RoomMvpView {
+open class RoomUiFeatureView(private val activityWrapper: MapActivityWrapper) : BaseFeatureView<RoomPresenter>(), RoomMvpView, RoomUiGateway {
 
     override fun performOfficeTransition() {
         with(activityWrapper.activity) {
@@ -31,11 +31,17 @@ open class RoomUiFeatureView(private val activityWrapper: MapActivityWrapper) : 
         }
     }
 
-    fun onBackButtonPressed() {
+    override fun onBackButtonPressed() {
         presenter.onBackButtonPressed()
     }
 
-    open fun onPerspectiveChanged(perspective: Perspective) {
+    override fun onPerspectiveChanged(perspective: Perspective) {
         TODO()
     }
+}
+
+interface RoomUiGateway {
+    fun onPerspectiveChanged(perspective: Perspective)
+
+    fun onBackButtonPressed()
 }

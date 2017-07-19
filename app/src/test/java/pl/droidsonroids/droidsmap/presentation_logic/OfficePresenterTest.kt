@@ -46,13 +46,6 @@ class OfficePresenterTest {
     }
 
     @Test
-    fun `use case is informed once app perspective changes from office to particular room`() {
-        presenter.onRoomClicked(Coordinates(0.0, 0.0))
-
-        verify(officeBoundary).changeToRoomPerspective()
-    }
-
-    @Test
     fun `view animates camera to clicked room`() {
         presenter.onRoomClicked(Coordinates(0.0, 0.0))
 

@@ -9,8 +9,6 @@ interface OfficeFeatureBoundary {
 
     fun requestOffice(officeDataObserver: DataObserverAdapter<OfficeUiModel>)
 
-    fun changeToRoomPerspective()
-
     companion object {
         fun create(roomBoundary: RoomFeatureBoundary? = null, officeRepository: OfficeRepository)
                 = OfficeFeatureUseCase(roomBoundary, officeRepository)
