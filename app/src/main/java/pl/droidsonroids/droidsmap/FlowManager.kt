@@ -8,10 +8,19 @@ class FlowManager(private val officeFeatureGateway: OfficeUiGateway, private val
     var currentPerspective = Perspective.OFFICE
 
     init {
+        officeFeatureGateway.registerFlowChangeCallback(this)
+        roomFeatureGateway.registerFlowChangeCallback(this)
         officeFeatureGateway.requestOffice()
     }
 
     fun onBackButtonPressed() {
-        TODO()
+        if (currentPerspective == Perspective.ROOM) {
+            currentPerspective = Perspective.OFFICE
+
+            roomFeatureGateway.onPerspectiveChanged(false)
+            officeFeatureGateway.onPerspectiveChanged(true)
+        } else {
+            officeFeatureGateway.onPerspectiveChanged(false)
+        }
     }
 }

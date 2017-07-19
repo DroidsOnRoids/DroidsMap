@@ -27,10 +27,10 @@ class FlowManagerTest {
         flowManager.currentPerspective = Perspective.OFFICE
         flowManager.onBackButtonPressed()
 
-        verify(roomGatewayMock).onPerspectiveChanged(true)
         verify(OfficeGatewayMock).onPerspectiveChanged(false)
 
         verify(roomGatewayMock, never()).onPerspectiveChanged(false)
+        verify(roomGatewayMock, never()).onPerspectiveChanged(true)
         verify(OfficeGatewayMock, never()).onPerspectiveChanged(true)
     }
 

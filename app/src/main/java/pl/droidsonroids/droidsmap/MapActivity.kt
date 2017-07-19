@@ -4,7 +4,6 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
-import pl.droidsonroids.droidsmap.base.MapActivityWrapper
 import pl.droidsonroids.droidsmap.feature.office.ui.OfficeUiFeatureView
 import pl.droidsonroids.droidsmap.feature.room.ui.RoomUiFeatureView
 
@@ -19,8 +18,8 @@ class MapActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_map)
-        officeFeature = OfficeUiFeatureView(MapActivityWrapper(this))
-        roomFeature = RoomUiFeatureView(MapActivityWrapper(this))
+        officeFeature = OfficeUiFeatureView(this)
+        roomFeature = RoomUiFeatureView(this)
         flowManager = FlowManager(officeFeature, roomFeature)
     }
 
