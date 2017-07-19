@@ -6,15 +6,13 @@ import android.transition.TransitionManager
 import android.widget.ImageView
 import kotlinx.android.synthetic.main.scene_office_map.*
 import kotlinx.android.synthetic.main.scene_room.*
-import pl.droidsonroids.droidsmap.Perspective
 import pl.droidsonroids.droidsmap.R
 import pl.droidsonroids.droidsmap.base.BaseFeatureView
 import pl.droidsonroids.droidsmap.base.MapActivityWrapper
 import pl.droidsonroids.droidsmap.feature.room.mvp.RoomMvpView
 import pl.droidsonroids.droidsmap.feature.room.mvp.RoomPresenter
 
-open class RoomUiFeatureView(private val activityWrapper: MapActivityWrapper) : BaseFeatureView<RoomPresenter>(), RoomMvpView, RoomUiGateway {
-
+class RoomUiFeatureView(private val activityWrapper: MapActivityWrapper) : BaseFeatureView<RoomPresenter>(), RoomMvpView, RoomUiGateway {
     override fun performOfficeTransition() {
         with(activityWrapper.activity) {
             if (this != null) {
@@ -31,17 +29,11 @@ open class RoomUiFeatureView(private val activityWrapper: MapActivityWrapper) : 
         }
     }
 
-    override fun onBackButtonPressed() {
-        TODO()
-    }
-
-    override fun onPerspectiveChanged(perspective: Perspective) {
-        TODO()
+    override fun onPerspectiveChanged(active: Boolean) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }
 
 interface RoomUiGateway {
-    fun onPerspectiveChanged(perspective: Perspective)
-
-    fun onBackButtonPressed()
+    fun onPerspectiveChanged(active: Boolean)
 }

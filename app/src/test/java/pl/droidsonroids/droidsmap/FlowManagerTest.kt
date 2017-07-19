@@ -1,6 +1,7 @@
 package pl.droidsonroids.droidsmap
 
 import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.verify
 import org.junit.Before
 import org.junit.Test
@@ -9,22 +10,40 @@ import pl.droidsonroids.droidsmap.feature.room.ui.RoomUiGateway
 
 class FlowManagerTest {
 
-    lateinit var roomViewMock: RoomUiGateway
-    lateinit var officeViewMock: OfficeUiGateway
+    lateinit var roomGatewayMock: RoomUiGateway
+    lateinit var OfficeGatewayMock: OfficeUiGateway
     lateinit var flowManager: FlowManager
 
     @Before
     fun setUp() {
-        roomViewMock = mock()
-        officeViewMock = mock()
-        flowManager = FlowManager(roomFeatureGateway = roomViewMock, officeFeatureGateway = officeViewMock)
+        roomGatewayMock = mock()
+        OfficeGatewayMock = mock()
+        flowManager = FlowManager(roomFeatureGateway = roomGatewayMock, officeFeatureGateway = OfficeGatewayMock)
     }
 
     @Test
-    fun `room view gets notified about perspective change`() {
+    fun `view features get notified about incoming room perspective change`() {
 
-        flowManager.notifyPerspectiveChanged(Perspective.ROOM)
+        flowManager.currentPerspective = Perspective.OFFICE
+        flowManager.onBackButtonPressed()
 
-        verify(roomViewMock).onPerspectiveChanged(Perspective.ROOM)
+        verify(roomGatewayMock).onPerspectiveChanged(true)
+        verify(OfficeGatewayMock).onPerspectiveChanged(false)
+
+        verify(roomGatewayMock, never()).onPerspectiveChanged(false)
+        verify(OfficeGatewayMock, never()).onPerspectiveChanged(true)
+    }
+
+    @Test
+    fun `view features get notified about incoming office perspective change`() {
+
+        flowManager.currentPerspective = Perspective.ROOM
+        flowManager.onBackButtonPressed()
+
+        verify(roomGatewayMock).onPerspectiveChanged(false)
+        verify(OfficeGatewayMock).onPerspectiveChanged(true)
+
+        verify(roomGatewayMock, never()).onPerspectiveChanged(true)
+        verify(OfficeGatewayMock, never()).onPerspectiveChanged(false)
     }
 }

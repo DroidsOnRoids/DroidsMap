@@ -101,12 +101,12 @@ class OfficeUiFeatureView(private val activityWrapper: MapActivityWrapper) : Bas
         }
     }
 
-    override fun onBackButtonPressed() {
-        TODO()
-    }
-
     override fun onLocationPermissionGranted() {
         googleMap?.isMyLocationEnabled = true
+    }
+
+    override fun onPerspectiveChanged(active: Boolean) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
 /*    private fun createRoomList() {
@@ -247,7 +247,7 @@ class OfficeUiFeatureView(private val activityWrapper: MapActivityWrapper) : Bas
 
 interface OfficeUiGateway {
     fun requestOffice()
-    fun onBackButtonPressed()
     fun onLocationPermissionGranted()
+    fun onPerspectiveChanged(active: Boolean)
 }
 
