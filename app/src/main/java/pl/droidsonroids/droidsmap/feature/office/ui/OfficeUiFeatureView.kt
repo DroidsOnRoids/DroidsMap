@@ -186,10 +186,10 @@ class OfficeUiFeatureView(private val activity: MapActivity) : BaseFeatureView<O
     }
 
     private fun convertpictureDrawableToBitmap(pictureDrawable: PictureDrawable): Bitmap {
-        val resultBirmap = Bitmap.createBitmap(pictureDrawable.intrinsicWidth, pictureDrawable.intrinsicHeight, Bitmap.Config.ARGB_8888)
-        val canvas = Canvas(resultBirmap)
+        val resultBitmap = Bitmap.createBitmap(pictureDrawable.intrinsicWidth, pictureDrawable.intrinsicHeight, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(resultBitmap)
         canvas.drawPicture(pictureDrawable.picture)
-        return resultBirmap
+        return resultBitmap
     }
 
     private fun createAndDisplayMapOverlay(room: RoomUiModel, uiModel: OfficeUiModel, bitmap: Bitmap) {
@@ -219,7 +219,6 @@ class OfficeUiFeatureView(private val activity: MapActivity) : BaseFeatureView<O
             }
             val sceneTransition = TransitionInflater.from(this).inflateTransition(R.transition.room_scene_enter_transition)
             TransitionManager.go(roomScene, sceneTransition)
-
         }
     }
 

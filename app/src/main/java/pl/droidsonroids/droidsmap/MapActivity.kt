@@ -1,7 +1,10 @@
 package pl.droidsonroids.droidsmap
 
+import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.support.v4.app.ActivityCompat
+import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
 import pl.droidsonroids.droidsmap.feature.office.ui.OfficeUiFeatureView
@@ -27,10 +30,19 @@ class MapActivity : AppCompatActivity() {
         officeFeature = OfficeUiFeatureView(this)
         roomFeature = RoomUiFeatureView(this)
         flowManager = FlowManager(officeFeature, roomFeature, appTerminateCallback)
+
+        checkLocationPermission()
     }
 
-    override fun onBackPressed() {
-        flowManager.onBackButtonPressed()
+    private fun checkLocationPermission() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            officeFeature.onLocationPermissionGranted()
+        } else {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
+            } else {
+                ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), LOCATION_REQUEST_CODE)
+            }
+        }
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -44,6 +56,10 @@ class MapActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    override fun onBackPressed() {
+        flowManager.onBackButtonPressed()
     }
 }
 

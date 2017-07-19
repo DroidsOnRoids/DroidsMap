@@ -24,8 +24,6 @@ class RoomUiFeatureView(private val activity: MapActivity) : BaseFeatureView<Roo
             }
             val sceneTransition = TransitionInflater.from(this).inflateTransition(pl.droidsonroids.droidsmap.R.transition.room_scene_enter_transition)
             TransitionManager.go(roomScene, sceneTransition)
-
-            TODO()
         }
     }
 

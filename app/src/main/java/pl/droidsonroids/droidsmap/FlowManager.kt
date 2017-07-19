@@ -6,7 +6,7 @@ import pl.droidsonroids.droidsmap.feature.room.ui.RoomUiGateway
 class FlowManager(
         private val officeFeatureGateway: OfficeUiGateway,
         private val roomFeatureGateway: RoomUiGateway,
-        private val terminateCallback: TerminationCallback) {
+        private val terminateCallback: TerminationCallback) : ForwardFlowChangeListener {
 
     var currentPerspective = Perspective.OFFICE
 
@@ -26,4 +26,12 @@ class FlowManager(
             terminateCallback.onAppTerminate()
         }
     }
+
+    override fun onPerspectiveChanged(newPerspective: Perspective) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+}
+
+interface ForwardFlowChangeListener {
+    fun onPerspectiveChanged(newPerspective: Perspective)
 }
