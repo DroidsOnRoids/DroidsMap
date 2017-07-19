@@ -85,7 +85,7 @@ class OfficePresenterTest {
     fun `view performs room transition once map camera animation has completed`() {
         presenter.onMapCameraAnimationCompleted()
 
-        inOrder {
+        inOrder(officeView) {
             verify(officeView).prepareForRoomTransition()
             verify(officeView).performRoomTransition()
         }
