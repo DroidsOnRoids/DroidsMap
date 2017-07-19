@@ -48,4 +48,12 @@ class FlowManagerTest {
         verify(roomGatewayMock, never()).onPerspectiveChanged(true)
         verify(officeGatewayMock, never()).onPerspectiveChanged(false)
     }
+
+    @Test
+    fun `application gets terminated upon back button press if in office perspective`() {
+        flowManager.currentPerspective = Perspective.OFFICE
+        flowManager.onBackButtonPressed()
+
+        verify(terminateListener).onTerminate()
+    }
 }
