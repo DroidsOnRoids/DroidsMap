@@ -22,9 +22,7 @@ class RoomImagesInteractor : BaseFirebaseStorageInteractor(), RoomImagesEndpoint
                 if (task.isSuccessful) {
                     emitter.onSuccess(task.result.toString())
                 } else {
-                    task.exception?.let {
-                        emitter.onError(it)
-                    }
+                    task.exception?.let(emitter::onError)
                 }
             }
             downloadingTask.addOnCompleteListener(queryListener)
