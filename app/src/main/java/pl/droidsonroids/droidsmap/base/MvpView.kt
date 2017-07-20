@@ -1,3 +1,8 @@
 package pl.droidsonroids.droidsmap.base
 
-interface MvpView
+import pl.droidsonroids.droidsmap.FlowNavigator
+
+interface MvpView {
+    fun onPerspectiveChanged(active: Boolean)
+    fun registerFlowNavigator(flowNavigator: FlowNavigator)
+}

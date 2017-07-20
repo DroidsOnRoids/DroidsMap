@@ -12,7 +12,7 @@ abstract class Presenter<V : MvpView> {
     }
 
     fun registerFlowNavigator(flowNavigator: FlowNavigator) {
-        this.flowChangeNavigator = flowChangeNavigator
+        this.flowChangeNavigator = flowNavigator
         onFlowNavigatorRegistered()
     }
 

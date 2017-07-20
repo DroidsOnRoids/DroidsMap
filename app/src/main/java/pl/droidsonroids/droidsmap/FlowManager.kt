@@ -1,38 +1,60 @@
 package pl.droidsonroids.droidsmap
 
-import pl.droidsonroids.droidsmap.feature.office.ui.OfficeUiGateway
-import pl.droidsonroids.droidsmap.feature.room.ui.RoomUiGateway
+import pl.droidsonroids.droidsmap.base.MvpView
+import java.util.*
+import kotlin.collections.HashMap
+import kotlin.reflect.KClass
 
 class FlowManager(
-        private val officeFeatureGateway: OfficeUiGateway,
-        private val roomFeatureGateway: RoomUiGateway,
-        private val terminateCallback: TerminationCallback) : FlowNavigator {
+        private val terminateCallback: TerminationCallback,
+        vararg views: MvpView
+) : FlowNavigator {
 
-    var currentPerspective = Perspective.OFFICE
+    val perspectiveViewsMap: MutableMap<KClass<out MvpView>, MvpView> = HashMap()
+    val perspectiveStack: MutableList<KClass<out MvpView>> = LinkedList()
 
     init {
-        officeFeatureGateway.onPerspectiveChanged(true)
-        officeFeatureGateway.registerFlowChangeCallback(this)
-        roomFeatureGateway.registerFlowChangeCallback(this)
-//        officeFeatureGateway.requestOffice()
+        views.forEach { mvpView ->
+            perspectiveViewsMap.put(mvpView.javaClass.kotlin, mvpView)
+            mvpView.registerFlowNavigator(this)
+        }
+        changePerspective(views.first().javaClass.kotlin)
     }
 
     fun onBackButtonPressed() {
-        if (currentPerspective == Perspective.ROOM) {
-            currentPerspective = Perspective.OFFICE
-            roomFeatureGateway.onPerspectiveChanged(false)
-            officeFeatureGateway.onPerspectiveChanged(true)
-        } else {
-            officeFeatureGateway.onPerspectiveChanged(false)
-            terminateCallback.onAppTerminate()
+        if (perspectiveStack.isNotEmpty()) {
+            getView(perspectiveStack.last()).onPerspectiveChanged(false)
+            perspectiveStack.removeAt(perspectiveStack.size - 1)
+
+            if (perspectiveStack.isNotEmpty()) {
+                getView(perspectiveStack.last()).onPerspectiveChanged(true)
+            } else {
+                terminateCallback.onAppTerminate()
+            }
         }
     }
 
-    override fun onPerspectiveChanged(newPerspective: Perspective) {
-        currentPerspective = newPerspective
+    override fun changePerspective(newPerspective: KClass<out MvpView>) {
+        if (perspectiveStack.isNotEmpty()) {
+            if (newPerspective.equals(perspectiveStack.last())) {
+                return
+            }
+
+            var currentView = getView(perspectiveStack.last())
+            currentView.onPerspectiveChanged(false)
+        }
+
+        perspectiveStack += newPerspective
+
+        var newView = getView(newPerspective)
+        newView.onPerspectiveChanged(true)
+    }
+
+    private fun getView(clazz: KClass<out MvpView>): MvpView {
+        return perspectiveViewsMap.get(clazz) as MvpView
     }
 }
 
 interface FlowNavigator {
-    fun onPerspectiveChanged(newPerspective: Perspective)
+    fun changePerspective(perspective: KClass<out MvpView>)
 }
