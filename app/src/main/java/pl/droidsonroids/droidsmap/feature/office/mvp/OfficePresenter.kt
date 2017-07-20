@@ -9,7 +9,7 @@ import pl.droidsonroids.droidsmap.model.Coordinates
 open class OfficePresenter private constructor(
         private val officeFeatureBoundary: OfficeFeatureBoundary) : Presenter<OfficeMvpView>() {
 
-    override fun onFlowCallbackRegistered(flowCallback: ForwardFlowChangeListener) = Unit
+    override fun onFlowCallbackRegistered(flowCallback: ForwardFlowChangeListener) = view.initMap()
 
     fun onRequestOffice() = officeFeatureBoundary.requestOffice(OfficeDataObserver())
 
