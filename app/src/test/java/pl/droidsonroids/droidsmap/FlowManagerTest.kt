@@ -64,4 +64,9 @@ class FlowManagerTest {
         flowManager.onPerspectiveChanged(Perspective.ROOM)
         Assertions.assertThat(flowManager.currentPerspective).isEqualTo(Perspective.ROOM)
     }
+
+    @Test
+    fun `flow manager launches first view upon initialization`() {
+        verify(officeGatewayMock).onPerspectiveChanged(true)
+    }
 }

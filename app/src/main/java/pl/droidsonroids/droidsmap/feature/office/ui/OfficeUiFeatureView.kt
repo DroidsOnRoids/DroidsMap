@@ -55,8 +55,8 @@ class OfficeUiFeatureView(private val activityWrapper: MapActivityWrapper, prese
         }
     }
 
-    override fun registerFlowChangeCallback(callback: FlowNavigator) {
-        presenter.registerFlowNavigator(callback)
+    override fun registerFlowChangeCallback(flowNavigator: FlowNavigator) {
+        presenter.registerFlowNavigator(flowNavigator)
     }
 
     private fun onGroundOverlayClicked(groundOverlay: GroundOverlay) {
@@ -230,6 +230,6 @@ class OfficeUiFeatureView(private val activityWrapper: MapActivityWrapper, prese
 interface OfficeUiGateway {
     fun onLocationPermissionGranted()
     fun onPerspectiveChanged(active: Boolean)
-    fun registerFlowChangeCallback(callback: FlowNavigator)
+    fun registerFlowChangeCallback(flowNavigator: FlowNavigator)
 }
 
