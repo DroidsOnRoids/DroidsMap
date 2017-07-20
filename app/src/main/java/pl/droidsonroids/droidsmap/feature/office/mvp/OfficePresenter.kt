@@ -1,34 +1,38 @@
 package pl.droidsonroids.droidsmap.feature.office.mvp
 
+import pl.droidsonroids.droidsmap.ForwardFlowChangeListener
 import pl.droidsonroids.droidsmap.base.DataObserverAdapter
 import pl.droidsonroids.droidsmap.base.Presenter
 import pl.droidsonroids.droidsmap.feature.office.business_logic.OfficeFeatureBoundary
 import pl.droidsonroids.droidsmap.model.Coordinates
 
-class OfficePresenter private constructor(
-        private val officeView: OfficeMvpView,
-        private val officeFeatureBoundary: OfficeFeatureBoundary) : Presenter() {
+open class OfficePresenter private constructor(
+        private val officeFeatureBoundary: OfficeFeatureBoundary) : Presenter<OfficeMvpView>() {
+
+    override fun onFlowCallbackRegistered(flowCallback: ForwardFlowChangeListener) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
     fun onRequestOffice() = officeFeatureBoundary.requestOffice(OfficeDataObserver())
 
     fun onRoomClicked(coordinates: Coordinates) {
-        officeView.animateCameraToClickedRoom(coordinates)
+        view.animateCameraToClickedRoom(coordinates)
     }
 
     fun onMapCameraAnimationCompleted() {
-        officeView.prepareForRoomTransition()
-        officeView.performRoomTransition()
+        view.prepareForRoomTransition()
+        view.performRoomTransition()
     }
 
     private fun showOfficeMap(uiModel: OfficeUiModel) {
-        officeView.setMapPanningConstraints(uiModel)
-        officeView.focusMapOnOfficeLocation(uiModel)
-        officeView.displayOfficeRooms(uiModel)
+        view.setMapPanningConstraints(uiModel)
+        view.focusMapOnOfficeLocation(uiModel)
+        view.displayOfficeRooms(uiModel)
     }
 
     companion object {
-        fun create(view: OfficeMvpView, officeFeatureBoundary: OfficeFeatureBoundary)
-                = OfficePresenter(view, officeFeatureBoundary)
+        fun create(officeFeatureBoundary: OfficeFeatureBoundary)
+                = OfficePresenter(officeFeatureBoundary)
     }
 
     inner class OfficeDataObserver : DataObserverAdapter<OfficeUiModel>() {

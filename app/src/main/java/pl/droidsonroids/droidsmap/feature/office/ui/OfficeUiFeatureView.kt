@@ -19,17 +19,12 @@ import com.google.android.gms.maps.model.*
 import kotlinx.android.synthetic.main.activity_map.*
 import kotlinx.android.synthetic.main.scene_office_map.*
 import pl.droidsonroids.droidsmap.ForwardFlowChangeListener
-import pl.droidsonroids.droidsmap.MapActivity
 import pl.droidsonroids.droidsmap.R
 import pl.droidsonroids.droidsmap.base.BaseFeatureView
-import pl.droidsonroids.droidsmap.feature.office.api.OfficeDataEndpoint
-import pl.droidsonroids.droidsmap.feature.office.business_logic.OfficeFeatureBoundary
+import pl.droidsonroids.droidsmap.base.MapActivityWrapper
 import pl.droidsonroids.droidsmap.feature.office.mvp.OfficeMvpView
 import pl.droidsonroids.droidsmap.feature.office.mvp.OfficePresenter
 import pl.droidsonroids.droidsmap.feature.office.mvp.OfficeUiModel
-import pl.droidsonroids.droidsmap.feature.office.repository.OfficeRepository
-import pl.droidsonroids.droidsmap.feature.room.api.RoomDataEndpoint
-import pl.droidsonroids.droidsmap.feature.room.api.RoomImagesEndpoint
 import pl.droidsonroids.droidsmap.feature.room.mvp.RoomUiModel
 import pl.droidsonroids.droidsmap.model.Coordinates
 import java.util.*
@@ -39,17 +34,17 @@ private const val MAP_BEARING = 201.5f
 private const val MIN_MAP_ZOOM = 18f
 private const val MAX_MAP_ZOOM = 25f
 
-class OfficeUiFeatureView(private val activity: MapActivity) : BaseFeatureView<OfficePresenter>(), OfficeMvpView, OfficeUiGateway {
+class OfficeUiFeatureView(private val activityWrapper: MapActivityWrapper, presenter: OfficePresenter) : BaseFeatureView<OfficeMvpView, OfficePresenter>(), OfficeMvpView, OfficeUiGateway {
 
-    private val officeBoundary = OfficeFeatureBoundary.create(
-            officeRepository = OfficeRepository(OfficeDataEndpoint.create(), RoomDataEndpoint.create(), RoomImagesEndpoint.create()))
     private var googleMap: GoogleMap? = null
     private val groundOverlayList = ArrayList<GroundOverlay>()
-    private var officeScene: Scene = Scene(activity.rootLayout, activity.officeSceneLayout)
 
     init {
-        presenter = OfficePresenter.create(this, officeBoundary)
-        val mapFragment = activity.supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
+        this.presenter = presenter
+    }
+
+    override fun initMap() {
+        val mapFragment = activityWrapper.activity.supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync {
             googleMap = it
             it.setup()
@@ -134,7 +129,7 @@ class OfficeUiFeatureView(private val activity: MapActivity) : BaseFeatureView<O
 
     private fun performDisplayOfficeRooms(officeUiModel: OfficeUiModel) {
         officeUiModel.roomUiModels.forEach { roomUiModel ->
-            Glide.with(activity)
+            Glide.with(activityWrapper.activity)
                     .`as`(PictureDrawable::class.java)
                     .load(roomUiModel.imageUrl)
                     .listener(object : RequestListener<PictureDrawable> {
@@ -179,7 +174,7 @@ class OfficeUiFeatureView(private val activity: MapActivity) : BaseFeatureView<O
     }
 
     override fun prepareForRoomTransition() {
-        with(activity) {
+        with(activityWrapper.activity) {
             val resourceId = resources.getIdentifier("room_3", "drawable", this.packageName)
             val roomImageDrawable = resources.getDrawable(resourceId)
 
@@ -201,7 +196,7 @@ class OfficeUiFeatureView(private val activity: MapActivity) : BaseFeatureView<O
     }
 
     override fun performRoomTransition() {
-        with(activity) {
+        with(activityWrapper.activity) {
             val roomScene = Scene.getSceneForLayout(rootLayout, R.layout.scene_room, this)
             roomScene.setEnterAction {
                 val roomSceneImage = (roomScene.sceneRoot.findViewById(R.id.zoomedRoomImage) as ImageView)
@@ -237,5 +232,6 @@ interface OfficeUiGateway {
     fun onLocationPermissionGranted()
     fun onPerspectiveChanged(active: Boolean)
     fun registerFlowChangeCallback(callback: ForwardFlowChangeListener)
+    fun initMap()
 }
 

@@ -3,7 +3,7 @@ package pl.droidsonroids.droidsmap.base
 import android.transition.Transition
 import pl.droidsonroids.droidsmap.MapActivity
 
-abstract class BaseFeatureView<P : Presenter> {
+abstract class BaseFeatureView<V : MvpView, P : Presenter<V>> {
     lateinit var presenter: P
 
     object UiCommandInvoker {
@@ -33,4 +33,4 @@ abstract class BaseFeatureView<P : Presenter> {
     }
 }
 
-class MapActivityWrapper(val activity: MapActivity? = null)
+open class MapActivityWrapper(val activity: MapActivity)

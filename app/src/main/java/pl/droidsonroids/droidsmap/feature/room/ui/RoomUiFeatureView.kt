@@ -13,7 +13,7 @@ import pl.droidsonroids.droidsmap.base.BaseFeatureView
 import pl.droidsonroids.droidsmap.feature.room.mvp.RoomMvpView
 import pl.droidsonroids.droidsmap.feature.room.mvp.RoomPresenter
 
-class RoomUiFeatureView(private val activity: MapActivity) : BaseFeatureView<RoomPresenter>(), RoomMvpView, RoomUiGateway {
+class RoomUiFeatureView(private val activity: MapActivity) : BaseFeatureView<RoomMvpView, RoomPresenter>(), RoomMvpView, RoomUiGateway {
 
     override fun performOfficeTransition() {
         with(activity) {

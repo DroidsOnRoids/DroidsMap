@@ -7,7 +7,14 @@ import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
+import pl.droidsonroids.droidsmap.base.MapActivityWrapper
+import pl.droidsonroids.droidsmap.feature.office.api.OfficeDataEndpoint
+import pl.droidsonroids.droidsmap.feature.office.business_logic.OfficeFeatureBoundary
+import pl.droidsonroids.droidsmap.feature.office.mvp.OfficePresenter
+import pl.droidsonroids.droidsmap.feature.office.repository.OfficeRepository
 import pl.droidsonroids.droidsmap.feature.office.ui.OfficeUiFeatureView
+import pl.droidsonroids.droidsmap.feature.room.api.RoomDataEndpoint
+import pl.droidsonroids.droidsmap.feature.room.api.RoomImagesEndpoint
 import pl.droidsonroids.droidsmap.feature.room.ui.RoomUiFeatureView
 
 private const val LOCATION_REQUEST_CODE = 1
@@ -27,7 +34,12 @@ class MapActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_map)
-        officeFeature = OfficeUiFeatureView(this)
+
+        val officeBoundary = OfficeFeatureBoundary.create(
+                officeRepository = OfficeRepository(OfficeDataEndpoint.create(), RoomDataEndpoint.create(), RoomImagesEndpoint.create()))
+
+        officeFeature = OfficeUiFeatureView(MapActivityWrapper(this), OfficePresenter.create(officeBoundary))
+        officeFeature.initMap()
         roomFeature = RoomUiFeatureView(this)
         flowManager = FlowManager(officeFeature, roomFeature, appTerminateCallback)
 
