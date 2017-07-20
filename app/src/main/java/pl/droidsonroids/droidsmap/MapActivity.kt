@@ -38,10 +38,7 @@ class MapActivity : AppCompatActivity() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             officeFeature.onLocationPermissionGranted()
         } else {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
-            } else {
-                ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), LOCATION_REQUEST_CODE)
-            }
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), LOCATION_REQUEST_CODE)
         }
     }
 
@@ -49,7 +46,7 @@ class MapActivity : AppCompatActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when (requestCode) {
             LOCATION_REQUEST_CODE -> {
-                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (grantResults.elementAtOrElse(0, { PackageManager.PERMISSION_DENIED }) == PackageManager.PERMISSION_GRANTED) {
                     officeFeature.onLocationPermissionGranted()
                 } else {
                     Toast.makeText(this, "Grant the permission!", Toast.LENGTH_SHORT).show()
