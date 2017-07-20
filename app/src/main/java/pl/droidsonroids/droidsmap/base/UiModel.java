@@ -1,3 +1,4 @@
 package pl.droidsonroids.droidsmap.base;
 
-public interface UiModel {}
+public interface UiModel {
+}

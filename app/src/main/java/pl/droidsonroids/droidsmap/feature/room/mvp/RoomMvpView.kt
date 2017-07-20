@@ -1,5 +1,7 @@
 package pl.droidsonroids.droidsmap.feature.room.mvp
 
-interface RoomMvpView {
-    fun performRoomTransition()
+import pl.droidsonroids.droidsmap.base.MvpView
+
+interface RoomMvpView : MvpView {
+    fun performOfficeTransition()
 }

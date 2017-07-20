@@ -1,9 +1,7 @@
 package pl.droidsonroids.droidsmap.business_logic
 
 import com.nhaarman.mockito_kotlin.mock
-import com.nhaarman.mockito_kotlin.verify
 import org.junit.Before
-import org.junit.Test
 import pl.droidsonroids.droidsmap.feature.office.business_logic.OfficeFeatureBoundary
 import pl.droidsonroids.droidsmap.feature.office.business_logic.OfficeFeatureUseCase
 import pl.droidsonroids.droidsmap.feature.office.repository.OfficeRepository
@@ -21,12 +19,5 @@ class OfficeFeatureUseCaseTest {
         roomBoundary = mock<RoomFeatureUseCase>()
         officeRepository = mock<OfficeRepository>()
         useCase = OfficeFeatureBoundary.create(roomBoundary, officeRepository)
-    }
-
-    @Test
-    fun `use case notifies room boundary that it's current app perspective`() {
-        useCase.changeToRoomPerspective()
-
-        verify(roomBoundary).onRoomPerspectiveGained()
     }
 }

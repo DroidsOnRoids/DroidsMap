@@ -5,7 +5,7 @@
     android:background="@android:color/transparent">
 
     <LinearLayout
-        android:id="@+id/rootLayout"
+        android:id="@+id/roomRootLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"

@@ -14,15 +14,13 @@ class OfficeFeatureUseCase(roomBoundary: RoomFeatureBoundary?, val officeReposit
     val disposableHandler = DisposableHandler()
     val roomFeatureBoundary = roomBoundary ?: RoomFeatureBoundary.create(this)
 
-    override fun requestOffice(dataObserver: DataObserverAdapter<OfficeUiModel>) {
+    override fun requestOffice(officeDataObserver: DataObserverAdapter<OfficeUiModel>) {
         disposableHandler handle officeRepository
                 .query()
                 .toObservable()
                 .applySchedulers()
-                .subscribeWith(dataObserver)
+                .subscribeWith(officeDataObserver)
     }
-
-    override fun changeToRoomPerspective() = roomFeatureBoundary.onRoomPerspectiveGained()
 }
 
 fun <T> Observable<T>.applySchedulers(): Observable<T> {

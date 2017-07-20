@@ -10,6 +10,7 @@ import org.assertj.core.api.JUnitSoftAssertions
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import pl.droidsonroids.droidsmap.SchedulersTestRule
 import pl.droidsonroids.droidsmap.feature.employee.api.EmployeeDataEndpoint
 import pl.droidsonroids.droidsmap.feature.employee.api.EmployeeImageEndpoint
 import pl.droidsonroids.droidsmap.feature.employee.business_logic.EmployeeEntity
@@ -20,6 +21,7 @@ import pl.droidsonroids.droidsmap.feature.employee.repository.EmployeeRepository
 class EmployeeRepositoryTest {
 
     @get:Rule val softly = JUnitSoftAssertions()
+    @get:Rule val testScheduler = SchedulersTestRule()
 
     lateinit var employeeDataEndpointMock: EmployeeDataEndpoint
     lateinit var employeeRepository: EmployeeRepository

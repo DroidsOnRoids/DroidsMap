@@ -11,6 +11,7 @@ import org.assertj.core.api.JUnitSoftAssertions
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import pl.droidsonroids.droidsmap.SchedulersTestRule
 import pl.droidsonroids.droidsmap.feature.office.api.OfficeDataEndpoint
 import pl.droidsonroids.droidsmap.feature.office.business_logic.OfficeEntity
 import pl.droidsonroids.droidsmap.feature.office.mvp.OfficeUiModel
@@ -24,6 +25,7 @@ import pl.droidsonroids.droidsmap.feature.room.mvp.RoomUiModel
 class OfficeRepositoryTest {
 
     @get:Rule val softly = JUnitSoftAssertions()
+    @get:Rule val testScheduler = SchedulersTestRule()
 
     lateinit var repository: OfficeRepository
     lateinit var officeDataEndpoint: OfficeDataEndpoint
