@@ -1,15 +1,16 @@
 package pl.droidsonroids.droidsmap.feature.office.mvp
 
-import pl.droidsonroids.droidsmap.ForwardFlowChangeListener
 import pl.droidsonroids.droidsmap.base.DataObserverAdapter
 import pl.droidsonroids.droidsmap.base.Presenter
 import pl.droidsonroids.droidsmap.feature.office.business_logic.OfficeFeatureBoundary
 import pl.droidsonroids.droidsmap.model.Coordinates
 
-open class OfficePresenter private constructor(
+class OfficePresenter private constructor(
         private val officeFeatureBoundary: OfficeFeatureBoundary) : Presenter<OfficeMvpView>() {
 
-    override fun onFlowCallbackRegistered(flowCallback: ForwardFlowChangeListener) = view.initMap()
+    override fun onFlowNavigatorRegistered() {
+        view.initMap()
+    }
 
     fun onRequestOffice() = officeFeatureBoundary.requestOffice(OfficeDataObserver())
 

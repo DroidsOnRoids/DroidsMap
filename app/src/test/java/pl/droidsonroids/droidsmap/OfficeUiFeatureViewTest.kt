@@ -24,9 +24,9 @@ class OfficeUiFeatureViewTest {
 
     @Test
     fun `view registers flow change callback`() {
-        val flowCallback = mock<ForwardFlowChangeListener>()
+        val flowCallback = mock<FlowNavigator>()
         uiFeature.registerFlowChangeCallback(flowCallback)
 
-        verify(presenterMock).onFlowCallbackRegistered(any())
+        verify(presenterMock).registerFlowNavigator(any())
     }
 }

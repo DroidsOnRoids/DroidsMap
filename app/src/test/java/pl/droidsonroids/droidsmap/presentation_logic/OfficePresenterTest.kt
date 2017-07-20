@@ -5,7 +5,7 @@ import org.assertj.core.api.JUnitSoftAssertions
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import pl.droidsonroids.droidsmap.ForwardFlowChangeListener
+import pl.droidsonroids.droidsmap.FlowNavigator
 import pl.droidsonroids.droidsmap.feature.office.business_logic.OfficeEntity
 import pl.droidsonroids.droidsmap.feature.office.business_logic.OfficeFeatureBoundary
 import pl.droidsonroids.droidsmap.feature.office.mvp.OfficeMvpView
@@ -94,10 +94,10 @@ class OfficePresenterTest {
     }
 
     @Test
-    fun `presenter registers flow callback and initalizes office map`() {
-        val flowCallback = mock<ForwardFlowChangeListener>()
+    fun `presenter initalizes office map upon flow navigator registration`() {
+        val flowCallback = mock<FlowNavigator>()
 
-        presenter.onFlowCallbackRegistered(flowCallback)
+        presenter.registerFlowNavigator(flowCallback)
 
         verify(officeViewMock).initMap()
     }
