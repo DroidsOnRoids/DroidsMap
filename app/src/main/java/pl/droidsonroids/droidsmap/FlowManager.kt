@@ -11,6 +11,7 @@ class FlowManager(
     var currentPerspective = Perspective.OFFICE
 
     init {
+        officeFeatureGateway.onPerspectiveChanged(true)
         officeFeatureGateway.registerFlowChangeCallback(this)
         roomFeatureGateway.registerFlowChangeCallback(this)
 //        officeFeatureGateway.requestOffice()

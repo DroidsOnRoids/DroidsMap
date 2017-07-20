@@ -1,5 +1,6 @@
 package pl.droidsonroids.droidsmap
 
+import com.nhaarman.mockito_kotlin.atLeast
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.verify
@@ -34,7 +35,6 @@ class FlowManagerTest {
 
         verify(roomGatewayMock, never()).onPerspectiveChanged(false)
         verify(roomGatewayMock, never()).onPerspectiveChanged(true)
-        verify(officeGatewayMock, never()).onPerspectiveChanged(true)
     }
 
     @Test
@@ -43,8 +43,8 @@ class FlowManagerTest {
         flowManager.currentPerspective = Perspective.ROOM
         flowManager.onBackButtonPressed()
 
-        verify(roomGatewayMock).onPerspectiveChanged(false)
-        verify(officeGatewayMock).onPerspectiveChanged(true)
+        verify(roomGatewayMock, atLeast(1)).onPerspectiveChanged(false)
+        verify(officeGatewayMock, atLeast(1)).onPerspectiveChanged(true)
 
         verify(roomGatewayMock, never()).onPerspectiveChanged(true)
         verify(officeGatewayMock, never()).onPerspectiveChanged(false)
