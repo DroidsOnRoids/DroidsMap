@@ -83,7 +83,7 @@ class OfficeUiFeatureView(private val activityWrapper: MapActivityWrapper, prese
 
     override fun onPerspectiveChanged(active: Boolean) = Unit
 
-    override fun requestOffice() = presenter.onRequestOffice()
+    private fun requestOffice() = presenter.onRequestOffice()
 
     override fun setMapPanningConstraints(uiModel: OfficeUiModel) {
         appointUiTaskIfMapNull { performSetMapPanningConstraints(uiModel) }
@@ -228,10 +228,8 @@ class OfficeUiFeatureView(private val activityWrapper: MapActivityWrapper, prese
 }
 
 interface OfficeUiGateway {
-    fun requestOffice()
     fun onLocationPermissionGranted()
     fun onPerspectiveChanged(active: Boolean)
     fun registerFlowChangeCallback(callback: ForwardFlowChangeListener)
-    fun initMap()
 }
 

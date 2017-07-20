@@ -13,7 +13,7 @@ class FlowManager(
     init {
         officeFeatureGateway.registerFlowChangeCallback(this)
         roomFeatureGateway.registerFlowChangeCallback(this)
-        officeFeatureGateway.requestOffice()
+//        officeFeatureGateway.requestOffice()
     }
 
     fun onBackButtonPressed() {

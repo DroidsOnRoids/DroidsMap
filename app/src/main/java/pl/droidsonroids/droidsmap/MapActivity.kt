@@ -15,6 +15,8 @@ import pl.droidsonroids.droidsmap.feature.office.repository.OfficeRepository
 import pl.droidsonroids.droidsmap.feature.office.ui.OfficeUiFeatureView
 import pl.droidsonroids.droidsmap.feature.room.api.RoomDataEndpoint
 import pl.droidsonroids.droidsmap.feature.room.api.RoomImagesEndpoint
+import pl.droidsonroids.droidsmap.feature.room.business_logic.RoomFeatureBoundary
+import pl.droidsonroids.droidsmap.feature.room.mvp.RoomPresenter
 import pl.droidsonroids.droidsmap.feature.room.ui.RoomUiFeatureView
 
 private const val LOCATION_REQUEST_CODE = 1
@@ -37,10 +39,10 @@ class MapActivity : AppCompatActivity() {
 
         val officeBoundary = OfficeFeatureBoundary.create(
                 officeRepository = OfficeRepository(OfficeDataEndpoint.create(), RoomDataEndpoint.create(), RoomImagesEndpoint.create()))
+        val roomBoundary = RoomFeatureBoundary.create(officeBoundary)
 
         officeFeature = OfficeUiFeatureView(MapActivityWrapper(this), OfficePresenter.create(officeBoundary))
-        officeFeature.initMap()
-        roomFeature = RoomUiFeatureView(this)
+        roomFeature = RoomUiFeatureView(MapActivityWrapper(this), RoomPresenter.create(roomBoundary))
         flowManager = FlowManager(officeFeature, roomFeature, appTerminateCallback)
 
         checkLocationPermission()
