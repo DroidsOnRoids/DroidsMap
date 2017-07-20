@@ -56,7 +56,7 @@ class OfficeUiFeatureView(private val activityWrapper: MapActivityWrapper, prese
     }
 
     override fun registerFlowChangeCallback(callback: ForwardFlowChangeListener) {
-        TODO()
+        presenter.onFlowCallbackRegistered(callback)
     }
 
     private fun onGroundOverlayClicked(groundOverlay: GroundOverlay) {
