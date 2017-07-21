@@ -6,19 +6,19 @@ import pl.droidsonroids.droidsmap.feature.office.business_logic.OfficeFeatureBou
 import pl.droidsonroids.droidsmap.model.Coordinates
 
 open class OfficePresenter private constructor(
-        private val officeFeatureBoundary: OfficeFeatureBoundary) : Presenter<OfficeMvpView>() {
+        private val officeFeatureBoundary: OfficeFeatureBoundary) : OfficePresenterContract() {
 
     override fun onFlowNavigatorRegistered() {
         view.initMap()
     }
 
-    fun onRequestOffice() = officeFeatureBoundary.requestOffice(OfficeDataObserver())
+    override fun onRequestOffice() = officeFeatureBoundary.requestOffice(OfficeDataObserver())
 
-    fun onRoomClicked(coordinates: Coordinates) {
+    override fun onRoomClicked(coordinates: Coordinates) {
         view.animateCameraToClickedRoom(coordinates)
     }
 
-    fun onMapCameraAnimationCompleted() {
+    override fun onMapCameraAnimationCompleted() {
         view.prepareForRoomTransition()
         view.performRoomTransition()
     }
@@ -43,4 +43,10 @@ open class OfficePresenter private constructor(
             TODO()
         }
     }
+}
+
+abstract class OfficePresenterContract : Presenter<OfficeMvpView>(){
+    abstract fun onRequestOffice()
+    abstract fun onRoomClicked(coordinates: Coordinates)
+    abstract fun onMapCameraAnimationCompleted()
 }

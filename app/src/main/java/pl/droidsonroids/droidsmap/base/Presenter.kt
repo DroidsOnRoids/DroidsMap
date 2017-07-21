@@ -7,11 +7,11 @@ abstract class Presenter<V : MvpView> {
     protected var flowChangeNavigator: FlowNavigator? = null
         set(value) = Unit
 
-    fun attachView(view: V) {
+    open fun attachView(view: V) {
         this.view = view
     }
 
-    fun registerFlowNavigator(flowNavigator: FlowNavigator) {
+    open fun registerFlowNavigator(flowNavigator: FlowNavigator) {
         this.flowChangeNavigator = flowNavigator
         onFlowNavigatorRegistered()
     }

@@ -24,7 +24,7 @@ import pl.droidsonroids.droidsmap.base.BaseFeatureView
 import pl.droidsonroids.droidsmap.base.MapActivityWrapper
 import pl.droidsonroids.droidsmap.base.UiGateway
 import pl.droidsonroids.droidsmap.feature.office.mvp.OfficeMvpView
-import pl.droidsonroids.droidsmap.feature.office.mvp.OfficePresenter
+import pl.droidsonroids.droidsmap.feature.office.mvp.OfficePresenterContract
 import pl.droidsonroids.droidsmap.feature.office.mvp.OfficeUiModel
 import pl.droidsonroids.droidsmap.feature.room.mvp.RoomUiModel
 import pl.droidsonroids.droidsmap.model.Coordinates
@@ -35,7 +35,7 @@ private const val MAP_BEARING = 201.5f
 private const val MIN_MAP_ZOOM = 18f
 private const val MAX_MAP_ZOOM = 25f
 
-class OfficeUiFeatureView(private val activityWrapper: MapActivityWrapper, presenter: OfficePresenter) : BaseFeatureView<OfficeMvpView, OfficePresenter>(), OfficeMvpView, OfficeUiGateway {
+class OfficeUiFeatureView(private val activityWrapper: MapActivityWrapper, presenter: OfficePresenterContract) : BaseFeatureView<OfficeMvpView, OfficePresenterContract>(), OfficeMvpView, OfficeUiGateway {
 
     private var googleMap: GoogleMap? = null
     private val groundOverlayList = ArrayList<GroundOverlay>()
@@ -82,9 +82,13 @@ class OfficeUiFeatureView(private val activityWrapper: MapActivityWrapper, prese
         googleMap?.isMyLocationEnabled = true
     }
 
-    override fun onPerspectiveGained() = Unit
+    override fun onPerspectiveGained() {
 
-    override fun onPerspectiveLost() = Unit
+    }
+
+    override fun onPerspectiveLost() {
+
+    }
 
     private fun requestOffice() = presenter.onRequestOffice()
 
