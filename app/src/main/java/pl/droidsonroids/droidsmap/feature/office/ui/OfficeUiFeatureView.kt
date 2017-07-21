@@ -52,6 +52,7 @@ class OfficeUiFeatureView(private val activityWrapper: MapActivityWrapper, prese
                 onGroundOverlayClicked(it)
             }
             UiCommandInvoker.invokeQueuedChain()
+            requestOffice()
         }
     }
 
