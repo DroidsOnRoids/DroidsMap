@@ -34,7 +34,9 @@ class RoomUiFeatureView(private val activityWrapper: MapActivityWrapper, present
 
     override fun registerFlowNavigator(flowNavigator: FlowNavigator) = Unit
 
-    override fun onPerspectiveChanged(active: Boolean) = Unit
+    override fun onPerspectiveGained() = Unit
+
+    override fun onPerspectiveLost() = Unit
 }
 
 interface RoomUiGateway : UiGateway

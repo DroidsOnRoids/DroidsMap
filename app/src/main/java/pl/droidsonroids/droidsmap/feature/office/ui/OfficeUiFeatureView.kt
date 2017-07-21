@@ -82,7 +82,9 @@ class OfficeUiFeatureView(private val activityWrapper: MapActivityWrapper, prese
         googleMap?.isMyLocationEnabled = true
     }
 
-    override fun onPerspectiveChanged(active: Boolean) = Unit
+    override fun onPerspectiveGained() = Unit
+
+    override fun onPerspectiveLost() = Unit
 
     private fun requestOffice() = presenter.onRequestOffice()
 

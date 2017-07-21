@@ -23,11 +23,11 @@ class FlowManager(
 
     fun onBackButtonPressed() {
         if (perspectiveStack.isNotEmpty()) {
-            getView(perspectiveStack.last()).onPerspectiveChanged(false)
+            getView(perspectiveStack.last()).onPerspectiveLost()
             perspectiveStack.removeAt(perspectiveStack.size - 1)
 
             if (perspectiveStack.isNotEmpty()) {
-                getView(perspectiveStack.last()).onPerspectiveChanged(true)
+                getView(perspectiveStack.last()).onPerspectiveGained()
             } else {
                 terminateCallback.onAppTerminate()
             }
@@ -41,13 +41,13 @@ class FlowManager(
             }
 
             val currentView = getView(perspectiveStack.last())
-            currentView.onPerspectiveChanged(false)
+            currentView.onPerspectiveLost()
         }
 
         perspectiveStack += perspective
 
         val newView = getView(perspective)
-        newView.onPerspectiveChanged(true)
+        newView.onPerspectiveGained()
     }
 
     private fun getView(clazz: KClass<out UiGateway>): UiGateway {
