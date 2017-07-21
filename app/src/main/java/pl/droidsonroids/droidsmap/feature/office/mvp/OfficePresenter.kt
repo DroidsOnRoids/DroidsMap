@@ -5,7 +5,7 @@ import pl.droidsonroids.droidsmap.base.Presenter
 import pl.droidsonroids.droidsmap.feature.office.business_logic.OfficeFeatureBoundary
 import pl.droidsonroids.droidsmap.model.Coordinates
 
-class OfficePresenter private constructor(
+open class OfficePresenter private constructor(
         private val officeFeatureBoundary: OfficeFeatureBoundary) : Presenter<OfficeMvpView>() {
 
     override fun onFlowNavigatorRegistered() {
