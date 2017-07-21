@@ -10,7 +10,7 @@ import pl.droidsonroids.droidsmap.FlowNavigator
 import pl.droidsonroids.droidsmap.R
 import pl.droidsonroids.droidsmap.base.BaseFeatureView
 import pl.droidsonroids.droidsmap.base.MapActivityWrapper
-import pl.droidsonroids.droidsmap.base.MvpView
+import pl.droidsonroids.droidsmap.base.UiGateway
 import pl.droidsonroids.droidsmap.feature.room.mvp.RoomMvpView
 import pl.droidsonroids.droidsmap.feature.room.mvp.RoomPresenter
 
@@ -37,5 +37,5 @@ class RoomUiFeatureView(private val activityWrapper: MapActivityWrapper, present
     override fun onPerspectiveChanged(active: Boolean) = Unit
 }
 
-interface RoomUiGateway : MvpView {
-}
+interface RoomUiGateway : UiGateway
+

@@ -53,13 +53,6 @@ class FlowManagerTest {
         verify(terminateCallbackMock).onAppTerminate()
     }
 
-//    @Test
-//    fun `flow manager stores new perspective after non-returning transition`() {
-//        Assertions.assertThat(flowManager.currentPerspective).isEqualTo(Perspective.OFFICE)
-//        flowManager.changePerspective(Perspective.ROOM)
-//        Assertions.assertThat(flowManager.currentPerspective).isEqualTo(Perspective.ROOM)
-//    }
-
     @Test
     fun `flow manager launches first view upon initialization`() {
         verify(officeGatewayMock).onPerspectiveChanged(true)

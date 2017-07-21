@@ -22,7 +22,7 @@ import pl.droidsonroids.droidsmap.FlowNavigator
 import pl.droidsonroids.droidsmap.R
 import pl.droidsonroids.droidsmap.base.BaseFeatureView
 import pl.droidsonroids.droidsmap.base.MapActivityWrapper
-import pl.droidsonroids.droidsmap.base.MvpView
+import pl.droidsonroids.droidsmap.base.UiGateway
 import pl.droidsonroids.droidsmap.feature.office.mvp.OfficeMvpView
 import pl.droidsonroids.droidsmap.feature.office.mvp.OfficePresenter
 import pl.droidsonroids.droidsmap.feature.office.mvp.OfficeUiModel
@@ -228,7 +228,7 @@ class OfficeUiFeatureView(private val activityWrapper: MapActivityWrapper, prese
     }
 }
 
-interface OfficeUiGateway : MvpView {
+interface OfficeUiGateway : UiGateway {
     fun onLocationPermissionGranted()
 }
 
