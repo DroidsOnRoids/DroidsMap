@@ -46,6 +46,7 @@
         android:id="@+id/roomImage"
         android:layout_width="164dp"
         android:layout_height="164dp"
-        android:layout_gravity="center" />
+        android:layout_gravity="center"
+        android:transitionName="room_transition" />
 </merge>
 
