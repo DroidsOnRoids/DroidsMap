@@ -6,10 +6,11 @@ import android.transition.TransitionManager
 import android.widget.ImageView
 import kotlinx.android.synthetic.main.scene_office_map.*
 import kotlinx.android.synthetic.main.scene_room.*
-import pl.droidsonroids.droidsmap.FlowManager
+import pl.droidsonroids.droidsmap.FlowNavigator
 import pl.droidsonroids.droidsmap.R
 import pl.droidsonroids.droidsmap.base.BaseFeatureView
 import pl.droidsonroids.droidsmap.base.MapActivityWrapper
+import pl.droidsonroids.droidsmap.base.MvpView
 import pl.droidsonroids.droidsmap.feature.room.mvp.RoomMvpView
 import pl.droidsonroids.droidsmap.feature.room.mvp.RoomPresenter
 
@@ -31,12 +32,10 @@ class RoomUiFeatureView(private val activityWrapper: MapActivityWrapper, present
         }
     }
 
-    override fun registerFlowChangeCallback(flowManager: FlowManager) = Unit
+    override fun registerFlowNavigator(flowNavigator: FlowNavigator) = Unit
 
     override fun onPerspectiveChanged(active: Boolean) = Unit
 }
 
-interface RoomUiGateway {
-    fun onPerspectiveChanged(active: Boolean)
-    fun registerFlowChangeCallback(flowManager: FlowManager)
+interface RoomUiGateway : MvpView {
 }

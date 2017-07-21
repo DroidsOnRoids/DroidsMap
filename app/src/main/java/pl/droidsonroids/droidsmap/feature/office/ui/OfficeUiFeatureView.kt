@@ -18,10 +18,11 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import kotlinx.android.synthetic.main.activity_map.*
 import kotlinx.android.synthetic.main.scene_office_map.*
-import pl.droidsonroids.droidsmap.ForwardFlowChangeListener
+import pl.droidsonroids.droidsmap.FlowNavigator
 import pl.droidsonroids.droidsmap.R
 import pl.droidsonroids.droidsmap.base.BaseFeatureView
 import pl.droidsonroids.droidsmap.base.MapActivityWrapper
+import pl.droidsonroids.droidsmap.base.MvpView
 import pl.droidsonroids.droidsmap.feature.office.mvp.OfficeMvpView
 import pl.droidsonroids.droidsmap.feature.office.mvp.OfficePresenter
 import pl.droidsonroids.droidsmap.feature.office.mvp.OfficeUiModel
@@ -55,8 +56,8 @@ class OfficeUiFeatureView(private val activityWrapper: MapActivityWrapper, prese
         }
     }
 
-    override fun registerFlowChangeCallback(callback: ForwardFlowChangeListener) {
-        presenter.onFlowCallbackRegistered(callback)
+    override fun registerFlowNavigator(flowNavigator: FlowNavigator) {
+        presenter.registerFlowNavigator(flowNavigator)
     }
 
     private fun onGroundOverlayClicked(groundOverlay: GroundOverlay) {
@@ -227,9 +228,7 @@ class OfficeUiFeatureView(private val activityWrapper: MapActivityWrapper, prese
     }
 }
 
-interface OfficeUiGateway {
+interface OfficeUiGateway : MvpView {
     fun onLocationPermissionGranted()
-    fun onPerspectiveChanged(active: Boolean)
-    fun registerFlowChangeCallback(callback: ForwardFlowChangeListener)
 }
 

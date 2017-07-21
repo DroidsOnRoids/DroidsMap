@@ -5,6 +5,7 @@ import org.assertj.core.api.JUnitSoftAssertions
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import pl.droidsonroids.droidsmap.FlowNavigator
 import pl.droidsonroids.droidsmap.feature.office.business_logic.OfficeEntity
 import pl.droidsonroids.droidsmap.feature.office.business_logic.OfficeFeatureBoundary
 import pl.droidsonroids.droidsmap.feature.office.mvp.OfficeMvpView
@@ -90,5 +91,14 @@ class OfficePresenterTest {
             verify(officeViewMock).prepareForRoomTransition()
             verify(officeViewMock).performRoomTransition()
         }
+    }
+
+    @Test
+    fun `presenter initalizes office map upon flow navigator registration`() {
+        val flowCallback = mock<FlowNavigator>()
+
+        presenter.registerFlowNavigator(flowCallback)
+
+        verify(officeViewMock).initMap()
     }
 }

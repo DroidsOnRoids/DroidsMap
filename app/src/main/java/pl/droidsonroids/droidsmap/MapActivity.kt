@@ -43,7 +43,7 @@ class MapActivity : AppCompatActivity() {
 
         officeFeature = OfficeUiFeatureView(MapActivityWrapper(this), OfficePresenter.create(officeBoundary))
         roomFeature = RoomUiFeatureView(MapActivityWrapper(this), RoomPresenter.create(roomBoundary))
-        flowManager = FlowManager(officeFeature, roomFeature, appTerminateCallback)
+        flowManager = FlowManager(appTerminateCallback, officeFeature, roomFeature)
 
         checkLocationPermission()
     }
