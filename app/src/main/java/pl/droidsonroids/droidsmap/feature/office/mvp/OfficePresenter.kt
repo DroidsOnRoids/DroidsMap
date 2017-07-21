@@ -8,7 +8,7 @@ import pl.droidsonroids.droidsmap.model.Coordinates
 open class OfficePresenter private constructor(
         private val officeFeatureBoundary: OfficeFeatureBoundary) : OfficePresenterContract() {
 
-    override fun onFlowNavigatorRegistered() {
+    override fun onViewAttached() {
         view.initMap()
     }
 

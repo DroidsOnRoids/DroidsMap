@@ -18,7 +18,6 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import kotlinx.android.synthetic.main.activity_map.*
 import kotlinx.android.synthetic.main.scene_office_map.*
-import pl.droidsonroids.droidsmap.FlowNavigator
 import pl.droidsonroids.droidsmap.R
 import pl.droidsonroids.droidsmap.base.BaseFeatureView
 import pl.droidsonroids.droidsmap.base.MapActivityWrapper
@@ -54,10 +53,6 @@ class OfficeUiFeatureView(private val activityWrapper: MapActivityWrapper, prese
             }
             UiCommandInvoker.invokeQueuedChain()
         }
-    }
-
-    override fun registerFlowNavigator(flowNavigator: FlowNavigator) {
-        presenter.registerFlowNavigator(flowNavigator)
     }
 
     private fun onGroundOverlayClicked(groundOverlay: GroundOverlay) {
