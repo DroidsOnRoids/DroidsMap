@@ -19,6 +19,7 @@ class RoomPresenterTest {
         roomViewMock = mock()
         roomBoundaryMock = mock()
         presenter = RoomPresenter.create(roomBoundaryMock)
+        presenter.attachView(roomViewMock)
     }
 
     @Test

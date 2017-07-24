@@ -5,7 +5,7 @@ import pl.droidsonroids.droidsmap.feature.room.business_logic.RoomFeatureBoundar
 
 class RoomPresenter(private val roomFeatureBoundary: RoomFeatureBoundary) : RoomPresenterContract() {
 
-    override fun onPerspectiveLost() = Unit
+    override fun onPerspectiveLost() = view.performOfficeTransition()
 
     companion object {
         fun create(roomFeatureBoundary: RoomFeatureBoundary)
