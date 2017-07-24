@@ -15,7 +15,6 @@ import pl.droidsonroids.droidsmap.feature.room.mvp.RoomUiModel
 import pl.droidsonroids.droidsmap.feature.room.ui.RoomUiFeatureView
 import pl.droidsonroids.droidsmap.model.Coordinates
 
-
 class OfficePresenterTest {
 
     lateinit var officeViewMock: OfficeMvpView

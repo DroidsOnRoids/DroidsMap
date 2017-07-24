@@ -9,15 +9,11 @@ import pl.droidsonroids.droidsmap.model.Coordinates
 open class OfficePresenter private constructor(
         private val officeFeatureBoundary: OfficeFeatureBoundary) : OfficePresenterContract() {
 
-    override fun onViewAttached() {
-        view.initMap()
-    }
+    override fun onViewAttached() = view.initMap()
 
     override fun onRequestOffice() = officeFeatureBoundary.requestOffice(OfficeDataObserver())
 
-    override fun onRoomClicked(coordinates: Coordinates) {
-        view.animateCameraToClickedRoom(coordinates)
-    }
+    override fun onRoomClicked(coordinates: Coordinates) = view.animateCameraToClickedRoom(coordinates)
 
     override fun onMapCameraAnimationCompleted() {
         view.prepareForRoomTransition()
@@ -37,13 +33,9 @@ open class OfficePresenter private constructor(
     }
 
     inner class OfficeDataObserver : DataObserverAdapter<OfficeUiModel>() {
-        override fun onNext(model: OfficeUiModel) {
-            showOfficeMap(model)
-        }
+        override fun onNext(model: OfficeUiModel) = showOfficeMap(model)
 
-        override fun onError(e: Throwable) {
-            TODO()
-        }
+        override fun onError(e: Throwable) = TODO()
     }
 }
 
