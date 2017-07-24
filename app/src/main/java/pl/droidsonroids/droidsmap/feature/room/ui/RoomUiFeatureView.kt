@@ -19,6 +19,11 @@ class RoomUiFeatureView(private val activityWrapper: MapActivityWrapper, present
         this.presenter = presenter
     }
 
+    override fun onPerspectiveLost() {
+        super.onPerspectiveLost()
+        presenter.onBackButtonPressed()
+    }
+
     override fun performOfficeTransition() {
         with(activityWrapper.activity) {
             val roomScene = Scene.getSceneForLayout(roomRootLayout, R.layout.scene_room, this)
