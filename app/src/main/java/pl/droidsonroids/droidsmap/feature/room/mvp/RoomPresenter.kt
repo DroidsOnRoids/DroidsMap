@@ -5,7 +5,7 @@ import pl.droidsonroids.droidsmap.feature.room.business_logic.RoomFeatureBoundar
 
 class RoomPresenter(private val roomFeatureBoundary: RoomFeatureBoundary) : RoomPresenterContract() {
 
-    override fun onBackButtonPressed() = Unit
+    override fun onPerspectiveLost() = Unit
 
     companion object {
         fun create(roomFeatureBoundary: RoomFeatureBoundary)
@@ -14,5 +14,5 @@ class RoomPresenter(private val roomFeatureBoundary: RoomFeatureBoundary) : Room
 }
 
 abstract class RoomPresenterContract : Presenter<RoomMvpView>() {
-    abstract fun onBackButtonPressed()
+    abstract fun onPerspectiveLost()
 }

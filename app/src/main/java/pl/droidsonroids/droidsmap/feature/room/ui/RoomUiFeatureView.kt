@@ -21,7 +21,7 @@ class RoomUiFeatureView(private val activityWrapper: MapActivityWrapper, present
 
     override fun onPerspectiveLost() {
         super.onPerspectiveLost()
-        presenter.onBackButtonPressed()
+        presenter.onPerspectiveLost()
     }
 
     override fun performOfficeTransition() {

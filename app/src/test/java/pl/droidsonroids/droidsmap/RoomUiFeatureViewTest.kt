@@ -25,6 +25,6 @@ class RoomUiFeatureViewTest {
     fun `view notifies presenter about perspective loss`() {
         uiFeature.onPerspectiveLost()
 
-        verify(presenterContractMock).onBackButtonPressed()
+        verify(presenterContractMock).onPerspectiveLost()
     }
 }
