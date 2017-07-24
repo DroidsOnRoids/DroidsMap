@@ -22,7 +22,7 @@ open class OfficePresenter private constructor(
     override fun onMapCameraAnimationCompleted() {
         view.prepareForRoomTransition()
         view.performRoomTransition()
-        flowChangeNavigator!!.changePerspective(RoomUiFeatureView::class)
+        flowChangeNavigator?.changePerspective(RoomUiFeatureView::class)
     }
 
     private fun showOfficeMap(uiModel: OfficeUiModel) {

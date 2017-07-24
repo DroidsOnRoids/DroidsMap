@@ -52,8 +52,11 @@ class OfficeUiFeatureView(private val activityWrapper: MapActivityWrapper, prese
                 onGroundOverlayClicked(it)
             }
             UiCommandInvoker.invokeQueuedChain()
-            requestOffice()
         }
+    }
+
+    override fun onLocationPermissionGranted() {
+        googleMap?.isMyLocationEnabled = true
     }
 
     private fun onGroundOverlayClicked(groundOverlay: GroundOverlay) {
@@ -74,11 +77,10 @@ class OfficeUiFeatureView(private val activityWrapper: MapActivityWrapper, prese
         }))
     }
 
-    override fun onLocationPermissionGranted() {
-        googleMap?.isMyLocationEnabled = true
+    override fun onPerspectiveGained() {
+        super.onPerspectiveGained()
+        presenter.onRequestOffice()
     }
-
-    private fun requestOffice() = presenter.onRequestOffice()
 
     override fun setMapPanningConstraints(uiModel: OfficeUiModel) {
         appointUiTaskIfMapNull { performSetMapPanningConstraints(uiModel) }
@@ -163,7 +165,6 @@ class OfficeUiFeatureView(private val activityWrapper: MapActivityWrapper, prese
 
         googleMap?.let {
             val overlay = (googleMap as GoogleMap).addGroundOverlay(overlayOptions)
-//            overlay.tag = room.
             groundOverlayList.add(overlay)
         }
     }
