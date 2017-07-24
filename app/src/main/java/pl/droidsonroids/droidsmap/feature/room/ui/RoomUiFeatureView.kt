@@ -14,11 +14,8 @@ import pl.droidsonroids.droidsmap.feature.room.mvp.RoomPresenterContract
 
 class RoomUiFeatureView(private val activityWrapper: MapActivityWrapper, presenter: RoomPresenterContract) : BaseFeatureView<RoomMvpView, RoomPresenterContract>(), RoomMvpView, RoomUiGateway {
 
-    private val officeScene: Scene
-
     init {
         this.presenter = presenter
-        officeScene = Scene(activityWrapper.activity.rootLayout, activityWrapper.activity.officeSceneLayout)
     }
 
     override fun onPerspectiveLost() {
@@ -27,6 +24,7 @@ class RoomUiFeatureView(private val activityWrapper: MapActivityWrapper, present
     }
 
     override fun performOfficeTransition() {
+        val officeScene = Scene(activityWrapper.activity.rootLayout, activityWrapper.activity.officeSceneLayout)
         with(activityWrapper.activity) {
             val sceneTransition = TransitionInflater.from(this).inflateTransition(R.transition.room_scene_exit_transition)
             sceneTransition.addListener(TransitionListenerAdapter({
