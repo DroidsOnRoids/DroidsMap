@@ -11,9 +11,9 @@ import pl.droidsonroids.droidsmap.base.BaseFeatureView
 import pl.droidsonroids.droidsmap.base.MapActivityWrapper
 import pl.droidsonroids.droidsmap.base.UiGateway
 import pl.droidsonroids.droidsmap.feature.room.mvp.RoomMvpView
-import pl.droidsonroids.droidsmap.feature.room.mvp.RoomPresenter
+import pl.droidsonroids.droidsmap.feature.room.mvp.RoomPresenterContract
 
-class RoomUiFeatureView(private val activityWrapper: MapActivityWrapper, presenter: RoomPresenter) : BaseFeatureView<RoomMvpView, RoomPresenter>(), RoomMvpView, RoomUiGateway {
+class RoomUiFeatureView(private val activityWrapper: MapActivityWrapper, presenter: RoomPresenterContract) : BaseFeatureView<RoomMvpView, RoomPresenterContract>(), RoomMvpView, RoomUiGateway {
 
     init {
         this.presenter = presenter
