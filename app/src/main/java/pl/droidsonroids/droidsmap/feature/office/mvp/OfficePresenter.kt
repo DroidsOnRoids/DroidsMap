@@ -3,6 +3,7 @@ package pl.droidsonroids.droidsmap.feature.office.mvp
 import pl.droidsonroids.droidsmap.base.DataObserverAdapter
 import pl.droidsonroids.droidsmap.base.Presenter
 import pl.droidsonroids.droidsmap.feature.office.business_logic.OfficeFeatureBoundary
+import pl.droidsonroids.droidsmap.feature.room.ui.RoomUiFeatureView
 import pl.droidsonroids.droidsmap.model.Coordinates
 
 open class OfficePresenter private constructor(
@@ -21,6 +22,7 @@ open class OfficePresenter private constructor(
     override fun onMapCameraAnimationCompleted() {
         view.prepareForRoomTransition()
         view.performRoomTransition()
+        flowChangeNavigator!!.changePerspective(RoomUiFeatureView::class)
     }
 
     private fun showOfficeMap(uiModel: OfficeUiModel) {
