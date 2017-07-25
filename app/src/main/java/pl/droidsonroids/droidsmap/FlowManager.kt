@@ -15,10 +15,10 @@ class FlowManager(
 
     init {
         views.forEach {
-            perspectiveViewsMap.put(it.javaClass.kotlin, it)
+            perspectiveViewsMap.put(it::class, it)
             it.registerFlowNavigator(this)
         }
-        changePerspective(views.first().javaClass.kotlin)
+        changePerspective(views.first()::class)
     }
 
     fun onBackButtonPressed() {

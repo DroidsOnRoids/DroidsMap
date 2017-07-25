@@ -5,9 +5,7 @@ import pl.droidsonroids.droidsmap.FlowNavigator
 abstract class Presenter<V : MvpView> {
     protected lateinit var view: V
     protected var flowChangeNavigator: FlowNavigator? = null
-        private set(value) {
-            field = value
-        }
+        private set
 
     open fun attachView(view: V) {
         this.view = view
