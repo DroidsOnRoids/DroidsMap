@@ -12,8 +12,8 @@ import pl.droidsonroids.droidsmap.feature.office.mvp.OfficeMvpView
 import pl.droidsonroids.droidsmap.feature.office.mvp.OfficePresenter
 import pl.droidsonroids.droidsmap.feature.office.mvp.OfficeUiModel
 import pl.droidsonroids.droidsmap.feature.room.mvp.RoomUiModel
+import pl.droidsonroids.droidsmap.feature.room.ui.RoomUiFeatureView
 import pl.droidsonroids.droidsmap.model.Coordinates
-
 
 class OfficePresenterTest {
 
@@ -85,20 +85,20 @@ class OfficePresenterTest {
 
     @Test
     fun `view performs room transition once map camera animation has completed`() {
+        val flowNavigatorMock = mock<FlowNavigator>()
+
+        presenter.registerFlowNavigator(flowNavigatorMock)
         presenter.onMapCameraAnimationCompleted()
 
-        inOrder(officeViewMock) {
+        inOrder(officeViewMock, flowNavigatorMock) {
             verify(officeViewMock).prepareForRoomTransition()
             verify(officeViewMock).performRoomTransition()
+            verify(flowNavigatorMock).changePerspective(RoomUiFeatureView::class)
         }
     }
 
     @Test
-    fun `presenter initalizes office map upon flow navigator registration`() {
-        val flowCallback = mock<FlowNavigator>()
-
-        presenter.registerFlowNavigator(flowCallback)
-
+    fun `presenter initalizes office map upon view attach`() {
         verify(officeViewMock).initMap()
     }
 }

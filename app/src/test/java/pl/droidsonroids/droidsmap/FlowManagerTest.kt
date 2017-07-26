@@ -30,10 +30,10 @@ class FlowManagerTest {
         flowManager.changePerspective(officeGatewayMock::class)
         flowManager.onBackButtonPressed()
 
-        verify(officeGatewayMock).onPerspectiveChanged(false)
+        verify(officeGatewayMock).onPerspectiveLost()
 
-        verify(roomGatewayMock, never()).onPerspectiveChanged(false)
-        verify(roomGatewayMock, never()).onPerspectiveChanged(true)
+        verify(roomGatewayMock, never()).onPerspectiveLost()
+        verify(roomGatewayMock, never()).onPerspectiveGained()
     }
 
     @Test
@@ -41,8 +41,8 @@ class FlowManagerTest {
         flowManager.changePerspective(roomGatewayMock::class)
         flowManager.onBackButtonPressed()
 
-        verify(roomGatewayMock, atLeast(1)).onPerspectiveChanged(false)
-        verify(officeGatewayMock, atLeast(1)).onPerspectiveChanged(true)
+        verify(roomGatewayMock, atLeast(1)).onPerspectiveLost()
+        verify(officeGatewayMock, atLeast(1)).onPerspectiveGained()
     }
 
     @Test
@@ -53,15 +53,8 @@ class FlowManagerTest {
         verify(terminateCallbackMock).onAppTerminate()
     }
 
-//    @Test
-//    fun `flow manager stores new perspective after non-returning transition`() {
-//        Assertions.assertThat(flowManager.currentPerspective).isEqualTo(Perspective.OFFICE)
-//        flowManager.changePerspective(Perspective.ROOM)
-//        Assertions.assertThat(flowManager.currentPerspective).isEqualTo(Perspective.ROOM)
-//    }
-
     @Test
     fun `flow manager launches first view upon initialization`() {
-        verify(officeGatewayMock).onPerspectiveChanged(true)
+        verify(officeGatewayMock).onPerspectiveGained()
     }
 }

@@ -3,24 +3,22 @@ package pl.droidsonroids.droidsmap.feature.office.mvp
 import pl.droidsonroids.droidsmap.base.DataObserverAdapter
 import pl.droidsonroids.droidsmap.base.Presenter
 import pl.droidsonroids.droidsmap.feature.office.business_logic.OfficeFeatureBoundary
+import pl.droidsonroids.droidsmap.feature.room.ui.RoomUiFeatureView
 import pl.droidsonroids.droidsmap.model.Coordinates
 
-class OfficePresenter private constructor(
-        private val officeFeatureBoundary: OfficeFeatureBoundary) : Presenter<OfficeMvpView>() {
+open class OfficePresenter private constructor(
+        private val officeFeatureBoundary: OfficeFeatureBoundary) : OfficePresenterContract() {
 
-    override fun onFlowNavigatorRegistered() {
-        view.initMap()
-    }
+    override fun onViewAttached() = view.initMap()
 
-    fun onRequestOffice() = officeFeatureBoundary.requestOffice(OfficeDataObserver())
+    override fun onRequestOffice() = officeFeatureBoundary.requestOffice(OfficeDataObserver())
 
-    fun onRoomClicked(coordinates: Coordinates) {
-        view.animateCameraToClickedRoom(coordinates)
-    }
+    override fun onRoomClicked(coordinates: Coordinates) = view.animateCameraToClickedRoom(coordinates)
 
-    fun onMapCameraAnimationCompleted() {
+    override fun onMapCameraAnimationCompleted() {
         view.prepareForRoomTransition()
         view.performRoomTransition()
+        flowChangeNavigator?.changePerspective(RoomUiFeatureView::class)
     }
 
     private fun showOfficeMap(uiModel: OfficeUiModel) {
@@ -35,12 +33,14 @@ class OfficePresenter private constructor(
     }
 
     inner class OfficeDataObserver : DataObserverAdapter<OfficeUiModel>() {
-        override fun onNext(model: OfficeUiModel) {
-            showOfficeMap(model)
-        }
+        override fun onNext(model: OfficeUiModel) = showOfficeMap(model)
 
-        override fun onError(e: Throwable) {
-            TODO()
-        }
+        override fun onError(e: Throwable) = TODO()
     }
+}
+
+abstract class OfficePresenterContract : Presenter<OfficeMvpView>(){
+    abstract fun onRequestOffice()
+    abstract fun onRoomClicked(coordinates: Coordinates)
+    abstract fun onMapCameraAnimationCompleted()
 }

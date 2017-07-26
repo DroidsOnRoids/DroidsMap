@@ -1,10 +1,17 @@
 package pl.droidsonroids.droidsmap.base
 
 import android.transition.Transition
+import pl.droidsonroids.droidsmap.FlowNavigator
 import pl.droidsonroids.droidsmap.MapActivity
 
-abstract class BaseFeatureView<V : MvpView, P : Presenter<V>> {
+abstract class BaseFeatureView<V : MvpView, P : Presenter<V>> : UiGateway, MvpView {
     lateinit var presenter: P
+
+    override fun registerFlowNavigator(flowNavigator: FlowNavigator) = presenter.registerFlowNavigator(flowNavigator)
+
+    override fun onPerspectiveGained() = presenter.attachView(this as V)
+
+    override fun onPerspectiveLost() = Unit
 
     object UiCommandInvoker {
         private val uiCommands = mutableListOf<() -> Any>()

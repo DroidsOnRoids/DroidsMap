@@ -18,13 +18,12 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import kotlinx.android.synthetic.main.activity_map.*
 import kotlinx.android.synthetic.main.scene_office_map.*
-import pl.droidsonroids.droidsmap.FlowNavigator
 import pl.droidsonroids.droidsmap.R
 import pl.droidsonroids.droidsmap.base.BaseFeatureView
 import pl.droidsonroids.droidsmap.base.MapActivityWrapper
-import pl.droidsonroids.droidsmap.base.MvpView
+import pl.droidsonroids.droidsmap.base.UiGateway
 import pl.droidsonroids.droidsmap.feature.office.mvp.OfficeMvpView
-import pl.droidsonroids.droidsmap.feature.office.mvp.OfficePresenter
+import pl.droidsonroids.droidsmap.feature.office.mvp.OfficePresenterContract
 import pl.droidsonroids.droidsmap.feature.office.mvp.OfficeUiModel
 import pl.droidsonroids.droidsmap.feature.room.mvp.RoomUiModel
 import pl.droidsonroids.droidsmap.model.Coordinates
@@ -35,7 +34,7 @@ private const val MAP_BEARING = 201.5f
 private const val MIN_MAP_ZOOM = 18f
 private const val MAX_MAP_ZOOM = 25f
 
-class OfficeUiFeatureView(private val activityWrapper: MapActivityWrapper, presenter: OfficePresenter) : BaseFeatureView<OfficeMvpView, OfficePresenter>(), OfficeMvpView, OfficeUiGateway {
+class OfficeUiFeatureView(private val activityWrapper: MapActivityWrapper, presenter: OfficePresenterContract) : BaseFeatureView<OfficeMvpView, OfficePresenterContract>(), OfficeMvpView, OfficeUiGateway {
 
     private var googleMap: GoogleMap? = null
     private val groundOverlayList = ArrayList<GroundOverlay>()
@@ -56,8 +55,8 @@ class OfficeUiFeatureView(private val activityWrapper: MapActivityWrapper, prese
         }
     }
 
-    override fun registerFlowNavigator(flowNavigator: FlowNavigator) {
-        presenter.registerFlowNavigator(flowNavigator)
+    override fun onLocationPermissionGranted() {
+        googleMap?.isMyLocationEnabled = true
     }
 
     private fun onGroundOverlayClicked(groundOverlay: GroundOverlay) {
@@ -78,13 +77,10 @@ class OfficeUiFeatureView(private val activityWrapper: MapActivityWrapper, prese
         }))
     }
 
-    override fun onLocationPermissionGranted() {
-        googleMap?.isMyLocationEnabled = true
+    override fun onPerspectiveGained() {
+        super.onPerspectiveGained()
+        presenter.onRequestOffice()
     }
-
-    override fun onPerspectiveChanged(active: Boolean) = Unit
-
-    private fun requestOffice() = presenter.onRequestOffice()
 
     override fun setMapPanningConstraints(uiModel: OfficeUiModel) {
         appointUiTaskIfMapNull { performSetMapPanningConstraints(uiModel) }
@@ -169,7 +165,6 @@ class OfficeUiFeatureView(private val activityWrapper: MapActivityWrapper, prese
 
         googleMap?.let {
             val overlay = (googleMap as GoogleMap).addGroundOverlay(overlayOptions)
-//            overlay.tag = room.
             groundOverlayList.add(overlay)
         }
     }
@@ -228,7 +223,7 @@ class OfficeUiFeatureView(private val activityWrapper: MapActivityWrapper, prese
     }
 }
 
-interface OfficeUiGateway : MvpView {
+interface OfficeUiGateway : UiGateway {
     fun onLocationPermissionGranted()
 }
 

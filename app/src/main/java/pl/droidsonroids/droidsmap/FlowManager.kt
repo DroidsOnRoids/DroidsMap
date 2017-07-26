@@ -1,60 +1,60 @@
 package pl.droidsonroids.droidsmap
 
-import pl.droidsonroids.droidsmap.base.MvpView
+import pl.droidsonroids.droidsmap.base.UiGateway
 import java.util.*
 import kotlin.collections.HashMap
 import kotlin.reflect.KClass
 
 class FlowManager(
         private val terminateCallback: TerminationCallback,
-        vararg views: MvpView
+        vararg views: UiGateway
 ) : FlowNavigator {
 
-    val perspectiveViewsMap: MutableMap<KClass<out MvpView>, MvpView> = HashMap()
-    val perspectiveStack: MutableList<KClass<out MvpView>> = LinkedList()
+    val perspectiveViewsMap: MutableMap<KClass<out UiGateway>, UiGateway> = HashMap()
+    val perspectiveStack: MutableList<KClass<out UiGateway>> = LinkedList()
 
     init {
-        views.forEach { mvpView ->
-            perspectiveViewsMap.put(mvpView.javaClass.kotlin, mvpView)
-            mvpView.registerFlowNavigator(this)
+        views.forEach {
+            perspectiveViewsMap.put(it::class, it)
+            it.registerFlowNavigator(this)
         }
-        changePerspective(views.first().javaClass.kotlin)
+        changePerspective(views.first()::class)
     }
 
     fun onBackButtonPressed() {
         if (perspectiveStack.isNotEmpty()) {
-            getView(perspectiveStack.last()).onPerspectiveChanged(false)
+            getView(perspectiveStack.last()).onPerspectiveLost()
             perspectiveStack.removeAt(perspectiveStack.size - 1)
 
             if (perspectiveStack.isNotEmpty()) {
-                getView(perspectiveStack.last()).onPerspectiveChanged(true)
+                getView(perspectiveStack.last()).onPerspectiveGained()
             } else {
                 terminateCallback.onAppTerminate()
             }
         }
     }
 
-    override fun changePerspective(newPerspective: KClass<out MvpView>) {
+    override fun changePerspective(perspective: KClass<out UiGateway>) {
         if (perspectiveStack.isNotEmpty()) {
-            if (newPerspective.equals(perspectiveStack.last())) {
+            if (perspective == perspectiveStack.last()) {
                 return
             }
 
-            var currentView = getView(perspectiveStack.last())
-            currentView.onPerspectiveChanged(false)
+            val currentView = getView(perspectiveStack.last())
+            currentView.onPerspectiveLost()
         }
 
-        perspectiveStack += newPerspective
+        perspectiveStack += perspective
 
-        var newView = getView(newPerspective)
-        newView.onPerspectiveChanged(true)
+        val newView = getView(perspective)
+        newView.onPerspectiveGained()
     }
 
-    private fun getView(clazz: KClass<out MvpView>): MvpView {
-        return perspectiveViewsMap.get(clazz) as MvpView
+    private fun getView(clazz: KClass<out UiGateway>): UiGateway {
+        return perspectiveViewsMap[clazz] as UiGateway
     }
 }
 
 interface FlowNavigator {
-    fun changePerspective(perspective: KClass<out MvpView>)
+    fun changePerspective(perspective: KClass<out UiGateway>)
 }
